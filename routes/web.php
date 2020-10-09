@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\seguimientoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,3 +20,5 @@ Route::get('/', function () {
 Route::get('/ejemplo', function () {
     return view('ejemplo');
 });
+Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
+Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
