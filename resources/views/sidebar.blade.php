@@ -26,7 +26,21 @@
     <div class="sidebar-heading">
       Interface
     </div>
-
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud" aria-expanded="true" aria-controls="collapseSolicitud">
+        <i class="fas fa-envelope-open-text"></i>
+        <span>Solicitudes</span>
+      </a>
+      <div id="collapseSolicitud" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <h6 class="collapse-header">Custom Components:</h6>
+          <a class="collapse-item" href="solicitudes">Listado</a>
+          <a class="collapse-item" href="alta_solicitud">Crear</a>
+          <a class="collapse-item" href="editar_solicitud">Editar</a>
+        </div>
+      </div>
+    </li>
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
