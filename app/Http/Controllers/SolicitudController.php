@@ -1,4 +1,4 @@
-<?php
+git <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Subcategoria;
@@ -47,6 +47,8 @@ class SolicitudController extends Controller
             $solicitud_dato->tipo_dato = $key['model'];
             $solicitud_dato -> save();
         }
+
+        
         return response()->json([
             'status' => true,
             'id_solicitud' =>$id_solicitud
