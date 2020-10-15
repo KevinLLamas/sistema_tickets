@@ -87,10 +87,8 @@
                                 <tr v-for="s in Solicitudes">
                                     <td>@{{s.id_solicitud}}</td>
                                     <td>
-                                        <label v-for="u in s.usuario">
-                                        @{{u.correo}}
-                                        </label>
-                                        <label v-if="s.usuario.length==0">Sin asignar</label>
+                                        <label v-for="u in s.usuario_many">@{{u.correo}}</label>
+                                        <label v-if="s.usuario_many.length == 0">Sin asignar</label>
                                     </td>
                                     <td>@{{s.descripcion}}</td>
                                     <td>@{{s.fecha_creacion}}</td>

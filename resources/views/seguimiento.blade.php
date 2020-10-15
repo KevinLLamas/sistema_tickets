@@ -17,8 +17,8 @@
 			<option data-tokens="mustard">Armando González Gutierrez</option>
 			<option data-tokens="frosting">Luis Márquez Hernández</option>
 		</select></p>
-	<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
-			electrónico <i class="fas fa-reply-all"></i> Respuestas: 2</small></p>
+	{{--<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
+			electrónico <i class="fas fa-reply-all"></i> Respuestas: 2</small></p>--}}
 	<hr>
 
 	<h3 class="h3 text-gray-800">Resumen</h3>

@@ -6,7 +6,12 @@ new Vue({
     el: '#app',
     data:{
         var: '',
-        seguimiento: {}
+        seguimiento: {
+            subategoria:
+            {
+                nombre: '',
+            }
+        }
     },
     created: function(){
         this.muestra();
@@ -14,7 +19,7 @@ new Vue({
     methods:{
         muestra: function(){
             axios.get(`/getSolicitud/`+getId).then(response=>{
-                //console.log(response);
+                console.log(response);
                 this.seguimiento = response.data;
                 //console.log(this.seguimiento.correo_atencion);
                 console.log(this.$route.params.id);

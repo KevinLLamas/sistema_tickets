@@ -8,9 +8,7 @@ class Usuario extends Model
     public $timestamps = false;
     
     public function solicitudes(){
-        return $this->belongsToMany('App\Models\Solicitud','Solicitud_usuario','id_usuario','id_solicitud')
-        ->using('App\Models\Solicitud_usuario')
-        ->withPivot(['momento','estado','razon','momento_fin']);
+        return $this->belongsToMany('App\Models\Solicitud','Solicitud_usuario','id_usuario','id_solicitud');
         //return $this->belongsToMany('Tabla relacionada','Tabla_intermedia','id Tabla actual(tabla intermedia)','id Tabla relacionada(tabla intermedia)');
     }
     public function departamento(){
