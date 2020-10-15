@@ -30,20 +30,20 @@
 			<p>
 				<small>
 					Datos adicionales: 
-					<font v-for="item in seguimiento.dato_adicional">
-						<font v-if="item.tipo_dato == 'correo_institucional'">
-							<i class="fas fa-at"></i>Correo institucional:<b>@{{item.valor}} </b>
-						</font>
-						<font v-else-if="item.tipo_dato == 'curp'">
+					<div v-for="item in seguimiento.dato_adicional">
+						<div v-if="item.tipo_dato == 'correo_institucional'">
+							<i class="fas fa-at"></i><h2>Correo institucional: @{{item.valor}} </h2>
+						</div>
+						<div v-else-if="item.tipo_dato == 'curp'">
 							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
-						</font>
-						<font v-else-if="item.tipo_dato == 'telefono'">
+						</div>
+						<div v-else-if="item.tipo_dato == 'telefono'">
 							<i class="fas fa-mobile-alt"></i> Celular: <b>@{{item.valor}} </b>
-						</font>
-						<font v-else-if="item.tipo_dato == 'matricula'">
+						</div>
+						<div v-else-if="item.tipo_dato == 'matricula'">
 							<i class="fas fa-mobile-alt"></i> Matricula: <b>@{{item.valor}} </b>
-						</font>
-					</font>
+						</div>
+					</div>
 				</small>
 			</p>
 		</div>
