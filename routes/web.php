@@ -7,7 +7,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\SubcategoriaController;
-
+use App\Http\Controllers\seguimientoController;
 //SOLICITUDES
 Route::get('alta_solicitud', function(){return view('alta_solicitud');});
 Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
@@ -38,3 +38,9 @@ Route::post('get_Num_Solicitudes_ByStatus_Dep', [UsuarioController::class, 'get_
 Route::post('get_Solicitudes_byUsuario', [UsuarioController::class, 'get_solicitudes_ByUsuario']);
 Route::post('get_Num_Solicitudes_ByStatus_Usuario', [UsuarioController::class, 'get_num_reportes_by_status_usuario']);
 Route::post('get_MySolicitudes', [UsuarioController::class, 'get_MySolicitudes']);
+//Seguimiento
+Route::get('/ejemplo', function () {
+    return view('ejemplo');
+});
+Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
+Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 

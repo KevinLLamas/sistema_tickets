@@ -217,7 +217,7 @@ class SolicitudController extends Controller
         $num=$request->input('num');
         $medio=$request->input('medio');
         $estado=$request->input('estado');
-        $solicitud=Solicitud::with('usuario')
+        $solicitud=Solicitud::with('usuario_many')
             ->where('estatus','like',"%$estado%")
             ->where('descripcion','like',"%$busqueda%")
             ->where('medio_reporte','like',"%$medio%")->paginate($num);
@@ -231,7 +231,7 @@ class SolicitudController extends Controller
         $estado=$request->input('estado');
         $idUsuario=$request->input('idUsuario');
         $idDep=$request->input('idDep');
-        $solicitudes_dep=Solicitud::with('usuario','usuario.departamento')
+        $solicitudes_dep=Solicitud::with('usuario_many','usuario.departamento')
         
         ->whereHas('usuario.departamento',function($q)use($idDep){
             $q->where('id',$idDep);
