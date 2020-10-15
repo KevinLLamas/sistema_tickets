@@ -6,6 +6,7 @@ class Perfil extends Model
     protected $table = 'perfil';
     protected $primaryKey = 'id';
     public $timestamps = false;
+    
     public function categorias()
     {
         return $this->hasManyThrough(

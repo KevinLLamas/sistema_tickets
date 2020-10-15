@@ -7,4 +7,10 @@ class Solicitud extends Model
     protected $primaryKey = 'id_solicitud';
     public $timestamps = false;
 
+    public function usuario(){
+        return $this->belongsToMany('App\Models\Usuario','Solicitud_usuario','id_solicitud','id_usuario')
+        ->using('App\Models\Solicitud_usuario')
+        ->withPivot(['momento','estado','razon','momento_fin']);
+    }
+
 }

@@ -18,6 +18,23 @@
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span></a>
     </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" href="/lista_solicitudes">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Lista de tickets admin</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/mis_solicitudes">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Lista de tickets trabajador</span></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/solicitudes_departamento">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Lista de tickets departamento</span></a>
+    </li>
+    
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -41,6 +58,7 @@
         </div>
       </div>
     </li>
+
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">

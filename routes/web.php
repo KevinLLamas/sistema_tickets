@@ -1,12 +1,12 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SolicitudController;
+use App\Http\Controllers\SolicitudUsuarioController;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\SubcategoriaController;
-
-Route::get('/', function(){return view('welcome');});
-Route::get('ejemplo', function(){return view('ejemplo');});
 
 //SOLICITUDES
 Route::get('alta_solicitud', function(){return view('alta_solicitud');});
@@ -14,6 +14,9 @@ Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
 Route::post('save_files', [SolicitudController::class, 'save_files']);
 Route::get('getCampos', [SolicitudController::class, 'getCampos']);
 Route::post('buscar_usuario', [SolicitudController::class, 'buscar_usuario']);
+Route::post('get_Solicitudes', [SolicitudController::class, 'get_solicitudes']);
+Route::get('get_Num_Solicitudes_ByStatus_General', [SolicitudController::class, 'get_num_reportes_by_status_general']);
+Route::post('get_MySolicitudes_Dep', [SolicitudController::class, 'get_MySolicitudes_Dep']);
 
 //CATEGORIAS
 Route::get('categorias', [CategoriaController::class, 'categorias']);
@@ -23,3 +26,15 @@ Route::get('subcategorias', [SubcategoriaController::class, 'subcategorias']);
 
 //PERFILES
 Route::get('perfiles', [PerfilController::class, 'perfiles']);
+
+//DASHBOARD
+Route::get('dashboard', function () {return view('dashboard');});
+Route::get('lista_solicitudes', function () {return view('lista_solicitudes');});
+Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
+Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
+
+//USUARIO
+Route::post('get_Num_Solicitudes_ByStatus_Dep', [UsuarioController::class, 'get_num_solicitudes_by_status_dep']);
+Route::post('get_Solicitudes_byUsuario', [UsuarioController::class, 'get_solicitudes_ByUsuario']);
+Route::post('get_Num_Solicitudes_ByStatus_Usuario', [UsuarioController::class, 'get_num_reportes_by_status_usuario']);
+Route::post('get_MySolicitudes', [UsuarioController::class, 'get_MySolicitudes']);
