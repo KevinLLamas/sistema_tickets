@@ -15,6 +15,8 @@ use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Atencion_externos;
+use App\Models\Subcategoria_departamento;
+use App\Models\Solicitud_departamento;
 class SolicitudController extends Controller
 {
     public function getCampos(Request $request)
@@ -54,6 +56,17 @@ class SolicitudController extends Controller
             $solicitud_dato->valor = $key['respuesta'];
             $solicitud_dato->tipo_dato = $key['model'];
             $solicitud_dato -> save();
+        }
+
+        $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->get();
+        foreach ($departamentos as $departamento)
+        {
+            $solicitud_departamento = new Solicitud_departamento;
+            $solicitud_departamento->id_solicitud = $id_solicitud;
+            $solicitud_departamento->id_departamento = $departamento->id_departamento;
+            $solicitud_departamento->aceptada = 'true';
+            $solicitud_departamento->razon = '';
+            $solicitud_departamento->save();
         }
 
         $solicitud_atencion = new Solicitud_atencion;
