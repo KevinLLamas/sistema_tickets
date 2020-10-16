@@ -12,10 +12,15 @@ use App\Models\Categoria;
 use App\Models\Solicitud;
 
 
-class seguimientoController extends Controller {
+class seguimientoController extends Controller 
+{
 	public function seguimiento($id){
 		//$categoria = Categoria::all();
 		//$categoria = Solicitud::with(['subcategoria','atencion'])->find($id);
 		return Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional'])->where('id_solicitud', $id)->first();
+	}
+	public function seguimiento_externo($id){
+		$id = Crypt::decryptString($id);
+		return \View::make('seguimiento_externo')->with(compact('id'));
 	}
 }

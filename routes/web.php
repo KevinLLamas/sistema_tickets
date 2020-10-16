@@ -44,3 +44,4 @@ Route::get('/ejemplo', function () {
 });
 Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
+Route::get('seguimiento_externo/{id}', [seguimientoController::class, 'seguimiento_externo']); 
