@@ -164,11 +164,11 @@ new Vue({
                     console.log(response.data);
                     if(response.data.status){
                         swal.close();
-                        Swal.fire('Atención','sí','success');
+                        Swal.fire('Atención','Solicitud creada con éxito','success');
                     }
                     else{
                         swal.close();
-                        Swal.fire('Atención','no','warning');
+                        Swal.fire('Atención','No se pudo crear la solicitu','warning');
                     }
                 }).catch(error=>{
                     console.log(error);
