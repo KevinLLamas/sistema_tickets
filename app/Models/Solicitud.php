@@ -26,4 +26,7 @@ class Solicitud extends Model
     public function categoria(){
     	return $this->hasMany('App\Models\Categoria', 'id_solicitud');
     }
+    public function solicitud_usuario(){
+    	return $this->hasMany('App\Models\Solicitud_usuario', 'id_solicitud');
+    }
 }

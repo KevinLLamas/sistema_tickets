@@ -44,3 +44,6 @@ Route::get('/ejemplo', function () {
 });
 Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
+Route::post('inserta_atencion',  [seguimientoController::class, 'inserta_atencion']);
+Route::post('cambiar_estatus',  [seguimientoController::class, 'cambiar_estatus']);
+

@@ -9,6 +9,8 @@ use App\Models\Campo_perfil_subcategoria;
 use App\Models\Campo_personalizado;
 use App\Models\Solicitud_dato_adicional;
 use App\Models\Solicitud_adjunto;
+use App\Models\Solicitud_atencion;
+use App\Models\Atencion_adjunto;
 class SolicitudController extends Controller
 {
     public function getCampos(Request $request)
@@ -60,6 +62,7 @@ class SolicitudController extends Controller
     {
         //return $request->all();
         $id_solicitud = $request->input('id_solicitud');
+        $id_atencion = $request->input('id_atencion');
         $files = $request->file('files');
         if($id_solicitud > 0){
             $carpeta_nombre = "solicitud-$id_solicitud";
@@ -68,8 +71,8 @@ class SolicitudController extends Controller
                 if($file_ext == 'pdf' || $file_ext == 'png' || $file_ext == 'jpg' || $file_ext == 'jpeg' || $file_ext == 'xls'){
                     $fileName = $file->getClientOriginalName();
                     $file->storeAs($carpeta_nombre, $fileName, 'solicitudes');
-                    $solicitud_adjunto = new Solicitud_adjunto;
-                    $solicitud_adjunto->id_solicitud = $id_solicitud;
+                    $solicitud_adjunto = new Atencion_adjunto;
+                    $solicitud_adjunto->id_atencion = $id_atencion;
                     $solicitud_adjunto->momento = now();
                     $solicitud_adjunto->mime = $file_ext;
                     $solicitud_adjunto->path_documento = "$carpeta_nombre/$fileName";
