@@ -30,20 +30,20 @@
 			<p>
 				<small>
 					Datos adicionales: 
-					<font v-for="item in seguimiento.dato_adicional">
-						<font v-if="item.tipo_dato == 'correo_institucional'">
-							<i class="fas fa-at"></i>Correo institucional:<b>@{{item.valor}} </b>
-						</font>
-						<font v-else-if="item.tipo_dato == 'curp'">
+					<div v-for="item in seguimiento.dato_adicional">
+						<div v-if="item.tipo_dato == 'correo_institucional'">
+							<i class="fas fa-at"></i><h2>Correo institucional: @{{item.valor}} </h2>
+						</div>
+						<div v-else-if="item.tipo_dato == 'curp'">
 							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
-						</font>
-						<font v-else-if="item.tipo_dato == 'telefono'">
+						</div>
+						<div v-else-if="item.tipo_dato == 'telefono'">
 							<i class="fas fa-mobile-alt"></i> Celular: <b>@{{item.valor}} </b>
-						</font>
-						<font v-else-if="item.tipo_dato == 'matricula'">
+						</div>
+						<div v-else-if="item.tipo_dato == 'matricula'">
 							<i class="fas fa-mobile-alt"></i> Matricula: <b>@{{item.valor}} </b>
-						</font>
-					</font>
+						</div>
+					</div>
 				</small>
 			</p>
 		</div>
@@ -53,31 +53,27 @@
 					<!--
 					-->
 	<div v-for="item in seguimiento.atencion">
-		<div class="card bg-white " v-if="item.tipo_respuesta == 'Todos'">			
+		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Todos'">			
 			<div class="card-body">
 				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
-				<a href="/app/storage/app/public/solicitudes/solicitud-10000/3.pdf" download></i> Download Brochure </a>
-				
+				<p class="card-text">Documentos Adjuntos:</p>
+				<div v-for="adj in item.adjuntos">
+					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+				</div>				
 			</div>			
 		</div>		
-	</div>
-
-	<hr>
-
-	<div v-for="item in seguimiento.atencion">
-		<div class="card alert alert-warning  border-warning" v-if="item.tipo_respuesta == 'Interna'">
-
+		<div class="card alert alert-warning  border-warning mb-3" v-if="item.tipo_respuesta == 'Interna'">
 			<div class="card-body">
-				<p>
-					<i class="far fa-sticky-note"></i> <b>@{{item.momento}} - Nota interna agregada por @{{seguimiento.usuario.correo}}</b>
-				</p>
+				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
-			</div>
+				<p class="card-text">Documentos Adjuntos:</p>
+				<div v-for="adj in item.adjuntos">
+					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+				</div>				
+			</div>		
 		</div>
 	</div>
-
-	<hr>
 
 
 	<div v-if="false" class="form-group row">
@@ -113,7 +109,7 @@
 
 
 
-	<ul v-if="seguimiento.estatus != 'Cerrada'" class="nav nav-tabs" id="myTab" role="tablist">
+	<ul v-if="seguimiento.estatus != 'Cerrada' && seguimiento.estatus != 'Suspendida'" class="nav nav-tabs mt-5" id="myTab" role="tablist">
 		<li class="nav-item">
 			<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
 				aria-selected="true">Responder</a>
@@ -124,18 +120,15 @@
 		</li>
 
 	</ul>
-	<div v-if="seguimiento.estatus != 'Cerrada'" class="tab-content" id="myTabContent">
+	<div v-if="seguimiento.estatus != 'Cerrada' && seguimiento.estatus != 'Suspendida'" class="tab-content" id="myTabContent">
 		<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-			<div class="form-group row mt-5">
+			<div class="form-group row mt-2">
 
 				<div class="col">
-					<textarea id="editor" name="problema" cols="40" rows="5" class="form-control" v-model="nueva_atencion.detalle"></textarea>
+					<textarea name="problema" cols="40" rows="5" class="form-control" v-model="nueva_atencion.detalle" placeholder="Agregar una respuesta..."></textarea>
 				</div>
 			</div>
-			<div class="form-group col-md-6 mt-2">
-				<label>
-					<i class="fas fa-paperclip">Adjuntar Archivos</i>
-				</label>	
+			<div class="form-group col-md-6 mt-2">	
 				<div class="custom-file" >
 					<input type="file" class="custom-file-input" id="customFileLang" v-on:change="fileChangeFormato"  multiple>
 					<label class="custom-file-label" id="label_formato" for="customFileLang" data-browse="Seleccionar" >Seleccionar Archivos</label>
@@ -145,7 +138,11 @@
 			<div class="form-group row">
 				<div class="col">
 					<div class="dropdown">
-						<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+						<button class="btn btn-primary" type="button" id="dropdownMenuButton"
+							aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencion('Todos')">
+							Responder
+						</button>
+						<!--<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencion('Todos')">
 							Responder
 						</button>
@@ -155,24 +152,21 @@
 							<a class="dropdown-item" href="#">Responder y suspender</a>
 							<a class="dropdown-item" href="#">Responder y resolver</a>
 							<a class="dropdown-item" href="#">Responder y terminar</a>
-						</div>
+						</div>-->
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
-			<div class="form-group row mt-5">
+			<div class="form-group row mt-2">
 
 				<div class="col">
-					<textarea id="editor" name="problema" cols="40" rows="5" class="form-control" v-model="nueva_atencion.detalle"></textarea>
+					<textarea  name="problema" cols="40" rows="5" class="form-control" v-model="nueva_atencion.detalle" placeholder="Agregar una nota..."></textarea>
 				</div>
 			</div>
 			
-			<div class="form-group col-md-6 mt-2">
-				<label>
-					<i class="fas fa-paperclip">Adjuntar Archivos</i>
-				</label>	
+			<div class="form-group col-md-6 mt-2">	
 				<div class="custom-file" >
 					<input type="file" class="custom-file-input" id="customFileLangNotes" v-on:change="fileChangeFormatoNotes"  multiple>
 					<label class="custom-file-label" id="label_formato_notes" for="customFileLangNotes" data-browse="Seleccionar" >Seleccionar Archivos</label>

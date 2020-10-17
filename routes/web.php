@@ -46,4 +46,6 @@ Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
 Route::post('inserta_atencion',  [seguimientoController::class, 'inserta_atencion']);
 Route::post('cambiar_estatus',  [seguimientoController::class, 'cambiar_estatus']);
-
+Route::get('seguimiento_externo/{id}', [seguimientoController::class, 'seguimiento_externo']); 
+Route::post('verifica_codigo', [seguimientoController::class, 'verifica_codigo']); 
+Route::get('get_file/{path}/{nombre_doc}', [seguimientoController::class, 'get_file']); 

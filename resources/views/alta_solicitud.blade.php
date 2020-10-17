@@ -69,7 +69,7 @@
             </div>
         </div>
         <button type="submit" v-if="Campos.length > 0" class="btn btn-primary" id="btnGuardar">Guardar</button>
-    </div>
-</form>
+    </form>
+</div>
 <script src="{{asset('assets/vue/alta_solicitud.js')}}"></script>
 @endsection

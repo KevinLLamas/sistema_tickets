@@ -11,6 +11,12 @@ use App\Models\Solicitud_dato_adicional;
 use App\Models\Solicitud_adjunto;
 use App\Models\Solicitud_atencion;
 use App\Models\Atencion_adjunto;
+use \PHPMailer\PHPMailer\PHPMailer;
+use \PHPMailer\PHPMailer\Exception;
+use Illuminate\Support\Facades\Crypt;
+use App\Models\Atencion_externos;
+use App\Models\Subcategoria_departamento;
+use App\Models\Solicitud_departamento;
 class SolicitudController extends Controller
 {
     public function getCampos(Request $request)
@@ -52,11 +58,36 @@ class SolicitudController extends Controller
             $solicitud_dato -> save();
         }
 
-        
-        return response()->json([
-            'status' => true,
-            'id_solicitud' =>$id_solicitud
-        ]);
+        $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->get();
+        foreach ($departamentos as $departamento)
+        {
+            $solicitud_departamento = new Solicitud_departamento;
+            $solicitud_departamento->id_solicitud = $id_solicitud;
+            $solicitud_departamento->id_departamento = $departamento->id_departamento;
+            $solicitud_departamento->aceptada = 'true';
+            $solicitud_departamento->razon = '';
+            $solicitud_departamento->save();
+        }
+
+        $solicitud_atencion = new Solicitud_atencion;
+        $solicitud_atencion->id_solicitud = $id_solicitud;
+        $solicitud_atencion->id_usuario = 1;
+        $solicitud_atencion->detalle = 'Solicitud creada';
+        $solicitud_atencion->tipo_respuesta = 'Todos';
+        $solicitud_atencion->momento =now();
+        $solicitud_atencion->tipo_at = 'Creacion';
+        $solicitud_atencion->save();
+
+        $atencion_externos = new Atencion_externos;
+        $atencion_externos->solicitud =  Crypt::encryptString($id_solicitud);
+        $atencion_externos->codigo =  $this->generarCodigo();
+        $atencion_externos->save();
+        if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion) == 'Enviado');
+            return response()->json([
+                'status' => true, 
+                'id_solicitud' =>$id_solicitud,
+                'id_atencion' =>$solicitud_atencion->id,
+            ]);
     }
     public function save_files(Request $request)
     {
@@ -65,10 +96,11 @@ class SolicitudController extends Controller
         $id_atencion = $request->input('id_atencion');
         $files = $request->file('files');
         if($id_solicitud > 0){
+            
             $carpeta_nombre = "solicitud-$id_solicitud";
             foreach ($files as $key => $file) {
                 $file_ext = $file->getClientOriginalExtension();
-                if($file_ext == 'pdf' || $file_ext == 'png' || $file_ext == 'jpg' || $file_ext == 'jpeg' || $file_ext == 'xls'){
+                if($file_ext == 'pdf' || $file_ext == 'png' || $file_ext == 'jpg' || $file_ext == 'jpeg' || $file_ext == 'xls' || $file_ext == 'PDF' || $file_ext == 'PNG' || $file_ext == 'JPG' || $file_ext == 'JPEG' || $file_ext == 'XLS'){
                     $fileName = $file->getClientOriginalName();
                     $file->storeAs($carpeta_nombre, $fileName, 'solicitudes');
                     $solicitud_adjunto = new Atencion_adjunto;
@@ -76,24 +108,69 @@ class SolicitudController extends Controller
                     $solicitud_adjunto->momento = now();
                     $solicitud_adjunto->mime = $file_ext;
                     $solicitud_adjunto->path_documento = "$carpeta_nombre/$fileName";
+                    $solicitud_adjunto->nombre_documento = "$fileName";
                     $solicitud_adjunto->save();
                 }
                 else{
                     return response()->json([
                         'status'=>false,
-                        'message'=>"La extención del archivo: ".$file->getClientOriginalName()." es incorrecta.",
+                        'message'=>"La extensión del archivo: ".$file->getClientOriginalName()." es incorrecta.",
                     ], 200);
                 }
             }
             return response()->json([
                 'status' => true,
                 'data' =>''
-            ]); 
+            ]);
         }
         return response()->json([
             'status' => false,
             'data' =>''
         ]); 
+    }
+    function generarCodigo() {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+        $randomString = '';
+        for ($i = 0; $i < 6; $i++) { 
+            $index = rand(0, strlen($characters) - 1); 
+            $randomString .= $characters[$index]; 
+        } 
+        return $randomString; 
+    } 
+    public function send_mail_nueva($atencion_externos,$email){
+
+        $mail = new PHPMailer(true);
+        try{
+            $mail->isSMTP();
+            $mail->Host = 'email-smtp.us-east-1.amazonaws.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'AKIATCA5M63WVFEMVFE3';
+            $mail->Password = 'BG9yGrkHgndFSF0aJcQv1L8fFj9k+jnjHigMmpkkUSMA';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+            $mail->setFrom("noreplay@jaliscoedu.mx", 'CASE');
+            $mail->CharSet = 'UTF-8';
+            $mail->addAddress(trim($email));
+
+            $mail->Subject = "Confirmación de solicitud creada";
+            $mail->isHTML(true);
+            $headers = "Content-Type: text/html; charset=UTF-8";
+            $mailContent = "
+                    <p>Confirmación de solicitud creada</p>
+                    <p>Usted ha creado su solicitud con éxito en el sistema CASE.</p>
+                    <p>Para dar seguimiento a su solicitud de click <a href='127.0.0.1:8000/seguimiento_externo/$atencion_externos->solicitud'>aquí</a></p>
+                    <p>Su código de verificación es: $atencion_externos->codigo.</p>
+            ";
+            $mail->Body = $mailContent;
+
+            if(!$mail->send()){
+               return $mail->ErrorInfo;
+            }else{
+                return 'Enviado';
+            }
+        }catch(phpmailerException $e){
+            return $e;
+        }
     }
     public function buscar_usuario(Request $request)
     {

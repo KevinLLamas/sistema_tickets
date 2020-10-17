@@ -112,6 +112,7 @@ new Vue({
                 console.log(result);
                 if(result.data.status){
                     this.solicitud.id = result.data.id_solicitud;
+                    this.solicitud.id_atencion = result.data.id_atencion;
                     Swal.fire('Correcto','Solicitud guardada correctamente','success');
                     this.saveFiles();
                 }
@@ -145,6 +146,9 @@ new Vue({
                 const config = {headers: { 'content-type': 'multipart/form-data' }};
                 let formData = new FormData();
                 formData.set('id_solicitud', this.solicitud.id);
+                formData.set('correo', this.solicitud.correo_contacto);
+                formData.set('id_atencion', this.solicitud.id_atencion);
+                
                 for (let i = 0; i < this.files.length; i++) 
                 {
                     if(this.files[0].size < (3*1000000))
@@ -160,11 +164,11 @@ new Vue({
                     console.log(response.data);
                     if(response.data.status){
                         swal.close();
-                        Swal.fire('Atención','sí','success');
+                        Swal.fire('Atención','Solicitud creada con éxito','success');
                     }
                     else{
                         swal.close();
-                        Swal.fire('Atención','no','warning');
+                        Swal.fire('Atención','No se pudo crear la solicitu','warning');
                     }
                 }).catch(error=>{
                     console.log(error);
