@@ -8,6 +8,9 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\seguimientoController;
+
+Route::group(['middleware' => 'validar', 'web'], function()
+{
 //SOLICITUDES
 Route::get('alta_solicitud', function(){return view('alta_solicitud');});
 Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
@@ -29,6 +32,7 @@ Route::get('perfiles', [PerfilController::class, 'perfiles']);
 
 //DASHBOARD
 Route::get('dashboard', function () {return view('dashboard');});
+Route::get('/', function () {return view('dashboard');});
 Route::get('lista_solicitudes', function () {return view('lista_solicitudes');});
 Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
@@ -38,6 +42,8 @@ Route::post('get_Num_Solicitudes_ByStatus_Dep', [UsuarioController::class, 'get_
 Route::post('get_Solicitudes_byUsuario', [UsuarioController::class, 'get_solicitudes_ByUsuario']);
 Route::post('get_Num_Solicitudes_ByStatus_Usuario', [UsuarioController::class, 'get_num_reportes_by_status_usuario']);
 Route::post('get_MySolicitudes', [UsuarioController::class, 'get_MySolicitudes']);
+});
+
 //Seguimiento
 Route::get('/ejemplo', function () {
     return view('ejemplo');
