@@ -6,7 +6,7 @@
 
 
 
-<div id="solicitudes" class="container-fluid">
+<div id="solicitudes_departamento" class="container-fluid">
     <div class="row">
         <!-- Tarjeta Listado de solicitudes -->
         <div class="col-xl-12 col-lg-12">

@@ -37,7 +37,10 @@ class seguimientoController extends Controller
 		$atencion->detalle = $Sol_atencion['detalle'];
 		$atencion->id_solicitud = $Sol_atencion['id_solicitud'];
 		$atencion->id_usuario = $Sol_atencion['id_usuario'];
-		$atencion->tipo_at = 'Atencion';
+		if($Sol_atencion['tipo_at'] != "")
+			$atencion->tipo_at = $Sol_atencion['tipo_at'];
+		else
+			$atencion->tipo_at = 'Atencion';
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
 
@@ -50,6 +53,7 @@ class seguimientoController extends Controller
 		$solicitud = Solicitud::find($id);
 		$solicitud->estatus =  $request->input('estatus');
 		$solicitud->save();
+		return $solicitud->estatus;
 	}
 
 	public function seguimiento_externo($id){

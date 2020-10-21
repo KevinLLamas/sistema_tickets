@@ -5,12 +5,22 @@
 <div class="container" id="app" v-cloak>
 	<!-- Page Heading -->
 	<h1 class="h1 text-gray-800">@{{ seguimiento.descripcion }}</h1>
-	<select v-if="seguimiento.usuario" class="selectpicker my-2" data-style="btn-primary" v-model=seguimiento.estatus @change="cambiarEstatus()">
-		<option option="Sin atender">Sin atender</option>
-		<option option="Atendiendo">Atendiendo</option>
-		<option option="Suspendida">Suspendida</option>
-		<option option="Cerrada">Cerrada</option>
-	</select>
+	<div v-if="seguimiento.estatus">
+		<!--select class="selectpicker my-2" data-style="btn-primary" v-model="seguimiento.estatus" @change="cambiarEstatus">
+			<option value="" disabled>Seleccione una opción</option>
+			<option option="Sin atender">Sin atender</option>
+			<option option="Atendiendo">Atendiendo</option>
+			<option option="Suspendida">Suspendida</option>
+			<option option="Cerrada">Cerrada</option>
+		</select-->
+		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()">
+			<option value="" disabled>Seleccione una opción</option>
+			<option option="Sin atender">Sin atender</option>
+			<option option="Atendiendo">Atendiendo</option>
+			<option option="Suspendida">Suspendida</option>
+			<option option="Cerrada">Cerrada</option>
+		</select>
+	</div>
 	<p><i class="far fa-clock"></i> 10-01-20 10:53 - Atendiendo:
 		<select class="selectpicker" data-live-search="true">
 			<option data-tokens="ketchup mustard">Juan López García</option>
@@ -55,11 +65,12 @@
 	<div v-for="item in seguimiento.atencion">
 		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Todos'">			
 			<div class="card-body">
-				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
+				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
+				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{seguimiento.usuario.correo}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
-				<p class="card-text">Documentos Adjuntos:</p>
+				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'../get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>		
@@ -69,7 +80,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'../get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>		
 		</div>
@@ -138,21 +149,17 @@
 			<div class="form-group row">
 				<div class="col">
 					<div class="dropdown">
-						<button class="btn btn-primary" type="button" id="dropdownMenuButton"
-							aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencion('Todos')">
-							Responder
-						</button>
-						<!--<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencion('Todos')">
+						<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
 							Responder
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-							<a class="dropdown-item" href="#">Responder</a>
-							<a class="dropdown-item" href="#">Responder y abrir</a>
-							<a class="dropdown-item" href="#">Responder y suspender</a>
-							<a class="dropdown-item" href="#">Responder y resolver</a>
-							<a class="dropdown-item" href="#">Responder y terminar</a>
-						</div>-->
+							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', '')">Responder</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Abrir')">Responder y abrir</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Suspender')">Responder y suspender</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Resolver')">Responder y resolver</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Terminar')">Responder y terminar</a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -178,15 +185,15 @@
 				<div class="col">
 					<div class="dropdown">
 						<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencion('Interna')" >
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
 							Responder
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-							<a class="dropdown-item" href="#">Responder</a>
-							<a class="dropdown-item" href="#">Responder y abrir</a>
-							<a class="dropdown-item" href="#">Responder y suspender</a>
-							<a class="dropdown-item" href="#">Responder y resolver</a>
-							<a class="dropdown-item" href="#">Responder y terminar</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', '')">Responder</a>
+							<a v-if="" class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Abrir')">Responder y abrir</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Suspender')">Responder y suspender</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Resolver')">Responder y resolver</a>
+							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Terminar')">Responder y terminar</a>
 						</div>
 					</div>
 				</div>

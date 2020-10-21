@@ -1,5 +1,5 @@
 new Vue({
-    el: '#solicitudes',
+    el: '#solicitudes_departamento',
     data:{
         numReportes:[],
         tipoEstatus:[],

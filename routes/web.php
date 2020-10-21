@@ -8,11 +8,14 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\seguimientoController;
+use App\Http\Controllers\LoginController;
+
 
 Route::group(['middleware' => 'validar', 'web'], function()
 {
+Route::get('logout', [LoginController::class, 'logout']);
 //SOLICITUDES
-Route::get('alta_solicitud', function(){return view('alta_solicitud');});
+Route::get('/alta_solicitud', function(){return view('alta_solicitud');});
 Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
 Route::post('save_files', [SolicitudController::class, 'save_files']);
 Route::get('getCampos', [SolicitudController::class, 'getCampos']);

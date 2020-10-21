@@ -14,7 +14,7 @@ class UsuarioController extends Controller
         $medio=$request->input('medio');
         $estado=$request->input('estado');
         $idUsuario=$request->input('idUsuario');
-        $solicitud_usuario=Usuario::find($idUsuario)->solicitudes()
+        $solicitud_usuario=Usuario::find(1)->solicitudes()
         ->where('solicitud.descripcion','like',"%$busqueda%")
         ->where('solicitud.medio_reporte','like',"%$medio%")
         ->where('solicitud.estatus','like',"%$estado%")

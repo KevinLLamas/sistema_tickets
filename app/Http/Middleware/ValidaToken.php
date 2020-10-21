@@ -6,7 +6,8 @@ use Closure;
 use Illuminate\Http\Request;
 use Session;
 use Redirect;
-
+use App\Models\Usuario;
+use App\Models\Departamentos;
 class ValidaToken
 {
     /**
@@ -76,13 +77,18 @@ class ValidaToken
                 //Data SGU
                 $result = self::buscar_usuario($token);
                 //Rol app
+                $usuario = Usuario::where('id_sgu',$res->id_persona)->first();
+                $departamento = Departamentos::find($usuario->id_departamento);
+
                     Session::put([
                         'key'=>$token,
                         'id_sgu'=>$res->id_persona,
                         'nombre'=> $result["nombre"],
                         'curp'=> $result["curp"],
                         'usuario'=> $result["usuario"],
-                        //'rol'=>$usuario->rol,
+                        'rol'=>$usuario->rol,
+                        'id_departamento'=>$departamento->id,
+                        'departamento'=>$departamento->nombre,
                     ]);
                     Session::save();
                     return $next($request);

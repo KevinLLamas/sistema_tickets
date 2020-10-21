@@ -117,7 +117,7 @@ new Vue({
                     this.saveFiles();
                 }
                 else
-                    Swal.fire('Incorrecto','Hay un error con los datos','warning');
+                    Swal.fire('Incorrecto',result.data.message,'warning');
             }).catch(error=>{
                 console.log(error);
             })
@@ -125,6 +125,14 @@ new Vue({
         fileChangeFormato(e){
            if(e.target.files.length > 1){
                 if(e.target.files.length < 5){
+                    for (let i = 0; i < e.target.files.length; i++){
+                        let nombre = e.target.files[i].name.split('.');
+                        let extencion = nombre[1].toLowerCase();
+                        if(!(extencion == 'pdf' || extencion == 'xls' || extencion == 'png' || extencion == 'jpg' || extencion == 'jpeg')){
+                            swal.fire('Incorrecto','El archivo '+e.target.files[i].name+' tiene una extensión no permitida' ,'warning');
+                            return;
+                        }
+                    }
                     this.files = e.target.files;
                     $("#label_formato").text(e.target.files.length + ' Archivos');
                 }
@@ -135,6 +143,12 @@ new Vue({
                 }
            }
            else{
+                let nombre = e.target.files[0].name.split('.');
+                let extencion = nombre[1].toLowerCase();
+                if(!(extencion == 'pdf' || extencion == 'xls' || extencion == 'png' || extencion == 'jpg' || extencion == 'jpeg')){
+                    swal.fire('Incorrecto','El archivo '+e.target.files[0].name+' tiene una extensión no permitida' ,'warning');
+                    return;
+                }
                 this.files = e.target.files;
                 $("#label_formato").text(e.target.files[0].name);
                 
@@ -164,18 +178,18 @@ new Vue({
                     console.log(response.data);
                     if(response.data.status){
                         swal.close();
-                        Swal.fire('Atención','Solicitud creada con éxito','success');
+                        Swal.fire('Atención','Solicitud '+this.solicitud.id+' creada con éxito','success');
                     }
                     else{
                         swal.close();
-                        Swal.fire('Atención','No se pudo crear la solicitu','warning');
+                        Swal.fire('Atención','No se pudieron subir los archivos, tu solicitud es: '+this.solicitud.id,'warning');
                     }
                 }).catch(error=>{
                     console.log(error);
                 })
             }
             else{
-                Swal.fire('Atención','No tienes archivos por guardar','warning');
+                Swal.fire('Atención','Solicitud '+this.solicitud.id+' creada con éxito','success');
             }
         },
     },
