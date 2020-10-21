@@ -9,14 +9,15 @@ use App\Models\Campo_perfil_subcategoria;
 use App\Models\Campo_personalizado;
 use App\Models\Solicitud_dato_adicional;
 use App\Models\Solicitud_adjunto;
-use App\Models\Atencion_adjunto;
 use App\Models\Solicitud_atencion;
+use App\Models\Atencion_adjunto;
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Atencion_externos;
 use App\Models\Subcategoria_departamento;
 use App\Models\Solicitud_departamento;
+use Illuminate\Support\Facades\Session;
 class SolicitudController extends Controller
 {
     public function getCampos(Request $request)
@@ -34,11 +35,11 @@ class SolicitudController extends Controller
     }
     public function guardar(Request $request)
     {
-        //return $request->all();
         if(filter_var($request->input('solicitud.correo_contacto'), FILTER_VALIDATE_EMAIL))
         {
+            //return $request->all();
             $solicitud = new Solicitud;
-            $solicitud->id_usuario = 1;
+            $solicitud->id_usuario = Session::get('id_sgu');
             $solicitud->estatus = "Sin atender";
             $solicitud->medio_reporte = "Internet"; 
             $solicitud->id_perfil = $request->input('solicitud.perfil');     
@@ -84,7 +85,7 @@ class SolicitudController extends Controller
             $atencion_externos->solicitud =  Crypt::encryptString($id_solicitud);
             $atencion_externos->codigo =  $this->generarCodigo();
             $atencion_externos->save();
-            if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion) == 'Enviado');
+            if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion,$id_solicitud) == 'Enviado');
                 return response()->json([
                     'status' => true, 
                     'id_solicitud' =>$id_solicitud,
@@ -107,8 +108,8 @@ class SolicitudController extends Controller
     {
         //return $request->all();
         $id_solicitud = $request->input('id_solicitud');
+        $id_atencion = $request->input('id_atencion');
         $files = $request->file('files');
-        $id_atencion = $request->file('id_atencion');
         if($id_solicitud > 0){
             
             $carpeta_nombre = "solicitud-$id_solicitud";
@@ -122,6 +123,7 @@ class SolicitudController extends Controller
                     $solicitud_adjunto->momento = now();
                     $solicitud_adjunto->mime = $file_ext;
                     $solicitud_adjunto->path_documento = "$carpeta_nombre/$fileName";
+                    $solicitud_adjunto->nombre_documento = "$fileName";
                     $solicitud_adjunto->save();
                 }
                 else{
@@ -150,7 +152,7 @@ class SolicitudController extends Controller
         } 
         return $randomString; 
     } 
-    public function send_mail_nueva($atencion_externos,$email){
+    public function send_mail_nueva($atencion_externos,$email,$id_solicitud){
 
         $mail = new PHPMailer(true);
         try{
@@ -165,15 +167,15 @@ class SolicitudController extends Controller
             $mail->CharSet = 'UTF-8';
             $mail->addAddress(trim($email));
 
-            $mail->Subject = "Confirmación de solicitud creada";
+            $mail->Subject = "Confirmación de solicitud #$id_solicitud creada";
             $mail->isHTML(true);
             $headers = "Content-Type: text/html; charset=UTF-8";
             $mailContent = "
-                    <p>Confirmación de solicitud creada</p>
-                    <p>Usted ha creado su solicitud con éxito en el sistema CASE.</p>
-                    <p>Para dar seguimiento a su solicitud de click <a href='127.0.0.1:8000/seguimiento_externo/$atencion_externos->solicitud'>aquí</a></p>
-                    <p>Su código de verificación es: $atencion_externos->codigo.</p>
-            ";
+                    <p>Confirmación de solicitud creada.</p>
+                    <p>Usted ha creado la solicitud #$id_solicitud con éxito en el sistema CASE.</p>
+                    <p>Para dar seguimiento a su solicitud de click <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$atencion_externos->solicitud'>aquí.</a></p>
+                    <p>Su código de verificación es: $atencion_externos->codigo</p>
+            "; 
             $mail->Body = $mailContent;
 
             if(!$mail->send()){
@@ -323,11 +325,11 @@ class SolicitudController extends Controller
         $medio=$request->input('medio');
         $estado=$request->input('estado');
         $idUsuario=$request->input('idUsuario');
-        $idDep=$request->input('idDep');
+        return $idDep= Session::get('id_departamento');
         $solicitudes_dep=Solicitud::with('usuario_many','usuario.departamento')
         
         ->whereHas('usuario.departamento',function($q)use($idDep){
-            $q->where('id',$idDep);
+            $q->where('id',1);
         })
         ->paginate($num);
         return $solicitudes_dep;
@@ -337,7 +339,11 @@ class SolicitudController extends Controller
         $num_status=Solicitud::select('solicitud.estatus',DB::raw('count(*) as total'))->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
         return $num_status;
     }
-    
+    public function get_Num_Solicitudes_ByStatus_mis_solicitudes(Request $request){
+        $idUsuario= Session::get('id_sgu');
+        $num_status=Solicitud::where('id_usuario',$idUsuario)->select('solicitud.estatus',DB::raw('count(*) as total'))->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+        return $num_status;
+    }
     public function get_num_reportes_by_status_dep(){
         
         $num_status=Solicitud::select('solicitud.estatus',DB::raw('count(*) as total'))->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
@@ -350,7 +356,7 @@ class SolicitudController extends Controller
 
         //Insert a tabla Solicitud
         $solicitud=new Solicitud;
-        $solicitud->id_usuario=3;
+        $solicitud->id_usuario= Session::get('id_sgu');;
         $solicitud->descripcion=$request->input('descripcion');
         $solicitud->estatus="Sin atender";
         $solicitud->medio_reporte="Internet";

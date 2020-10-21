@@ -1,5 +1,5 @@
 new Vue({
-    el: '#solicitudes',
+    el: '#solicitudes_departamento',
     data:{
         numReportes:[],
         tipoEstatus:[],
@@ -110,7 +110,7 @@ new Vue({
             url="get_Num_Solicitudes_ByStatus_Dep";
             data= await axios.get(url)
             .then(response=>{
-                //console.log(response.data);
+                console.log(response.data);
                 
                 this.Estatus= response.data;
             })

@@ -8,6 +8,6 @@ class Campo_personalizado extends Model
     public $timestamps = false;
     public function opciones()
     {
-        return $this->hasMany('\App\Models\campo_personalizado_opciones', 'id_campo_personalizado');
+        return $this->hasMany('\App\Models\Campo_personalizado_opciones', 'id_campo_personalizado');
     }
 } 

@@ -13,7 +13,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Tus solicitudes Asignadas</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Mis Solicitudes</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -42,17 +42,17 @@
                             <div class="form-group col-md-3">
                                 <label for="">Medio de Reporte</label>
                                 <select class="form-control" name="" id="" v-model="medioReporte" @change="getMisSolicitudes">
-                                    <option value="" disabled>Selecciona una opcion</option>
+                                    <option value="" disabled>Selecciona</option>
                                     <option value='Internet'>Internet</option>
                                     <option value='Personal'>Personal</option>
                                     <option value='Llamada'>Llamada</option>
                                     <option value='Chatbot'>Chatbot</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-2">
                                 <label for="">Estado</label>
                                 <select class="form-control" name="" id="" v-model="estadoReporte" @change="getMisSolicitudes">
-                                    <option value="" disabled>Selecciona una opcion</option>
+                                    <option value="" disabled>Selecciona</option>
                                     <option value='Sin atender'>Sin atender</option>
                                     <option value='Atendiendo'>Atendiendo</option>
                                     <option value='Suspendida'>Suspendida</option>
@@ -60,7 +60,15 @@
                                     <option value='Cerrada'>Cerrada</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-5">
+                            <div class="form-group col-md-2">
+                                <div class="form-group">
+                                    <label for="">Busqueda por ID</label>
+                                    <input type="text"
+                                        class="form-control" name="busquedaid" id="busquedaid" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getMisSolicitudes">
+                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
                                 <div class="form-group">
                                     <label for="">Busqueda por Descripcion</label>
                                     <input type="text"
@@ -130,7 +138,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes Asignadas</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Mis Solicitudes</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>

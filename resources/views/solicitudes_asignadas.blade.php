@@ -6,35 +6,34 @@
 
 
 
-<div id="solicitudes" class="container-fluid">
+<div id="mis_solicitudes" class="container-fluid">
     <div class="row">
         <!-- Tarjeta Listado de solicitudes -->
-        <div class="col-xl-12 col-lg-12">
+        <div class="col-xl-12 col-lg-9">
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Tus solicitudes Asignadas</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Tus solicitudes Asignadas</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                             <div class="dropdown-header">Opciones:</div>
-                            <button class="dropdown-item" @click="getSolicitudes()">Recargar</button>
-                            <button class="dropdown-item" v-show="!ocultarListaSolicitudes" @click="ocultarListaSolicitudes = true">Ocultar</button>
-                            <button class="dropdown-item" v-show="ocultarListaSolicitudes" @click="ocultarListaSolicitudes = false">Mostrar</button>
+                            <button class="dropdown-item" v-show="!ocultarTabla" @click="ocultarTabla = true">Ocultar</button>
+                            <button class="dropdown-item" v-show="ocultarTabla" @click="ocultarTabla = false">Mostrar</button>
                         
                         </div>
                     </div>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body" v-show="!ocultarListaSolicitudes">
+                <div class="card-body" v-show="!ocultarTabla">
                     <div class=" mt-4 mb-2  container-fluid border-bottom">
-                        <h1>Listado de Solicitudes</h1>
+                        <h1>Solicitudes Asignadas</h1>
                         <div class="form-row">
                             <div class="form-group col-md-1">
                                 <label for="">Paginado</label>
-                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudes">
+                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getMisSolicitudes">
                                     <option value='10'>10</option>
                                     <option value='50'>50</option>
                                     <option value='100'>100</option>
@@ -42,7 +41,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="">Medio de Reporte</label>
-                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudes">
+                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getMisSolicitudes">
                                     <option value="" disabled>Selecciona una opcion</option>
                                     <option value='Internet'>Internet</option>
                                     <option value='Personal'>Personal</option>
@@ -52,7 +51,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="">Estado</label>
-                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudes">
+                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getMisSolicitudes">
                                     <option value="" disabled>Selecciona una opcion</option>
                                     <option value='Sin atender'>Sin atender</option>
                                     <option value='Atendiendo'>Atendiendo</option>
@@ -65,17 +64,16 @@
                                 <div class="form-group">
                                     <label for="">Busqueda por Descripcion</label>
                                     <input type="text"
-                                        class="form-control" name="busqueda" id="busqueda" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudes">
+                                        class="form-control" name="busqueda" id="busqueda" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getMisSolicitudes">
                                     <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
                                 </div>
                             </div>
                         </div>
                     
-                        <table class="table table-small">
+                        <table class="table table-small" >
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Asignada a</th>
                                     <th>Descripcion</th>
                                     <th>Fecha</th>
                                     <th>Estado</th>
@@ -83,18 +81,15 @@
                                     <th>Responder</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr v-for="s in Solicitudes">
+                            <tbody >
+                                <tr v-for="s in MisSolicitudes">
                                     <td>@{{s.id_solicitud}}</td>
-                                    <td>
-                                        <label v-for="u in s.usuario_many">@{{u.correo}}</label>
-                                        <label v-if="s.usuario_many.length == 0">Sin asignar</label>
-                                    </td>
+                                    
                                     <td>@{{s.descripcion}}</td>
                                     <td>@{{s.fecha_creacion}}</td>
                                     <td>@{{s.estatus}}</td>
                                     <td>@{{s.medio_reporte}}</td>
-                                    <td><a type="button" class="btn btn-outline-primary" :href="'seguimiento/'+s.id_solicitud">Responder</a></td>
+                                    <td><a type="button" class="btn btn-outline-primary" :href="'/seguimiento/'+s.id_solicitud">Responder</a></td>
                                 </tr>
                            
                             </tbody>
@@ -128,7 +123,7 @@
         </div>
     
         
-    </div>  
+    </div>    
     <div class="row">
         <!-- Grafica Dona numero De Solicitudes por tipo -->
         <div class="col-xl-12 col-lg-5" id="graficas">
@@ -162,8 +157,7 @@
                 </div>
             </div>
         </div>
-    </div>  
-   
+    </div>
 </div>
 
 <!-- /.container-fluid -->
@@ -188,7 +182,6 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                 <a class="btn btn-primary" href="login.html">Logout</a>
-                
             </div>
         </div>
     </div>
@@ -205,7 +198,7 @@
 
 
 <!-- Scripts VUE -->
-<script src="{{asset('assets/vue/solicitudes.js')}}"></script>
+<script src="{{asset('assets/vue/solicitudes_asignadas.js')}}"></script>
 
 
 

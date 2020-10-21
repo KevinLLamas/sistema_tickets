@@ -1,5 +1,5 @@
 new Vue({
-    el: '#mis_solicitudes',
+    el: '#mis_solicitudes_asignadas',
     data:{
         numReportes:[],
         tipoEstatus:[],
@@ -14,7 +14,6 @@ new Vue({
         estadoReporte:'',
         numFiltro: '10',
         busqueda: '',
-        busquedaid: '',
         pagination: {
             'total'         : 0,
             'current_page'  : 0,
@@ -108,7 +107,7 @@ new Vue({
             }
         },
         getNumSolicitudesByStatus:async function(){
-            url="get_Num_Solicitudes_ByStatus_mis_solicitudes";
+            url="get_Num_Solicitudes_ByStatus_Usuario";
             data= await axios.post(url,{
                 idUsuario:1,
             })
@@ -161,18 +160,17 @@ new Vue({
         },
         
         getMisSolicitudes: function(page){
-            var url = 'get_mis_solicitudes';
+            var url = 'get_solicitudes_asignadas';
             axios.post(url,{
                 page: page,
                 busqueda: this.busqueda,
                 num: this.numFiltro,
                 medio: this.medioReporte,
                 estado: this.estadoReporte,
-                idUsuario: 1,
-                busquedaid: this.busquedaid,
+                idUsuario:1,
             })
             .then(response => {
-                console.log(response.data);
+                console.log(response.data.data);
                 this.pagination=response.data;
                 this.MisSolicitudes=response.data.data;
             });

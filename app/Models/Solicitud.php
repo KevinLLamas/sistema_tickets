@@ -8,7 +8,7 @@ class Solicitud extends Model
     public $timestamps = false;
 
     public function usuario_many(){
-        return $this->belongsToMany('App\Models\Usuario','Solicitud_usuario','id_solicitud','id_usuario');
+        return $this->belongsToMany('App\Models\Usuario','solicitud_usuario','id_solicitud','id_usuario');
     }
 
     public function subcategoria(){
@@ -25,5 +25,8 @@ class Solicitud extends Model
     }
     public function categoria(){
     	return $this->hasMany('App\Models\Categoria', 'id_solicitud');
+    }
+    public function solicitud_usuario(){
+    	return $this->hasMany('App\Models\Solicitud_usuario', 'id_solicitud');
     }
 }
