@@ -35,59 +35,73 @@ class SolicitudController extends Controller
     public function guardar(Request $request)
     {
         //return $request->all();
-        $solicitud = new Solicitud;
-        $solicitud->id_usuario = 1;
-        $solicitud->estatus = "Sin atender";
-        $solicitud->medio_reporte = "Internet"; 
-        $solicitud->id_perfil = $request->input('solicitud.perfil');     
-        $solicitud->id_subcategoria = $request->input('solicitud.subcategoria');
-        $solicitud->descripcion = $request->input('solicitud.descripcion');
-        $solicitud->correo_atencion = $request->input('solicitud.correo_contacto');
-        $solicitud->necesita_respuesta = $request->input('solicitud.necesita');
-        $solicitud->fecha_creacion = now();
-        $solicitud -> save();
-        $id_solicitud = $solicitud->id_solicitud;
-
-        $datos = $request->input('datos');
-        foreach ($datos as $key)
+        if(filter_var($request->input('solicitud.correo_contacto'), FILTER_VALIDATE_EMAIL))
         {
-            $solicitud_dato = new Solicitud_dato_adicional;
-            $solicitud_dato->id_solicitud = $id_solicitud;
-            $solicitud_dato->valor = $key['respuesta'];
-            $solicitud_dato->tipo_dato = $key['model'];
-            $solicitud_dato -> save();
-        }
+            $solicitud = new Solicitud;
+            $solicitud->id_usuario = 1;
+            $solicitud->estatus = "Sin atender";
+            $solicitud->medio_reporte = "Internet"; 
+            $solicitud->id_perfil = $request->input('solicitud.perfil');     
+            $solicitud->id_subcategoria = $request->input('solicitud.subcategoria');
+            $solicitud->descripcion = $request->input('solicitud.descripcion');
+            $solicitud->correo_atencion = $request->input('solicitud.correo_contacto');
+            $solicitud->necesita_respuesta = $request->input('solicitud.necesita');
+            $solicitud->fecha_creacion = now();
+            $solicitud -> save();
+            $id_solicitud = $solicitud->id_solicitud;
 
-        $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->get();
-        foreach ($departamentos as $departamento)
-        {
-            $solicitud_departamento = new Solicitud_departamento;
-            $solicitud_departamento->id_solicitud = $id_solicitud;
-            $solicitud_departamento->id_departamento = $departamento->id_departamento;
-            $solicitud_departamento->aceptada = 'true';
-            $solicitud_departamento->razon = '';
-            $solicitud_departamento->save();
-        }
+            $datos = $request->input('datos');
+            foreach ($datos as $key)
+            {
+                $solicitud_dato = new Solicitud_dato_adicional;
+                $solicitud_dato->id_solicitud = $id_solicitud;
+                $solicitud_dato->valor = $key['respuesta'];
+                $solicitud_dato->tipo_dato = $key['model'];
+                $solicitud_dato -> save();
+            }
 
-        $solicitud_atencion = new Solicitud_atencion;
-        $solicitud_atencion->id_solicitud = $id_solicitud;
-        $solicitud_atencion->id_usuario = 1;
-        $solicitud_atencion->detalle = 'Solicitud creada';
-        $solicitud_atencion->tipo_respuesta = 'Todos';
-        $solicitud_atencion->momento =now();
-        $solicitud_atencion->tipo_at = 'Creacion';
-        $solicitud_atencion->save();
+            $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->get();
+            foreach ($departamentos as $departamento)
+            {
+                $solicitud_departamento = new Solicitud_departamento;
+                $solicitud_departamento->id_solicitud = $id_solicitud;
+                $solicitud_departamento->id_departamento = $departamento->id_departamento;
+                $solicitud_departamento->aceptada = 'true';
+                $solicitud_departamento->razon = '';
+                $solicitud_departamento->save();
+            }
 
-        $atencion_externos = new Atencion_externos;
-        $atencion_externos->solicitud =  Crypt::encryptString($id_solicitud);
-        $atencion_externos->codigo =  $this->generarCodigo();
-        $atencion_externos->save();
-        if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion) == 'Enviado');
+            $solicitud_atencion = new Solicitud_atencion;
+            $solicitud_atencion->id_solicitud = $id_solicitud;
+            $solicitud_atencion->id_usuario = 1;
+            $solicitud_atencion->detalle = 'Solicitud creada';
+            $solicitud_atencion->tipo_respuesta = 'Todos';
+            $solicitud_atencion->momento =now();
+            $solicitud_atencion->tipo_at = 'Creacion';
+            $solicitud_atencion->save();
+
+            $atencion_externos = new Atencion_externos;
+            $atencion_externos->solicitud =  Crypt::encryptString($id_solicitud);
+            $atencion_externos->codigo =  $this->generarCodigo();
+            $atencion_externos->save();
+            if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion) == 'Enviado');
+                return response()->json([
+                    'status' => true, 
+                    'id_solicitud' =>$id_solicitud,
+                    'id_atencion' =>$solicitud_atencion->id,
+                ]);
             return response()->json([
-                'status' => true, 
-                'id_solicitud' =>$id_solicitud,
-                'id_atencion' =>$solicitud_atencion->id,
+                'status' => false, 
+                'message' => 'Fue imposible enviar el correo de confirmación.'
             ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => false, 
+                'message' => 'Correo invalido.'
+            ]);
+        }
     }
     public function save_files(Request $request)
     {
