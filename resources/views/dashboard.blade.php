@@ -43,7 +43,7 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Opciones:</div>
-                                            <button class="dropdown-item" @click="getSolicitudes()">Recargar</button>
+                                            <button class="dropdown-item" @click="getSolicitudesAdmin()">Recargar</button>
                                             <button class="dropdown-item" v-show="!ocultarListaSolicitudes" @click="ocultarListaSolicitudes = true">Ocultar</button>
                                             <button class="dropdown-item" v-show="ocultarListaSolicitudes" @click="ocultarListaSolicitudes = false">Mostrar</button>
                                         
@@ -57,7 +57,7 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-1">
                                                 <label for="">Paginado</label>
-                                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudes">
+                                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudesAdmin">
                                                     <option value='10'>10</option>
                                                     <option value='50'>50</option>
                                                     <option value='100'>100</option>
@@ -65,18 +65,18 @@
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label for="">Medio de Reporte</label>
-                                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudes">
-                                                    <option value="" disabled>Selecciona una opcion</option>
+                                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesAdmin">
+                                                    <option value="" disabled>Selecciona</option>
                                                     <option value='Internet'>Internet</option>
                                                     <option value='Personal'>Personal</option>
                                                     <option value='Llamada'>Llamada</option>
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-md-2">
                                                 <label for="">Estado</label>
-                                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudes">
-                                                    <option value="" disabled>Selecciona una opcion</option>
+                                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesAdmin">
+                                                    <option value="" disabled>Selecciona</option>
                                                     <option value='Sin atender'>Sin atender</option>
                                                     <option value='Atendiendo'>Atendiendo</option>
                                                     <option value='Suspendida'>Suspendida</option>
@@ -84,11 +84,20 @@
                                                     <option value='Cerrada'>Cerrada</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-5">
+                                            
+                                            <div class="form-group col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Busqueda por ID</label>
+                                                    <input type="text"
+                                                        class="form-control" name="busquedaid1" id="busquedaid1" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesAdmin">
+                                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por Descripcion</label>
                                                     <input type="text"
-                                                        class="form-control" name="busqueda" id="busqueda" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudes">
+                                                        class="form-control" name="busqueda1" id="busqueda1" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudesAdmin">
                                                     <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
                                                 </div>
                                             </div>
@@ -172,7 +181,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-3">
-                                        <canvas id="myPieChart"></canvas>
+                                        <canvas id="SolicitudesAdminChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
                                         <span class="mr-2" v-for="(e,index) in Estatus">
@@ -218,7 +227,7 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-1">
                                                 <label for="">Paginado</label>
-                                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getMisSolicitudes">
+                                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudesAsignadas">
                                                     <option value='10'>10</option>
                                                     <option value='50'>50</option>
                                                     <option value='100'>100</option>
@@ -226,18 +235,18 @@
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label for="">Medio de Reporte</label>
-                                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getMisSolicitudes">
-                                                    <option value="" disabled>Selecciona una opcion</option>
+                                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesAsignadas">
+                                                    <option value="" disabled>Selecciona</option>
                                                     <option value='Internet'>Internet</option>
                                                     <option value='Personal'>Personal</option>
                                                     <option value='Llamada'>Llamada</option>
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-md-2">
                                                 <label for="">Estado</label>
-                                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getMisSolicitudes">
-                                                    <option value="" disabled>Selecciona una opcion</option>
+                                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesAsignadas">
+                                                    <option value="" disabled>Selecciona</option>
                                                     <option value='Sin atender'>Sin atender</option>
                                                     <option value='Atendiendo'>Atendiendo</option>
                                                     <option value='Suspendida'>Suspendida</option>
@@ -245,11 +254,19 @@
                                                     <option value='Cerrada'>Cerrada</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-5">
+                                            <div class="form-group col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Busqueda por ID</label>
+                                                    <input type="text"
+                                                        class="form-control" name="busquedaid2" id="busquedaid2" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesAsignadas">
+                                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por Descripcion</label>
                                                     <input type="text"
-                                                        class="form-control" name="busqueda" id="busqueda" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getMisSolicitudes">
+                                                        class="form-control" name="busqueda2" id="busqueda2" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudesAsignadas">
                                                     <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
                                                 </div>
                                             </div>
@@ -332,7 +349,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-3">
-                                        <canvas id="myPieChart"></canvas>
+                                        <canvas id="SolicitudesAsignadasChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
                                         <span class="mr-2" v-for="(e,index) in Estatus">
@@ -377,7 +394,7 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-1">
                                                 <label for="">Paginado</label>
-                                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudes">
+                                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudesDepartamento">
                                                     <option value='10'>10</option>
                                                     <option value='50'>50</option>
                                                     <option value='100'>100</option>
@@ -385,18 +402,18 @@
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label for="">Medio de Reporte</label>
-                                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudes">
-                                                    <option value="" disabled>Selecciona una opcion</option>
+                                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesDepartamento">
+                                                    <option value="" disabled>Selecciona</option>
                                                     <option value='Internet'>Internet</option>
                                                     <option value='Personal'>Personal</option>
                                                     <option value='Llamada'>Llamada</option>
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-md-2">
                                                 <label for="">Estado</label>
-                                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudes">
-                                                    <option value="" disabled>Selecciona una opcion</option>
+                                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesDepartamento">
+                                                    <option value="" disabled>Selecciona</option>
                                                     <option value='Sin atender'>Sin atender</option>
                                                     <option value='Atendiendo'>Atendiendo</option>
                                                     <option value='Suspendida'>Suspendida</option>
@@ -404,11 +421,19 @@
                                                     <option value='Cerrada'>Cerrada</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-5">
+                                            <div class="form-group col-md-2">
+                                                <div class="form-group">
+                                                    <label for="">Busqueda por ID</label>
+                                                    <input type="text"
+                                                        class="form-control" name="busquedaid3" id="busquedaid3" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesDepartamento">
+                                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-4">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por Descripcion</label>
                                                     <input type="text"
-                                                        class="form-control" name="busqueda" id="busqueda" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudes">
+                                                        class="form-control" name="busqueda3" id="busqueda3" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudesDepartamento">
                                                     <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
                                                 </div>
                                             </div>
@@ -430,10 +455,8 @@
                                                 <tr v-for="s in Solicitudes">
                                                     <td>@{{s.id_solicitud}}</td>
                                                     <td>
-                                                        <label v-for="u in s.usuario">
-                                                        @{{u.correo}}
-                                                        </label>
-                                                        <label v-if="s.usuario.length==0">Sin asignar</label>
+                                                        <label v-for="u in s.usuario_many">@{{u.correo}}</label>
+                                                        <label v-if="s.usuario_many.length == 0">Sin asignar</label>
                                                     </td>
                                                     <td>@{{s.descripcion}}</td>
                                                     <td>@{{s.fecha_creacion}}</td>
@@ -497,7 +520,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-3">
-                                        <canvas id="myPieChart"></canvas>
+                                        <canvas id="SolicitudesDepartamentoChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
                                         <span class="mr-2" v-for="(e,index) in Estatus">
@@ -571,7 +594,7 @@
                                                 <div class="form-group">
                                                     <label for="">Busqueda por ID</label>
                                                     <input type="text"
-                                                        class="form-control" name="busquedaid" id="busquedaid" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getMisSolicitudes">
+                                                        class="form-control" name="busquedaid4" id="busquedaid4" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getMisSolicitudes">
                                                     <small id="helpId" class="form-text text-muted">Escribe el ID</small>
                                                 </div>
                                             </div>
@@ -579,7 +602,7 @@
                                                 <div class="form-group">
                                                     <label for="">Busqueda por Descripcion</label>
                                                     <input type="text"
-                                                        class="form-control" name="busqueda" id="busqueda" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getMisSolicitudes">
+                                                        class="form-control" name="busqueda4" id="busqueda4" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getMisSolicitudes">
                                                     <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
                                                 </div>
                                             </div>
@@ -662,7 +685,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-pie pt-4 pb-3">
-                                        <canvas id="myPieChart"></canvas>
+                                        <canvas id="MisSolicitudesChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
                                         <span class="mr-2" v-for="(e,index) in Estatus">

@@ -20,13 +20,19 @@ Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
 Route::post('save_files', [SolicitudController::class, 'save_files']);
 Route::get('getCampos', [SolicitudController::class, 'getCampos']);
 Route::post('buscar_usuario', [SolicitudController::class, 'buscar_usuario']);
-Route::post('get_Solicitudes', [SolicitudController::class, 'get_solicitudes']);
-Route::get('get_Num_Solicitudes_ByStatus_General', [SolicitudController::class, 'get_num_reportes_by_status_general']);
-Route::post('get_MySolicitudes_Dep', [SolicitudController::class, 'get_MySolicitudes_Dep']);
+//obtener solicitudes
+Route::post('get_solicitudes_admin', [SolicitudController::class, 'get_solicitudes_admin']);
+Route::post('get_solicitudes_departamento', [SolicitudController::class, 'get_solicitudes_departamento']);
+Route::post('get_mis_solicitudes', [SolicitudController::class, 'get_mis_solicitudes']);
+Route::post('get_solicitudes_asignadas', [SolicitudController::class, 'get_solicitudes_asignadas']);
+//datos para graficas
+Route::get('get_num_solicitudes_bystatus_admin', [SolicitudController::class, 'get_num_solicitudes_bystatus_admin']);
+Route::get('get_num_solicitudes_bystatus_mis_solicitudes', [SolicitudController::class, 'get_num_solicitudes_bystatus_mis_solicitudes']);
+Route::get('get_num_solicitudes_bystatus_departamento', [SolicitudController::class, 'get_num_solicitudes_bystatus_departamento']);
+Route::get('get_num_solicitudes_bystatus_asignadas', [SolicitudController::class, 'get_num_solicitudes_bystatus_asignadas']);
 
 //SOLICITAR SERVICIO
 Route::get('/alta_solicitud_servicio', function(){return view('alta_solicitud_servicio');});
-
 
 //CATEGORIAS
 Route::get('categorias', [CategoriaController::class, 'categorias']);
@@ -46,12 +52,7 @@ Route::get('solicitudes_asignadas', function () {return view('solicitudes_asigna
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
 
 //USUARIO
-Route::post('get_Num_Solicitudes_ByStatus_Dep', [UsuarioController::class, 'get_num_solicitudes_by_status_dep']);
-Route::post('get_Solicitudes_byUsuario', [UsuarioController::class, 'get_solicitudes_ByUsuario']);
-Route::post('get_Num_Solicitudes_ByStatus_Usuario', [UsuarioController::class, 'get_Num_Solicitudes_ByStatus_Usuario']);
-Route::post('get_Num_Solicitudes_ByStatus_mis_solicitudes', [SolicitudController::class, 'get_Num_Solicitudes_ByStatus_mis_solicitudes']);
-Route::post('get_mis_solicitudes', [UsuarioController::class, 'get_mis_solicitudes']);
-Route::post('get_solicitudes_asignadas', [UsuarioController::class, 'get_solicitudes_asignadas']);
+
 
 });
 

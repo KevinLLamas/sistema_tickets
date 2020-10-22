@@ -14,6 +14,7 @@ new Vue({
         estadoReporte:'',
         numFiltro: '10',
         busqueda: '',
+        busquedaid:'',
         pagination: {
             'total'         : 0,
             'current_page'  : 0,
@@ -26,11 +27,11 @@ new Vue({
         offset: 3
     },
     created: function(){
-       this.getMisSolicitudes();
+       this.getSolicitudesAsignadas();
        //this.getNumSolicitudesByStatus();
     },
     mounted: async function(){
-        await this.getNumSolicitudesByStatus();
+        await this.getNumSolicitudesByStatusAsignadas();
         //console.log("ok",this.Estatus);
         this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
         this.numEstatus=await this.Estatus.map(n=>n.total);
@@ -106,12 +107,11 @@ new Vue({
  
             }
         },
-        getNumSolicitudesByStatus:async function(){
-            url="get_Num_Solicitudes_ByStatus_Usuario";
-            data= await axios.post(url,{
-                idUsuario:1,
-            })
+        getNumSolicitudesByStatusAsignadas:async function(){
+            url="get_num_solicitudes_bystatus_asignadas";
+            data= await axios.get(url)
             .then(response=>{
+                console.log('Datos grafica ByStatus Asignadas');
                 console.log(response.data);
                 
                 this.Estatus= response.data;
@@ -126,7 +126,7 @@ new Vue({
             Chart.defaults.global.defaultFontColor = '#858796';
             console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
-            var ctx = document.getElementById("myPieChart");
+            var ctx = document.getElementById("SolicitudesAsignadasChart");
             var myPieChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -159,7 +159,7 @@ new Vue({
 
         },
         
-        getMisSolicitudes: function(page){
+        getSolicitudesAsignadas: function(page){
             var url = 'get_solicitudes_asignadas';
             axios.post(url,{
                 page: page,
@@ -167,9 +167,10 @@ new Vue({
                 num: this.numFiltro,
                 medio: this.medioReporte,
                 estado: this.estadoReporte,
-                idUsuario:1,
+                id: this.busquedaid,
             })
             .then(response => {
+                console.log('Solicitudes Asignadas');
                 console.log(response.data.data);
                 this.pagination=response.data;
                 this.MisSolicitudes=response.data.data;
@@ -177,7 +178,7 @@ new Vue({
         },
         siguientePagina: function(page){
             this.pagination.current_page = page;
-            this.getSolicitudes(page);
+            this.getSolicitudesAsignadas(page);
         },
     }
 });

@@ -14,6 +14,7 @@ new Vue({
         estadoReporte:'',
         numFiltro: '10',
         busqueda: '',
+        busquedaid:'',
         pagination: {
             'total'         : 0,
             'current_page'  : 0,
@@ -26,11 +27,11 @@ new Vue({
         offset: 3
     },
     created: function(){
-       this.getSolicitudes();
-       //this.getNumSolicitudesByStatus();
+       this.getSolicitudesDepartamento();
+       //this.getNumSolicitudesByStatusDepartamento();
     },
-    /*mounted: async function(){
-        await this.getNumSolicitudesByStatus();
+    mounted: async function(){
+        await this.getNumSolicitudesByStatusDepartamento();
         //console.log("ok",this.Estatus);
         this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
         this.numEstatus=await this.Estatus.map(n=>n.total);
@@ -42,7 +43,7 @@ new Vue({
         //this.colorEstatus=await this.Estatus.map(c=>c.color);
         //await console.log("ök",colorEstatus);
         this.generar_Grafica_ByStatus();
-    },*/
+    },
     computed:{
         isActived: function(){
             return this.pagination.current_page;
@@ -106,10 +107,11 @@ new Vue({
  
             }
         },
-        getNumSolicitudesByStatus:async function(){
-            url="get_Num_Solicitudes_ByStatus_Dep";
+        getNumSolicitudesByStatusDepartamento:async function(){
+            url="get_num_solicitudes_bystatus_departamento";
             data= await axios.get(url)
             .then(response=>{
+                console.log('Datos grafica ByStatus Departamento');
                 console.log(response.data);
                 
                 this.Estatus= response.data;
@@ -124,7 +126,7 @@ new Vue({
             Chart.defaults.global.defaultFontColor = '#858796';
             console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
-            var ctx = document.getElementById("myPieChart");
+            var ctx = document.getElementById("SolicitudesDepartamentoChart");
             var myPieChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -157,18 +159,18 @@ new Vue({
 
         },
         
-        getSolicitudes: function(page){
-            var url = 'get_MySolicitudes_Dep';
+        getSolicitudesDepartamento: function(page){
+            var url = 'get_solicitudes_departamento';
             axios.post(url,{
                 page: page,
                 busqueda: this.busqueda,
                 num: this.numFiltro,
                 medio: this.medioReporte,
                 estado: this.estadoReporte,
-                idUsuario: 1,
-                idDep: 1
+                id_solicitud: this.busquedaid,
             })
             .then(response => {
+                console.log('Solicitudes Departamento');
                 console.log(response.data);
                 this.pagination=response.data;
                 this.Solicitudes=response.data.data;
@@ -176,7 +178,7 @@ new Vue({
         },
         siguientePagina: function(page){
             this.pagination.current_page = page;
-            this.getSolicitudes(page);
+            this.getSolicitudesDepartamento(page);
         },
     }
 });

@@ -14,6 +14,7 @@ new Vue({
         estadoReporte:'',
         numFiltro: '10',
         busqueda: '',
+        busquedaid:'',
         pagination: {
             'total'         : 0,
             'current_page'  : 0,
@@ -26,11 +27,11 @@ new Vue({
         offset: 3
     },
     created: function(){
-       this.getSolicitudes();
+       this.getSolicitudesAdmin();
        //this.getNumSolicitudesByStatus();
     },
     mounted: async function(){
-        await this.getNumSolicitudesByStatus();
+        await this.getNumSolicitudesByStatusAdmin();
         //console.log("ok",this.Estatus);
         this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
         this.numEstatus=await this.Estatus.map(n=>n.total);
@@ -114,11 +115,12 @@ new Vue({
             }
             return color;
         },
-        getNumSolicitudesByStatus:async function(){
-            url="get_Num_Solicitudes_ByStatus_General";
+        getNumSolicitudesByStatusAdmin:async function(){
+            url="get_num_solicitudes_bystatus_admin";
             data= await axios.get(url)
             .then(response=>{
-                //console.log(response.data);
+                console.log('Datos grafica ByStatus Admin');
+                console.log(response.data);
                 
                 this.Estatus= response.data;
             })
@@ -132,7 +134,7 @@ new Vue({
             Chart.defaults.global.defaultFontColor = '#858796';
             console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
-            var ctx = document.getElementById("myPieChart");
+            var ctx = document.getElementById("SolicitudesAdminChart");
             var myPieChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -165,16 +167,18 @@ new Vue({
 
         },
         
-        getSolicitudes: function(page){
-            var url = 'get_Solicitudes';
+        getSolicitudesAdmin: function(page){
+            var url = 'get_solicitudes_admin';
             axios.post(url,{
                 page: page,
                 busqueda: this.busqueda,
                 num: this.numFiltro,
                 medio: this.medioReporte,
                 estado: this.estadoReporte,
+                id: this.busquedaid,
             })
             .then(response => {
+                console.log('Solicitudes Admin');
                 console.log(response.data);
                 this.pagination=response.data;
                 this.Solicitudes=response.data.data;
@@ -182,7 +186,7 @@ new Vue({
         },
         siguientePagina: function(page){
             this.pagination.current_page = page;
-            this.getSolicitudes(page);
+            this.getSolicitudesAdmin(page);
         },
     }
 });

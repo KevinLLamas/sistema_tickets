@@ -28,10 +28,10 @@ new Vue({
     },
     created: function(){
        this.getMisSolicitudes();
-       //this.getNumSolicitudesByStatus();
+       //this.getNumSolicitudesByStatusMisSolicitudes();
     },
     mounted: async function(){
-        await this.getNumSolicitudesByStatus();
+        await this.getNumSolicitudesByStatusMisSolicitudes();
         //console.log("ok",this.Estatus);
         this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
         this.numEstatus=await this.Estatus.map(n=>n.total);
@@ -107,12 +107,11 @@ new Vue({
  
             }
         },
-        getNumSolicitudesByStatus:async function(){
-            url="get_Num_Solicitudes_ByStatus_mis_solicitudes";
-            data= await axios.post(url,{
-                idUsuario:1,
-            })
+        getNumSolicitudesByStatusMisSolicitudes:async function(){
+            url="get_num_solicitudes_bystatus_mis_solicitudes";
+            data= await axios.get(url)
             .then(response=>{
+                console.log('Datos grafica ByStatus Mis Solicitudes');
                 console.log(response.data);
                 
                 this.Estatus= response.data;
@@ -127,7 +126,7 @@ new Vue({
             Chart.defaults.global.defaultFontColor = '#858796';
             console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
-            var ctx = document.getElementById("myPieChart");
+            var ctx = document.getElementById("MisSolicitudesChart");
             var myPieChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -168,10 +167,10 @@ new Vue({
                 num: this.numFiltro,
                 medio: this.medioReporte,
                 estado: this.estadoReporte,
-                idUsuario: 1,
                 busquedaid: this.busquedaid,
             })
             .then(response => {
+                console.log('Mis solicitudes');
                 console.log(response.data);
                 this.pagination=response.data;
                 this.MisSolicitudes=response.data.data;
@@ -179,7 +178,7 @@ new Vue({
         },
         siguientePagina: function(page){
             this.pagination.current_page = page;
-            this.getSolicitudes(page);
+            this.getMisSolicitudes(page);
         },
     }
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Solicitud;
+use App\Models\Usuario;
 use Illuminate\Support\Facades\DB;
 use App\Models\Subcategoria;
 use App\Models\Campo_perfil_subcategoria;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\Atencion_externos;
 use App\Models\Subcategoria_departamento;
 use App\Models\Solicitud_departamento;
+use App\Models\Departamentos;
 use Illuminate\Support\Facades\Session;
 class SolicitudController extends Controller
 {
@@ -306,52 +308,178 @@ class SolicitudController extends Controller
             ], 500);
         }
     }
-    public function get_solicitudes(Request $request){
+    public function get_solicitudes_admin(Request $request){
         $busqueda=$request->input('busqueda');
         $page=$request->input('page');
         $num=$request->input('num');
         $medio=$request->input('medio');
         $estado=$request->input('estado');
-        $solicitud=Solicitud::with('usuario_many')
-            ->where('estatus','like',"%$estado%")
-            ->where('descripcion','like',"%$busqueda%")
-            ->where('medio_reporte','like',"%$medio%")->paginate($num);
-        return $solicitud;
+        $id=$request->input('id');
+        
+        try{
+            $solicitud=Solicitud::with('usuario_many')
+                ->where('id_solicitud','like',"%$id%")
+                ->where('estatus','like',"%$estado%")
+                ->where('descripcion','like',"%$busqueda%")
+                ->where('medio_reporte','like',"%$medio%")->paginate($num);
+            return $solicitud;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
     }
-    public function get_MySolicitudes_Dep(Request $request){
+    public function get_solicitudes_departamento(Request $request){
         $busqueda=$request->input('busqueda');
         $page=$request->input('page');
         $num=$request->input('num');
         $medio=$request->input('medio');
         $estado=$request->input('estado');
-        $idUsuario=$request->input('idUsuario');
-        return $idDep= Session::get('id_departamento');
-        $solicitudes_dep=Solicitud::with('usuario_many','usuario.departamento')
+        $id_solicitud=$request->input('id_solicitud');
+        $idDep=Session::get('id_departamento');
         
-        ->whereHas('usuario.departamento',function($q)use($idDep){
-            $q->where('id',1);
-        })
-        ->paginate($num);
-        return $solicitudes_dep;
-    }
-    public function get_num_reportes_by_status_general(){
         
-        $num_status=Solicitud::select('solicitud.estatus',DB::raw('count(*) as total'))->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
-        return $num_status;
+        
+        try{
+            $solicitudes_dep=Departamentos::find($idDep)->solicitudes()
+                ->where('solicitud.id_solicitud','like',"%$id_solicitud%")
+                ->where('solicitud.descripcion','like',"%$busqueda%")
+                ->where('solicitud.medio_reporte','like',"%$medio%")
+                ->where('solicitud.estatus','like',"%$estado%")
+                ->with('usuario_many')
+            ->paginate($num);
+             return $solicitudes_dep;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
     }
-    public function get_Num_Solicitudes_ByStatus_mis_solicitudes(Request $request){
+    public function get_solicitudes_asignadas(Request $request){
         $idUsuario= Session::get('id_sgu');
-        $num_status=Solicitud::where('id_usuario',$idUsuario)->select('solicitud.estatus',DB::raw('count(*) as total'))->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
-        return $num_status;
-    }
-    public function get_num_reportes_by_status_dep(){
+        $busqueda=$request->input('busqueda');
+        $page=$request->input('page');
+        $num=$request->input('num');
+        $medio=$request->input('medio');
+        $estado=$request->input('estado');
+        $id=$request->input('id');
+        //$idUsuario=$request->input('idUsuario');
         
-        $num_status=Solicitud::select('solicitud.estatus',DB::raw('count(*) as total'))->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
-        return $num_status;
+        try{
+            $solicitud_usuario=Usuario::find($idUsuario)->solicitudes()
+            ->where('solicitud.id_solicitud','like',"%$id%")
+            ->where('solicitud.descripcion','like',"%$busqueda%")
+            ->where('solicitud.medio_reporte','like',"%$medio%")
+            ->where('solicitud.estatus','like',"%$estado%")
+    
+            ->paginate($num);
+            return $solicitud_usuario;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
+        
+
+        
     }
-    public function get_num_reportes_by_medio(){
+    public function get_mis_solicitudes(Request $request){
+        
+        $idUsuario= Session::get('id_sgu');
+        $busqueda = $request->input('busqueda');
+        $busquedaid = $request->input('busquedaid');
+        $page = $request->input('page');
+        $num = $request->input('num');
+        $medio = $request->input('medio');
+        $estado = $request->input('estado');
+        try{
+            $solicitud_usuario = Solicitud::where('id_usuario',$idUsuario)
+            ->where('id_solicitud','like',"%$busquedaid%")
+            ->where('descripcion','like',"%$busqueda%")
+            ->where('medio_reporte','like',"%$medio%")
+            ->where('estatus','like',"%$estado%")
+            ->paginate($num);
+       
+        return $solicitud_usuario;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
+        
+        
+    }
+    
+    public function get_num_solicitudes_bystatus_admin(){
+        try{
+            $num_status=Solicitud::select('solicitud.estatus',DB::raw('count(*) as total'))
+            ->groupBy('solicitud.estatus')
+            ->orderBy('total','DESC')
+            ->get();
+            return $num_status;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
+    }
+    public function get_num_solicitudes_bystatus_departamento(Request $request){
+        
+        $idDep=Session::get('id_departamento');
+        
+        try{
+            $num_status=Departamentos::find($idDep)
+            ->solicitudes()
+            ->select('solicitud.*',DB::raw('count(*) as total'))
+            ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+            return $num_status;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
 
     }
+    public function get_num_solicitudes_bystatus_asignadas(Request $request){
+        
+        $idUsuario=Session::get('id_sgu');
+        
+        try{
+            $num_status=Usuario::find($idUsuario)
+            ->solicitudes()
+            ->select('solicitud.estatus',DB::raw('count(*) as total'))
+            ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+            return $num_status;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
+
+    }
+    public function get_num_solicitudes_bystatus_mis_solicitudes(Request $request){
+        $idUsuario=Session::get('id_sgu');
+        
+        try{
+            $num_status=Solicitud::where('id_usuario',$idUsuario)
+            ->select('solicitud.estatus',DB::raw('count(*) as total'))
+            ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+            return $num_status;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>''
+            ]);
+        }
+    }
+    
     public function insert(Request $request){
 
         //Insert a tabla Solicitud

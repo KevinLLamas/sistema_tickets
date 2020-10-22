@@ -10,7 +10,9 @@ class Solicitud extends Model
     public function usuario_many(){
         return $this->belongsToMany('App\Models\Usuario','solicitud_usuario','id_solicitud','id_usuario');
     }
-
+    public function departamento(){
+        return $this->belongsToMany('App\Models\Departamentos','solicitud_departamento','id_solicitud','id_departamento');
+    }
     public function subcategoria(){
     	return $this->hasOne('App\Models\Subcategoria', 'id', 'id_subcategoria');
     }
