@@ -712,10 +712,9 @@
 <!-- Chart.js -->
 <script src="{{asset('assets/vendor/chart.js/Chart.min.js')}}"></script>
 <!-- Scripts VUE -->
-<script src="{{asset('assets/vue/mis_solicitudes.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes.js')}}"></script>
-<script src="{{asset('assets/vue/solicitudes_departamento.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes_asignadas.js')}}"></script>
-
+<script src="{{asset('assets/vue/solicitudes_departamento.js')}}"></script>
+<script src="{{asset('assets/vue/mis_solicitudes.js')}}"></script>
 
 @endsection

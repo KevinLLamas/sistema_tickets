@@ -368,14 +368,19 @@ class SolicitudController extends Controller
         //$idUsuario=$request->input('idUsuario');
         
         try{
-            $solicitud_usuario=Usuario::find($idUsuario)->solicitudes()
-            ->where('solicitud.id_solicitud','like',"%$id%")
-            ->where('solicitud.descripcion','like',"%$busqueda%")
-            ->where('solicitud.medio_reporte','like',"%$medio%")
-            ->where('solicitud.estatus','like',"%$estado%")
-    
-            ->paginate($num);
-            return $solicitud_usuario;
+            $solicitud_usuario = Usuario::find($idUsuario);
+            if(!is_null($solicitud_usuario))
+                return $solicitud_usuario->solicitudes()
+                ->where('solicitud.id_solicitud','like',"%$id%")
+                ->where('solicitud.descripcion','like',"%$busqueda%")
+                ->where('solicitud.medio_reporte','like',"%$medio%")
+                ->where('solicitud.estatus','like',"%$estado%")
+                ->paginate($num);
+            else
+                return response()->json([
+                    'status' => false,
+                    'data' =>''
+                ]);
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
