@@ -223,7 +223,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body" v-show="!ocultarTabla">
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
-                                        <h1>Mis Solicitudes</h1>
+                                        <h1>Solicitudes Asignadas</h1>
                                         <div class="form-row">
                                             <div class="form-group col-md-1">
                                                 <label for="">Paginado</label>

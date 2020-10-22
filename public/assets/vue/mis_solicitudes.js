@@ -73,16 +73,16 @@ new Vue({
     methods:{
         asignarColor:function(tipo){
             if (tipo == 'Sin atender') {
-                return 'text-danger'
+                return 'text-primary'
             } 
             else if (tipo == 'Atendiendo') {
-                return 'text-warning'
+                return 'text-info'
             } 
             else if (tipo == 'Suspendida') {
-                return 'text-dark'
+                return 'text-secundary'
             } 
             else if (tipo == 'Cancelada') {
-                return 'text-info'
+                return 'text-warning'
             } 
             else if (tipo == 'Cerrada') {
                 return 'text-success'
@@ -91,19 +91,19 @@ new Vue({
         },
         asignarColorHex:function(tipo){
             if (tipo == 'Sin atender') {
-                return '#d9534f'
+                return '#E9004C'
             } 
             else if (tipo == 'Atendiendo') {
-                return '#f0ad4e'
+                return '#007bff'
             } 
             else if (tipo == 'Suspendida') {
-                return '#343a40'
+                return '#6c757d'
             } 
             else if (tipo == 'Cancelada') {
-                return '#5bc0de'
+                return '#ffc107'
             } 
             else if (tipo == 'Cerrada') {
-                return '#5cb85c'
+                return '#28a745'
  
             }
         },
