@@ -9,6 +9,7 @@ new Vue({
 
         estado_ticket:'',
         ocultarTabla:false,
+        ocultarGrafica:false,
         MisSolicitudes:[],
         medioReporte:'',
         estadoReporte:'',
@@ -31,18 +32,7 @@ new Vue({
        //this.getNumSolicitudesByStatus();
     },
     mounted: async function(){
-        await this.getNumSolicitudesByStatusAsignadas();
-        //console.log("ok",this.Estatus);
-        this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
-        this.numEstatus=await this.Estatus.map(n=>n.total);
-        
-        await this.Estatus.forEach(e => {
-            this.colorEstatus.push(this.asignarColor(e.estatus));
-            this.coloresHex.push(this.asignarColorHex(e.estatus))
-        });
-        //this.colorEstatus=await this.Estatus.map(c=>c.color);
-        //await console.log("ök",colorEstatus);
-        this.generar_Grafica_ByStatus();
+        this.generarGraficaAsignadas();
     },
     computed:{
         isActived: function(){
@@ -71,6 +61,17 @@ new Vue({
         }
     },
     methods:{
+        generarGraficaAsignadas:async function(){
+            await this.getNumSolicitudesByStatusAsignadas();
+            this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
+            this.numEstatus=await this.Estatus.map(n=>n.total);
+            
+            await this.Estatus.forEach(e => {
+                this.colorEstatus.push(this.asignarColor(e.estatus));
+                this.coloresHex.push(this.asignarColorHex(e.estatus))
+            });
+            this.generar_Grafica_ByStatus();
+        },
         asignarColor:function(tipo){
             if (tipo == 'Sin atender') {
                 return 'text-primary'
