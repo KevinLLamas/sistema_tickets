@@ -6,13 +6,6 @@
 	<!-- Page Heading -->
 	<h1 class="h1 text-gray-800">@{{ seguimiento.descripcion }}</h1>
 	<div v-if="seguimiento.estatus">
-		<!--select class="selectpicker my-2" data-style="btn-primary" v-model="seguimiento.estatus" @change="cambiarEstatus">
-			<option value="" disabled>Seleccione una opción</option>
-			<option option="Sin atender">Sin atender</option>
-			<option option="Atendiendo">Atendiendo</option>
-			<option option="Suspendida">Suspendida</option>
-			<option option="Cerrada">Cerrada</option>
-		</select-->
 		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()">
 			<option value="" disabled>Seleccione una opción</option>
 			<option option="Sin atender">Sin atender</option>

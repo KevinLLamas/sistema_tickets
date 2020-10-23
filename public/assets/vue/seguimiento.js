@@ -277,28 +277,26 @@ new Vue({
         },
         validatePermission: function()
         {
-            if(this.user.rol === "ADMIN" || this.user.rol === "SUPER")
+            for(var i = 0; i < this.seguimiento.departamento.length; i++)
             {
-                for(var i = 0; i < this.seguimiento.departamento.length; i++)
-                {
-                    if(this.seguimiento.departamento[i].id == this.user.id_departamento)
-                        this.departamentoValido = this.seguimiento.departamento[i];
-                }
-                var c = 0;
-                for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
-                {
-                    for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
-                    {
-                        //console.log(this.departamentoValido.integrantes[i].id);
-                        if(this.departamentoValido.integrantes[i].id == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
-                        { 
-                            this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id;
-                            c++;
-                        }
-                    }                    
-                }    
-                this.getDepartamentos();            
+                console.log(this.seguimiento.departamento);
+                if(this.seguimiento.departamento[i].id == this.user.id_departamento)
+                    this.departamentoValido = this.seguimiento.departamento[i];
             }
+            var c = 0;
+            for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
+            {
+                for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
+                {
+                    //console.log(this.departamentoValido.integrantes[i].id);
+                    if(this.departamentoValido.integrantes[i].id == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                    { 
+                        this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id;
+                        c++;
+                    }
+                }                    
+            }    
+            this.getDepartamentos();   
         },
         updateIntegrantes: function()
         {
