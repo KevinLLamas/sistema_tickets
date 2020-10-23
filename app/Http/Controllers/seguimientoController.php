@@ -23,17 +23,20 @@ class seguimientoController extends Controller
 {
 	public function seguimiento($id){
 		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
-		$atencion = $solicitud->atencion;
-		foreach($atencion as $at)
+		if($solicitud->atencion != null)
 		{
-			$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
-			if($at->id_usuario != null)
+			$atencion = $solicitud->atencion;
+			foreach($atencion as $at)
 			{
-				$usuario = Usuario::where('id', $at->id_usuario)->first();
-				$at->correo_usuario = $usuario->correo;
+				$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
+				if($at->id_usuario != null)
+				{
+					$usuario = Usuario::where('id', $at->id_usuario)->first();
+					$at->correo_usuario = $usuario->correo;
+				}
+				$at->adjuntos = $adjuntos;
+				
 			}
-			$at->adjuntos = $adjuntos;
-			
 		}
 		$departamentos = $solicitud->departamento;
 		foreach($departamentos as $dtp)
