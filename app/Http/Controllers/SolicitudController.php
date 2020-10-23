@@ -178,7 +178,7 @@ class SolicitudController extends Controller
                     <p>Para dar seguimiento a su solicitud de click <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$atencion_externos->solicitud'>aquí.</a></p>
                     <p>Para dar seguimiento a su solicitud de click <a href='http://127.0.0.1:8000/seguimiento_externo/$atencion_externos->solicitud'>aquí.</a></p>
                     <p>Su código de verificación es: $atencion_externos->codigo</p>
-            "; 
+            ";  
             $mail->Body = $mailContent;
 
             if(!$mail->send()){
