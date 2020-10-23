@@ -45,7 +45,7 @@
 			<option option="Cerrada">Cerrada</option>
 		</select>
 	</div>
-	<p><i class="far fa-clock"></i> 10-01-20 10:53 - Atendiendo: Juan López García
+	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo: Juan López García
 		<!--select class="selectpicker" data-live-search="true">
 			<option data-tokens="ketchup mustard">Juan López García</option>
 			<option data-tokens="mustard">Armando González Gutierrez</option>
@@ -56,10 +56,10 @@
 	<hr>
 
 	<h3 class="h3 text-gray-800">Resumen</h3>
-	<div v-if="seguimiento.usuario"  class="card bg-white ">
+	<div   class="card bg-white ">
 
 		<div class="card-body">
-			<p><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
+			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
 			<p class="card-text">@{{seguimiento.descripcion}}</p>
 			<p>
 				<small>
