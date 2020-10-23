@@ -55,17 +55,17 @@
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
                                         <h1>Listado de Solicitudes</h1>
                                         <div class="form-row">
-                                            <div class="form-group col-md-1">
-                                                <label for="">Paginado</label>
-                                                <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudesAdmin">
+                                            <div class="form-group col-lg-1">
+                                                <label for="paginado1">Paginado</label>
+                                                <select class="form-control" name="paginado1" id="paginado1" v-model="numFiltro" @change="getSolicitudesAdmin">
                                                     <option value='10'>10</option>
                                                     <option value='50'>50</option>
                                                     <option value='100'>100</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-lg-3">
                                                 <label for="">Medio de Reporte</label>
-                                                <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesAdmin">
+                                                <select class="form-control" name="medioReporte1" id="medioReporte1" v-model="medioReporte" @change="getSolicitudesAdmin">
                                                     <option value="" disabled>Selecciona</option>
                                                     <option value='Internet'>Internet</option>
                                                     <option value='Personal'>Personal</option>
@@ -73,9 +73,9 @@
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
-                                                <label for="">Estado</label>
-                                                <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesAdmin">
+                                            <div class="form-group col-lg-2">
+                                                <label for="estadoReporte1">Estado</label>
+                                                <select class="form-control" name="estadoReporte1" id="estadoReporte1" v-model="estadoReporte" @change="getSolicitudesAdmin">
                                                     <option value="" disabled>Selecciona</option>
                                                     <option value='Sin atender'>Sin atender</option>
                                                     <option value='Atendiendo'>Atendiendo</option>
@@ -85,24 +85,23 @@
                                                 </select>
                                             </div>
                                             
-                                            <div class="form-group col-md-2">
-                                                <div class="form-group">
-                                                    <label for="">Busqueda por ID</label>
-                                                    <input type="text"
-                                                        class="form-control" name="busquedaid1" id="busquedaid1" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesAdmin">
-                                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
-                                                </div>
+                                            <div class="form-group col-lg-2">
+                                                <label for="busquedaid1">Busqueda por ID</label>
+                                                <input type="text"
+                                                    class="form-control" name="busquedaid1" id="busquedaid1" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesAdmin">
+                                                <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                
                                             </div>
-                                            <div class="form-group col-md-4">
-                                                <div class="form-group">
-                                                    <label for="">Busqueda por Descripcion</label>
-                                                    <input type="text"
-                                                        class="form-control" name="busqueda1" id="busqueda1" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudesAdmin">
-                                                    <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
-                                                </div>
+                                            <div class="form-group col-lg-4">
+                                                
+                                                <label for="busqueda1">Busqueda por Descripcion</label>
+                                                <input type="text"
+                                                    class="form-control" name="busqueda1" id="busqueda1" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getSolicitudesAdmin">
+                                                <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
+                                                
                                             </div>
                                         </div>
-                                        <table class="table table-small">
+                                        <table class="table table-responsive">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -170,16 +169,15 @@
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-header">Opciones:</div>
+                                            <button class="dropdown-item" @click="generarGraficaAdmin()">Recargar Grafica</button>
+                                            <button class="dropdown-item" v-show="!ocultarGrafica" @click="ocultarGrafica = true">Ocultar</button>
+                                            <button class="dropdown-item" v-show="ocultarGrafica" @click="ocultarGrafica = false">Mostrar</button>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
+                                <div class="card-body" v-show="!ocultarGrafica">
                                     <div class="chart-pie pt-4 pb-3">
                                         <canvas id="SolicitudesAdminChart"></canvas>
                                     </div>
@@ -214,6 +212,7 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Opciones:</div>
+                                            <button class="dropdown-item" @click="getSolicitudesAsignadas()">Recargar</button>
                                             <button class="dropdown-item" v-show="!ocultarTabla" @click="ocultarTabla = true">Ocultar</button>
                                             <button class="dropdown-item" v-show="ocultarTabla" @click="ocultarTabla = false">Mostrar</button>
                                         
@@ -225,7 +224,7 @@
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
                                         <h1>Solicitudes Asignadas</h1>
                                         <div class="form-row">
-                                            <div class="form-group col-md-1">
+                                            <div class="form-group col-lg-1">
                                                 <label for="">Paginado</label>
                                                 <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudesAsignadas">
                                                     <option value='10'>10</option>
@@ -233,7 +232,7 @@
                                                     <option value='100'>100</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-lg-3">
                                                 <label for="">Medio de Reporte</label>
                                                 <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesAsignadas">
                                                     <option value="" disabled>Selecciona</option>
@@ -243,7 +242,7 @@
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-lg-2">
                                                 <label for="">Estado</label>
                                                 <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesAsignadas">
                                                     <option value="" disabled>Selecciona</option>
@@ -254,7 +253,7 @@
                                                     <option value='Cerrada'>Cerrada</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-lg-2">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por ID</label>
                                                     <input type="text"
@@ -262,7 +261,7 @@
                                                     <small id="helpId" class="form-text text-muted">Escribe el ID</small>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-md-4">
+                                            <div class="form-group col-lg-4">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por Descripcion</label>
                                                     <input type="text"
@@ -272,7 +271,7 @@
                                             </div>
                                         </div>
                                     
-                                        <table class="table table-small" >
+                                        <table class="table table-responsive" >
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -338,16 +337,15 @@
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-header">Opciones:</div>
+                                            <button class="dropdown-item" @click="generarGraficaAsignadas()">Recargar Grafica</button>
+                                            <button class="dropdown-item" v-show="!ocultarGrafica" @click="ocultarGrafica = true">Ocultar</button>
+                                            <button class="dropdown-item" v-show="ocultarGrafica" @click="ocultarGrafica = false">Mostrar</button>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
+                                <div class="card-body" v-show="!ocultarGrafica">
                                     <div class="chart-pie pt-4 pb-3">
                                         <canvas id="SolicitudesAsignadasChart"></canvas>
                                     </div>
@@ -380,7 +378,7 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Opciones:</div>
-                                            <button class="dropdown-item" @click="getSolicitudes()">Recargar</button>
+                                            <button class="dropdown-item" @click="getSolicitudesDepartamento()">Recargar</button>
                                             <button class="dropdown-item" v-show="!ocultarListaSolicitudes" @click="ocultarListaSolicitudes = true">Ocultar</button>
                                             <button class="dropdown-item" v-show="ocultarListaSolicitudes" @click="ocultarListaSolicitudes = false">Mostrar</button>
                                         
@@ -392,7 +390,7 @@
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
                                         <h1>Listado de Solicitudes</h1>
                                         <div class="form-row">
-                                            <div class="form-group col-md-1">
+                                            <div class="form-group col-lg-1">
                                                 <label for="">Paginado</label>
                                                 <select class="form-control" name="" id="" v-model="numFiltro" @change="getSolicitudesDepartamento">
                                                     <option value='10'>10</option>
@@ -400,7 +398,7 @@
                                                     <option value='100'>100</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-lg-3">
                                                 <label for="">Medio de Reporte</label>
                                                 <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesDepartamento">
                                                     <option value="" disabled>Selecciona</option>
@@ -410,7 +408,7 @@
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-lg-2">
                                                 <label for="">Estado</label>
                                                 <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesDepartamento">
                                                     <option value="" disabled>Selecciona</option>
@@ -421,7 +419,7 @@
                                                     <option value='Cerrada'>Cerrada</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-lg-2">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por ID</label>
                                                     <input type="text"
@@ -429,7 +427,7 @@
                                                     <small id="helpId" class="form-text text-muted">Escribe el ID</small>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-md-4">
+                                            <div class="form-group col-lg-4">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por Descripcion</label>
                                                     <input type="text"
@@ -439,7 +437,7 @@
                                             </div>
                                         </div>
                                     
-                                        <table class="table table-small">
+                                        <table class="table table-responsive">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -509,16 +507,15 @@
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-header">Opciones:</div>
+                                            <button class="dropdown-item" @click="generarGraficaDepartamento()">Recargar Grafica</button>
+                                            <button class="dropdown-item" v-show="!ocultarGrafica" @click="ocultarGrafica = true">Ocultar</button>
+                                            <button class="dropdown-item" v-show="ocultarGrafica" @click="ocultarGrafica = false">Mostrar</button>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
+                                <div class="card-body" v-show="!ocultarGrafica">
                                     <div class="chart-pie pt-4 pb-3">
                                         <canvas id="SolicitudesDepartamentoChart"></canvas>
                                     </div>
@@ -550,6 +547,7 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Opciones:</div>
+                                            <button class="dropdown-item" @click="getMisSolicitudes()">Recargar</button>
                                             <button class="dropdown-item" v-show="!ocultarTabla" @click="ocultarTabla = true">Ocultar</button>
                                             <button class="dropdown-item" v-show="ocultarTabla" @click="ocultarTabla = false">Mostrar</button>
                                         
@@ -561,7 +559,7 @@
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
                                         <h1>Mis Solicitudes</h1>
                                         <div class="form-row">
-                                            <div class="form-group col-md-1">
+                                            <div class="form-group col-lg-1">
                                                 <label for="">Paginado</label>
                                                 <select class="form-control" name="" id="" v-model="numFiltro" @change="getMisSolicitudes">
                                                     <option value='10'>10</option>
@@ -569,7 +567,7 @@
                                                     <option value='100'>100</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-3">
+                                            <div class="form-group col-lg-3">
                                                 <label for="">Medio de Reporte</label>
                                                 <select class="form-control" name="" id="" v-model="medioReporte" @change="getMisSolicitudes">
                                                     <option value="" disabled>Selecciona</option>
@@ -579,7 +577,7 @@
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-lg-2">
                                                 <label for="">Estado</label>
                                                 <select class="form-control" name="" id="" v-model="estadoReporte" @change="getMisSolicitudes">
                                                     <option value="" disabled>Selecciona</option>
@@ -590,7 +588,7 @@
                                                     <option value='Cerrada'>Cerrada</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-lg-2">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por ID</label>
                                                     <input type="text"
@@ -598,7 +596,7 @@
                                                     <small id="helpId" class="form-text text-muted">Escribe el ID</small>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-md-4">
+                                            <div class="form-group col-lg-4">
                                                 <div class="form-group">
                                                     <label for="">Busqueda por Descripcion</label>
                                                     <input type="text"
@@ -608,7 +606,7 @@
                                             </div>
                                         </div>
                                     
-                                        <table class="table table-small" >
+                                        <table class="table table-responsive" >
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -674,16 +672,15 @@
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <div class="dropdown-header">Opciones:</div>
+                                            <button class="dropdown-item" @click="generarGraficaMisSolicitudes()">Recargar Grafica</button>
+                                            <button class="dropdown-item" v-show="!ocultarGrafica" @click="ocultarGrafica = true">Ocultar</button>
+                                            <button class="dropdown-item" v-show="ocultarGrafica" @click="ocultarGrafica = false">Mostrar</button>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
+                                <div class="card-body" v-show="!ocultarGrafica">
                                     <div class="chart-pie pt-4 pb-3">
                                         <canvas id="MisSolicitudesChart"></canvas>
                                     </div>
