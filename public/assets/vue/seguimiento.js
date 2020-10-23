@@ -348,7 +348,15 @@ new Vue({
             axios.get('../getUserData').then(response=>{
                 console.log(response.data);
                 this.user = response.data;   
-                this.validatePermission();             
+                this.validatePermission();            
+                if(this.user.rol != 'TECNICO')
+                {
+                    slim = new SlimSelect({
+                        select: '#agregar_usuarios',
+                        placeholder: 'Asignar solicitud ',
+                        limit: 4,
+                      })
+                } 
                 //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
                 //console.log(error);
@@ -381,7 +389,7 @@ new Vue({
             {
                 Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
             }  
-            this.getDepartamentos();   
+             
             
         },
         validatePermissionExterno: function()
@@ -408,12 +416,10 @@ new Vue({
             {
                 Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
             }  
-            this.getDepartamentos();  
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)')
             {
                 Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
-            }  
-            this.getDepartamentos();   
+            }    
             
         },
         updateIntegrantes: function()
@@ -424,6 +430,7 @@ new Vue({
             }).then(response=>{
                 this.muestra();
                 var c = 0;  
+                Swal.fire('Correcto','Se han actualizado los usuarios','success');
                 /*this.nueva_atencion.detalle = 'Cambio en asignación';
                 this.nueva_atencion.id_usuario= this.user.id;
                 this.nueva_atencion.tipo_at= 'Asignación';

@@ -1,6 +1,7 @@
 @extends('app')
 @section('content')
-
+<script src="https://unpkg.com/slim-select@1.25.0/dist/slimselect.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.23.1/slimselect.css">
 <!-- Begin Page Content -->
 <div  class="container" id="app" v-cloak>
 	<!-- Page Heading -->
@@ -15,30 +16,24 @@
 			<option v-if="seguimiento.estatus === 'Cerrada'" option="Cerrada">Cerrada</option>
 		</select>
 	</div>
-	<!--p><i class="far fa-clock"></i> <b>@{{seguimiento.fecha_creacion}}</b> - 
+	<p v-if="user.rol != 'TECNICO'">
+		<i class="far fa-clock"></i> 
+		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
-		<select  class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
+		<select  class="col-md-5" v-model="integrantesSeleccionados"   id="agregar_usuarios" @change="updateIntegrantes" multiple>
 			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
 		</select>
-		<div v-for="item in departamentoValido.integrantes">
-			@{{item}}
-		</div>
-		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
-	</p-->
-	<p><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo:
-		<select v-if="departamentoValido && user.rol === 'ADMIN'" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
-			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
-		</select>
-		<!--select v-if="departamentos && user.rol === 'SUPER'" class="selectpicker" data-live-search="true" v-model="seguimiento.departamento" multiple>
-			<option  :value="item" v-for="item in departamentos">@{{item.nombre}}</option>
-		</select-->
-		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
 	</p>
-	{{--<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
-			electrónico <i class="fas fa-reply-all"></i> Respuestas: 2</small></p>--}}
+	<p v-if="user.rol == 'TECNICO'">
+		<i class="far fa-clock"></i> 
+		<b>@{{seguimiento.fecha_creacion}}</b> - 
+		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
+		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
+		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}}, <br> </label>
+	</p>
+	
 	<hr>
-	{{--dd(Session::all())--}}
 	<h3 class="h3 text-gray-800">Resumen</h3>
 	<div   class="card bg-white ">
 
