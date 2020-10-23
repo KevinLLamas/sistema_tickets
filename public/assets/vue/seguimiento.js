@@ -14,7 +14,7 @@ new Vue({
         nueva_atencion:{
             detalle: '',
             id_solicitud: '',
-            id_usuario: 1,
+            id_usuario: this.user.id,
             tipo_at: '',
             tipo_respuesta: '',
         },
