@@ -1,6 +1,6 @@
 @extends('app')
 @section('content')
-<div id="app" >
+<div id="app" v-cloak>
     <div class="col-md-12 mt-3">
         <ol class="breadcrumb w-100">
             <li class="breadcrumb-item"><a href="inicio">Inicio</a></li>
@@ -28,7 +28,7 @@
 
     <div class="container" v-if="banVerif">
         <!-- Page Heading -->
-	<h1 class="h1 text-gray-800">@{{ seguimiento.descripcion }}</h1>
+	<h1 class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} @{{ seguimiento.descripcion }}</h1>
 	<div v-if="seguimiento.estatus">
 		<!--select class="selectpicker my-2" data-style="btn-primary" v-model="seguimiento.estatus" @change="cambiarEstatus">
 			<option value="" disabled>Seleccione una opción</option>
@@ -45,7 +45,11 @@
 			<option option="Cerrada">Cerrada</option>
 		</select>
 	</div>
-	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo: Juan López García
+	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo: 
+		<select v-if="departamentoValido && user.rol === 'ADMIN'" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
+			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
+		</select>
+		<label v-if="integrantesSeleccionadosCompleto" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
 		<!--select class="selectpicker" data-live-search="true">
 			<option data-tokens="ketchup mustard">Juan López García</option>
 			<option data-tokens="mustard">Armando González Gutierrez</option>
@@ -69,13 +73,13 @@
 							<i class="fas fa-at"></i><h2>Correo institucional: @{{item.valor}} </h2>
 						</div>
 						<div v-else-if="item.tipo_dato == 'curp'">
-							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
+							<i class="far fa-id-badge"></i> CURP: <b>**********@{{item.valor.slice(10)}} </b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'telefono'">
-							<i class="fas fa-mobile-alt"></i> Celular: <b>@{{item.valor}} </b>
+							<i class="fas fa-mobile-alt"></i> Celular: ******<b>@{{item.valor.slice(6)}} </b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'matricula'">
-							<i class="fas fa-mobile-alt"></i> Matricula: <b>@{{item.valor}} </b>
+							<i class="fas fa-mobile-alt"></i> Matricula: *****<b>@{{item.valor.slice(5)}} </b>
 						</div>
 					</div>
 				</small>
@@ -91,23 +95,14 @@
 			<div class="card-body">
 				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
 				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{seguimiento.usuario.correo}}</b></p>
+				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
 					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
-		</div>		
-		<!--div class="card alert alert-warning  border-warning mb-3" v-if="item.tipo_respuesta == 'Interna'">
-			<div class="card-body">
-				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
-				<p class="card-text">@{{item.detalle}}</p>
-				<p class="card-text">Documentos Adjuntos:</p>
-				<div v-for="adj in item.adjuntos">
-					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
-				</div>				
-			</div>		
-		</div-->
+		</div>	
 	</div>
 
 

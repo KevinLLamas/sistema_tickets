@@ -26,6 +26,7 @@ new Vue({
         user: '',
         departamentoValido: '',
         integrantesSeleccionados: [],
+        integrantesSeleccionadosCompleto: [],
         departamentos: [],
     },
     created: function(){
@@ -45,6 +46,7 @@ new Vue({
         muestra2: function(){
             axios.get(`../getSolicitud/`+this.id).then(response=>{
                 this.seguimiento = response.data;
+                this.getUserData();
                 //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
                 //console.log(error);
@@ -100,7 +102,7 @@ new Vue({
                     }
                     Swal.fire({
                         icon: 'success',
-                        title: 'Agregada',
+                        title: 'Listo',
                         showConfirmButton: false,
                         timer: 1000
                     })
@@ -131,7 +133,7 @@ new Vue({
                      timer: 1000
                  })                 
                 this.nueva_atencion.detalle= 'Cambio de estatus a ' + this.seguimiento.estatus;
-                this.nueva_atencion.id_usuario= 1;
+                this.nueva_atencion.id_usuario= this.user.id;
                 this.nueva_atencion.tipo_at= 'Estatus';
                 this.agregarAtencion('Todos', '');
                 this.nueva_atencion.estatus = "";
@@ -294,6 +296,7 @@ new Vue({
                     if(this.departamentoValido.integrantes[i].id == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
                     { 
                         this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id;
+                        this.integrantesSeleccionadosCompleto[c] = this.departamentoValido.integrantes[i];
                         c++;
                     }
                 }                    
@@ -307,6 +310,12 @@ new Vue({
                 id_solicitud: this.seguimiento.id_solicitud,
             }).then(response=>{
                 this.muestra();
+                var c = 0;  
+                /*this.nueva_atencion.detalle = 'Cambio en asignación';
+                this.nueva_atencion.id_usuario= this.user.id;
+                this.nueva_atencion.tipo_at= 'Asignación';
+                this.agregarAtencion('Todos', '');
+                this.nueva_atencion.estatus = "";*/
                 //console.log(response);
             }).catch(function (error) {
                 //console.log(error);

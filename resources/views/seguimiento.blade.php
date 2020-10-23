@@ -4,7 +4,7 @@
 <!-- Begin Page Content -->
 <div  class="container" id="app" v-cloak>
 	<!-- Page Heading -->
-	<h1 class="h1 text-gray-800">@{{ seguimiento.descripcion }}</h1>
+	<h1 class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} @{{ seguimiento.descripcion }}</h1>
 	<div v-if="seguimiento.estatus">
 		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()">
 			<option value="" disabled>Seleccione una opción</option>
@@ -19,9 +19,10 @@
 		<select v-if="departamentoValido && user.rol === 'ADMIN'" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
 			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
 		</select>
-		<select v-if="departamentos && user.rol === 'SUPER'" class="selectpicker" data-live-search="true" v-model="seguimiento.departamento" multiple>
+		<!--select v-if="departamentos && user.rol === 'SUPER'" class="selectpicker" data-live-search="true" v-model="seguimiento.departamento" multiple>
 			<option  :value="item" v-for="item in departamentos">@{{item.nombre}}</option>
-		</select>
+		</select-->
+		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
 	</p>
 		
 	{{--<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
@@ -45,10 +46,10 @@
 							<i class="far fa-id-badge"></i> CURP: <b>**********@{{item.valor.slice(10)}} </b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'telefono'">
-							<i class="fas fa-mobile-alt"></i> Celular: <b>@{{item.valor}} </b>
+							<i class="fas fa-mobile-alt"></i> Celular: ******<b>@{{item.valor.slice(6)}} </b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'matricula'">
-							<i class="fas fa-mobile-alt"></i> Matricula: <b>@{{item.valor}} </b>
+							<i class="fas fa-mobile-alt"></i> Matricula: *****<b>@{{item.valor.slice(5)}} </b>
 						</div>
 					</div>
 				</small>
@@ -64,6 +65,7 @@
 			<div class="card-body">
 				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
 				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{seguimiento.usuario.correo}}</b></p>
+				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
