@@ -42,14 +42,18 @@
 			<option option="Sin atender">Sin atender</option>
 			<option option="Atendiendo">Atendiendo</option>
 			<option option="Suspendida">Suspendida</option>
+			<option option="Cerrada (En espera de aprobación)">Cerrada (En espera de aprobación)</option>
 			<option option="Cerrada">Cerrada</option>
 		</select>
+		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Cerrada'; cambiarEstatus()">Confirmar</button>
+		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Atendiendo'; cambiarEstatus()">Abrir de Nuevo</button>
 	</div>
 	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo: 
 		<select v-if="departamentoValido && user.rol === 'ADMIN'" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
 			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
 		</select>
 		<label v-if="integrantesSeleccionadosCompleto" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
+		
 		<!--select class="selectpicker" data-live-search="true">
 			<option data-tokens="ketchup mustard">Juan López García</option>
 			<option data-tokens="mustard">Armando González Gutierrez</option>

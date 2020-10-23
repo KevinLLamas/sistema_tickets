@@ -270,6 +270,7 @@ new Vue({
             });
         },
         getUserData: function(){
+             //console.log("User data");
             axios.get('../getUserData').then(response=>{
                 //console.log(response.data);
                 this.user = response.data;   
@@ -300,7 +301,11 @@ new Vue({
                         c++;
                     }
                 }                    
-            }    
+            }  
+            if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)')
+            {
+                Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
+            }  
             this.getDepartamentos();   
         },
         updateIntegrantes: function()
