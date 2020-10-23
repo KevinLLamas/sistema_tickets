@@ -49,7 +49,7 @@
 		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Atendiendo'; cambiarEstatus()">Abrir de Nuevo</button>
 	</div>
 	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo: 
-		<select v-if="departamentoValido && user.rol === 'ADMIN'" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
+		<select v-if="departamentoValido" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
 			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
 		</select>
 		<label v-if="integrantesSeleccionadosCompleto" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
@@ -97,9 +97,20 @@
 	<div v-for="item in seguimiento.atencion">
 		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Todos' && item.tipo_at != 'Estatus'">			
 			<div class="card-body">
-				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
-				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{seguimiento.usuario.correo}}</b></p>
-				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
+				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.correo_usuario}}</b></p>
+				<p v-if="item.tipo_at == 'Externo'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Usuario Constesto</b></p>
+				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{item.correo_usuario}}</b></p>
+				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{item.correo_usuario}}</b></p>
+				<p class="card-text">@{{item.detalle}}</p>
+				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
+				<div v-for="adj in item.adjuntos">
+					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+				</div>				
+			</div>			
+		</div>	
+		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Externa' && item.tipo_at != 'Estatus'">			
+			<div class="card-body">
+				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Usuario Contesto</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
@@ -169,7 +180,7 @@
 				<div class="col">
 					<div class="dropdown">
 						<button class="btn btn-primary" type="button" id="dropdownMenuButton"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencion('Todos', '')" >
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencionExterno('Externa', '')" >
 							Responder
 						</button>
 					</div>

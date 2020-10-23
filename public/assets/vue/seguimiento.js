@@ -30,14 +30,14 @@ new Vue({
         departamentos: [],
     },
     created: function(){
-        this.muestra();
-        this.getUserData();
+        this.muestra();        
     },
     methods:{
         muestra: function(){
             axios.get(`../getSolicitud/`+getId).then(response=>{
                 //console.log(response.data);
                 this.seguimiento = response.data;
+                this.getUserData();
                 //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
                 //console.log(error);
@@ -46,17 +46,18 @@ new Vue({
         muestra2: function(){
             axios.get(`../getSolicitud/`+this.id).then(response=>{
                 this.seguimiento = response.data;
-                this.getUserData();
+                //this.getUserData();
+                this.validatePermissionExterno();
                 //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
                 //console.log(error);
             });
         },
         agregarAtencion: function(tipo, accion){
-            let ban = false;
+            var ban = false;
             if(this.nueva_atencion.detalle)
             {
-                this.nueva_atencion.id_usuario = this.user.id;
+                this.nueva_atencion.id_usuario= this.user.id;
                 this.nueva_atencion.tipo_respuesta = tipo;
                 this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
                 //console.log(this.nueva_atencion);
@@ -65,6 +66,74 @@ new Vue({
                     codigo: this.codigo,
                     email: this.seguimiento.usuario.correo,
                     rol: this.user.rol,
+                }).then(result=>{
+                    console.log(result);
+                    this.id_atencion = result.data;
+                    if(this.id === '')
+                        this.muestra();
+                    else
+                        this.muestra2();
+                    if(accion != '')
+                    {
+                        switch(accion)
+                        {
+                            case 'Abrir':
+                                if(this.seguimiento.estatus != "Atendiendo")
+                                {
+                                    this.seguimiento.estatus = "Atendiendo";
+                                }
+                            break;
+                            case 'Suspender':
+                                if(this.seguimiento.estatus != "Suspendida")
+                                {
+                                    this.seguimiento.estatus = "Suspendida";
+                                }                                
+                            break;
+                            case 'Resolver':
+                                if(this.seguimiento.estatus != "Cerrada")
+                                {
+                                    this.seguimiento.estatus = "Cerrada";
+                                }                                
+                            break;
+                            case 'Terminar':
+                                if(this.seguimiento.estatus != "Cerrada")
+                                {
+                                    this.seguimiento.estatus = "Cerrada";
+                                }                                
+                            break;
+                        }  
+                        this.cambiarEstatus();                      
+                    }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Listo',
+                        showConfirmButton: false,
+                        timer: 1000
+                    })
+                    this.saveFiles();
+                    this.nueva_atencion.detalle = '';
+                    this.nueva_atencion.tipo_respuesta = '';
+                    this.nueva_atencion.tipo_at = '';
+                }).catch(error=>{
+                    console.log(error);
+                });
+            }
+            else
+            {
+                Swal.fire('Error','Llene el campo de texto','warning');
+            }
+        },
+        agregarAtencionExterno: function(tipo, accion){
+            var ban = false;
+            if(this.nueva_atencion.detalle)
+            {
+                this.nueva_atencion.tipo_respuesta = tipo;
+                this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
+                //console.log(this.nueva_atencion);
+                axios.post('../inserta_atencion_externo',{
+                    data: this.nueva_atencion,
+                    codigo: this.codigo,
+                    email: this.seguimiento.usuario.correo
                 }).then(result=>{
                     console.log(result);
                     this.id_atencion = result.data;
@@ -257,6 +326,7 @@ new Vue({
                 codigo: this.codigo,
                 id: this.id
             }).then(response=>{
+                console.log(response);
                 this.banVerif = response.data.status;
                 if(this.banVerif)
                 {
@@ -275,7 +345,7 @@ new Vue({
         getUserData: function(){
              //console.log("User data");
             axios.get('../getUserData').then(response=>{
-                //console.log(response.data);
+                console.log(response.data);
                 this.user = response.data;   
                 this.validatePermission();             
                 //console.log(this.seguimiento.correo_atencion);
@@ -285,15 +355,16 @@ new Vue({
         },
         validatePermission: function()
         {
+            console.log("HODA");
             for(var i = 0; i < this.seguimiento.departamento.length; i++)
-            {
-                console.log(this.seguimiento.departamento);
+            {                
                 if(this.seguimiento.departamento[i].id == this.user.id_departamento)
                     this.departamentoValido = this.seguimiento.departamento[i];
             }
             var c = 0;
             for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
             {
+                console.log(this.seguimiento.departamentoValido);
                 for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
                 {
                     //console.log(this.departamentoValido.integrantes[i].id);
@@ -305,11 +376,44 @@ new Vue({
                     }
                 }                    
             }  
+            if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)' && this.user === '')
+            {
+                Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
+            }  
+            this.getDepartamentos();   
+            
+        },
+        validatePermissionExterno: function()
+        {
+            console.log("HODA");
+            for(var i = 0; i < this.seguimiento.departamento.length; i++)
+            {                
+                var c = 0;
+                for(var z = 0; z < this.seguimiento.departamento[i].integrantes.length; z++)
+                {
+                    for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
+                    {
+                        if(this.seguimiento.departamento[i].integrantes[z].id == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                        { 
+                            this.integrantesSeleccionados[c] = this.seguimiento.departamento[i].integrantes[z].id;
+                            this.integrantesSeleccionadosCompleto[c] = this.seguimiento.departamento[i].integrantes[z];
+                            c++;
+                        }
+                    }                    
+                }  
+            }
+            
+            if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)')
+            {
+                Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
+            }  
+            this.getDepartamentos();  
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)')
             {
                 Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
             }  
             this.getDepartamentos();   
+            
         },
         updateIntegrantes: function()
         {

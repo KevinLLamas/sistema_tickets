@@ -63,19 +63,29 @@
 	<div v-for="item in seguimiento.atencion">
 		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Todos'">			
 			<div class="card-body">
-				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
-				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{seguimiento.usuario.correo}}</b></p>
-				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
+				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.correo_usuario}}</b></p>
+				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{item.correo_usuario}}</b></p>
+				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{item.correo_usuario}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
 					<a :href="'../get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
-		</div>		
+		</div>	
+		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Externa' && item.tipo_at != 'Estatus'">			
+			<div class="card-body">
+				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Usuario Contesto</b></p>
+				<p class="card-text">@{{item.detalle}}</p>
+				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
+				<div v-for="adj in item.adjuntos">
+					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+				</div>				
+			</div>			
+		</div>	
 		<div class="card alert alert-warning  border-warning mb-3" v-if="item.tipo_respuesta == 'Interna'">
 			<div class="card-body">
-				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
+				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Nota agregada por @{{item.correo_usuario}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">

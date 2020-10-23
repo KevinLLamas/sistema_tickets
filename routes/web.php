@@ -70,4 +70,5 @@ Route::get('get_file/{path}/{nombre_doc}', [seguimientoController::class, 'get_f
 Route::get('getUserData', [seguimientoController::class, 'getUserData']);
 Route::post('UpdateSolicitud_usuario',  [seguimientoController::class, 'UpdateSolicitud_usuario']);
 Route::get('getDepartamentos', [seguimientoController::class, 'getDepartamentos']);
+Route::post('inserta_atencion_externo',  [seguimientoController::class, 'inserta_atencion_externo']);
 

@@ -29,8 +29,11 @@ class seguimientoController extends Controller
 		foreach($atencion as $at)
 		{
 			$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
-			//$usuario = Usuario::where('id', $at->id_usuario).first();
-			//$at->
+			if($at->id_usuario != null)
+			{
+				$usuario = Usuario::where('id', $at->id_usuario)->first();
+				$at->correo_usuario = $usuario->correo;
+			}
 			$at->adjuntos = $adjuntos;
 			
 		}
@@ -68,12 +71,28 @@ class seguimientoController extends Controller
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
 
-		if($request->input('rol') != 'USUARIO')
+		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion')
 		{
 			//return Crypt::encryptString($Sol_atencion['id_solicitud']);
 			//$atencion_externos = Atencion_externos::where('solicitud', Crypt::encryptString($Sol_atencion['id_solicitud']))->first();
 			if($this->send_mail_nueva($request->input('codigo'),$request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
 		}
+		return $atencion->id;
+	}
+
+	public function inserta_atencion_externo(Request $request){
+		$atencion = new Solicitud_atencion;
+		$Sol_atencion = $request->input('data');	
+			
+		$atencion->detalle = $Sol_atencion['detalle'];
+		$atencion->id_solicitud = $Sol_atencion['id_solicitud'];
+		if($Sol_atencion['tipo_at'] != "")
+			$atencion->tipo_at = $Sol_atencion['tipo_at'];
+		else
+			$atencion->tipo_at = 'Atencion';
+		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
+		$atencion->save();
+
 		return $atencion->id;
 	}
 	
