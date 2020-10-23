@@ -31,7 +31,7 @@ class ValidaToken
             'nombre'=> 'Luis Marquez',
             'curp'=> 'MAHL920209HJCRRS02',
             'usuario'=> 'luis.marquez@jalisco.gob.mx',
-            'rol'=>'ADMIN',
+            'rol'=>'SUPER',
             'id_departamento'=>1,
             'departamento'=>'DTI',
         ]);

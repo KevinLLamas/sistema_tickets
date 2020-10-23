@@ -111,9 +111,7 @@ new Vue({
             url="get_num_solicitudes_bystatus_mis_solicitudes";
             data= await axios.get(url)
             .then(response=>{
-                console.log('Datos grafica ByStatus Mis Solicitudes');
-                console.log(response.data);
-                
+                //console.log(response.data);
                 this.Estatus= response.data;
             })
             
@@ -124,7 +122,7 @@ new Vue({
             // Set new default font family and font color to mimic Bootstrap's default styling
             Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#858796';
-            console.log("colores para grafica",this.coloresHex);
+            //console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
             var ctx = document.getElementById("MisSolicitudesChart");
             var myPieChart = new Chart(ctx, {
@@ -170,8 +168,7 @@ new Vue({
                 busquedaid: this.busquedaid,
             })
             .then(response => {
-                console.log('Mis solicitudes');
-                console.log(response.data);
+                //console.log(response.data);
                 this.pagination=response.data;
                 this.MisSolicitudes=response.data.data;
             });

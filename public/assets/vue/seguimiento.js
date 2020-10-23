@@ -14,7 +14,7 @@ new Vue({
         nueva_atencion:{
             detalle: '',
             id_solicitud: '',
-            id_usuario: this.user.id,
+            id_usuario: '',
             tipo_at: '',
             tipo_respuesta: '',
         },
@@ -53,9 +53,10 @@ new Vue({
             });
         },
         agregarAtencion: function(tipo, accion){
-            var ban = false;
+            let ban = false;
             if(this.nueva_atencion.detalle)
             {
+                this.nueva_atencion.id_usuario = this.user.id;
                 this.nueva_atencion.tipo_respuesta = tipo;
                 this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
                 //console.log(this.nueva_atencion);

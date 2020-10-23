@@ -3,29 +3,32 @@
 
 
 <!-- Begin Page Content -->
-<div  class="container">
+<div  class="container" >
     <!-- Content Row -->
     <div class="row">
     </div>    
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                aria-selected="true">Solicitudes</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                aria-selected="false">Solicitudes Asignadas</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profile2-tab" data-toggle="tab" href="#profile2" role="tab" aria-controls="profile2"
-                aria-selected="false">Solicitudes Departamento</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="profile3-tab" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile3"
-                aria-selected="false">Mis Solicitudes</a>
-        </li>
+    <div id="dashboard">
+        <input type="hidden" value="{{Session::get('rol')}}" id="rol" name="rol">
+        <ul class="nav nav-tabs" id="myTab" role="tablist" >
+            <li class="nav-item">
+                <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                    aria-selected="true">Solicitudes Asignadas</a>
+            </li>
+            <li class="nav-item" v-if="rol == 'SUPER'">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                    aria-selected="false">Solicitudes</a>
+            </li>
+            <li class="nav-item" v-if="rol == 'ADMIN' || rol == 'JEFE' || rol == 'SUPER'">
+                <a class="nav-link" id="profile2-tab" data-toggle="tab" href="#profile2" role="tab" aria-controls="profile2"
+                    aria-selected="false">Solicitudes Departamento</a>
+            </li>
+            <li class="nav-item" >
+                <a class="nav-link" id="profile3-tab" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile3"
+                    aria-selected="false">Mis Solicitudes</a>
+            </li>
 
-    </ul>
+        </ul>
+    </div>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="form-group row mt-3">
@@ -709,6 +712,7 @@
 <!-- Chart.js -->
 <script src="{{asset('assets/vendor/chart.js/Chart.min.js')}}"></script>
 <!-- Scripts VUE -->
+<script src="{{asset('assets/vue/dashboard.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes_asignadas.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes_departamento.js')}}"></script>

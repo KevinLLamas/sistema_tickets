@@ -1,10 +1,10 @@
 new Vue({
     el:"#dashboard",
     data:{
-        estado_ticket:"",
+        rol: '',
     },
     created: function(){
-        
+        this.rol = $("#rol").val();
     },
     methods:{
 

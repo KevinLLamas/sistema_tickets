@@ -17,7 +17,8 @@
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('assets/css/sb-admin-2.css')}}" rel="stylesheet">
-
+  <!-- Bootstrap core JavaScript-->
+  <script src="{{asset('assets/vendor/jquery/jquery.min.js')}}"></script>
   <script src="{{ asset('assets/js/vue.js')}}"></script>
   <script src="{{ asset('assets/js/axios.js')}}"></script>
   <script src="{{ asset('assets/js/toastr.js')}}"></script> 
@@ -37,8 +38,7 @@
 <!-- End of Content Wrapper -->
         {{-- @include('footer') --}}
         <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-        <!-- Bootstrap core JavaScript-->
-        <script src="{{asset('assets/vendor/jquery/jquery.min.js')}}"></script>
+        
         <script src="{{asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
         <!-- Core plugin JavaScript-->
         <script src="{{asset('assets/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
