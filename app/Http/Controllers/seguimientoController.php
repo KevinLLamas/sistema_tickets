@@ -22,8 +22,6 @@ use \PHPMailer\PHPMailer\Exception;
 class seguimientoController extends Controller 
 {
 	public function seguimiento($id){
-		//$categoria = Categoria::all();
-		//$categoria = Solicitud::with(['subcategoria','atencion'])->find($id);
 		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		$atencion = $solicitud->atencion;
 		foreach($atencion as $at)
@@ -37,23 +35,12 @@ class seguimientoController extends Controller
 			$at->adjuntos = $adjuntos;
 			
 		}
-		
-
 		$departamentos = $solicitud->departamento;
 		foreach($departamentos as $dtp)
 		{
-			//$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
 			$usuarios = Usuario::where('id_departamento', $dtp->id)->get();
 			$dtp->integrantes = $usuarios;
 		}
-		/*$departamentos = $solicitud->departamento;
-		
-		foreach($departamentos as $dpt)
-		{
-			return $dtp;
-			$usuario = Usuario::where('id_departamento', $dtp->id)->get();
-			$dtp->integrantes = $usuario;
-		}*/
 		return $solicitud;
 	}
 	

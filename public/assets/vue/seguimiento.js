@@ -34,13 +34,14 @@ new Vue({
     },
     methods:{
         muestra: function(){
+            if(getId>0)
             axios.get(`../getSolicitud/`+getId).then(response=>{
                 //console.log(response.data);
                 this.seguimiento = response.data;
                 this.getUserData();
                 //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
-                //console.log(error);
+                console.log(error);
             });
         },
         muestra2: function(){
@@ -106,10 +107,10 @@ new Vue({
                     }
                     Swal.fire({
                         icon: 'success',
-                        title: 'Listo',
+                        title: 'Comentario agregado correctamente.',
                         showConfirmButton: false,
                         timer: 1000
-                    })
+                    });
                     this.saveFiles();
                     this.nueva_atencion.detalle = '';
                     this.nueva_atencion.tipo_respuesta = '';
@@ -174,7 +175,7 @@ new Vue({
                     }
                     Swal.fire({
                         icon: 'success',
-                        title: 'Listo',
+                        title: 'Comentario agregado correctamente.',
                         showConfirmButton: false,
                         timer: 1000
                     })
@@ -299,7 +300,7 @@ new Vue({
                 .then(response => {
                     if(response.data.status){
                         swal.close();
-                        Swal.fire('Atención','sí','success');
+                        Swal.fire('Atención','Comentario agregado correctamente.','success');
                         if(this.id === '')
                             this.muestra();
                         else
@@ -309,7 +310,7 @@ new Vue({
                     }
                     else{
                         swal.close();
-                        Swal.fire('Atención','no','warning');
+                        Swal.fire('Atención','Comentario agregado correctamente.','info');
                     }
                 }).catch(error=>{
                     console.log(error);

@@ -15,6 +15,17 @@
 			<option v-if="seguimiento.estatus === 'Cerrada'" option="Cerrada">Cerrada</option>
 		</select>
 	</div>
+	<!--p><i class="far fa-clock"></i> <b>@{{seguimiento.fecha_creacion}}</b> - 
+		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
+		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
+		<select  class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
+			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
+		</select>
+		<div v-for="item in departamentoValido.integrantes">
+			@{{item}}
+		</div>
+		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
+	</p-->
 	<p><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo:
 		<select v-if="departamentoValido && user.rol === 'ADMIN'" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
 			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
@@ -24,16 +35,15 @@
 		</select-->
 		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
 	</p>
-		
 	{{--<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
 			electrónico <i class="fas fa-reply-all"></i> Respuestas: 2</small></p>--}}
 	<hr>
-
+	{{--dd(Session::all())--}}
 	<h3 class="h3 text-gray-800">Resumen</h3>
-	<div v-if="seguimiento.usuario"  class="card bg-white ">
+	<div   class="card bg-white ">
 
 		<div class="card-body">
-			<p><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
+			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
 			<p class="card-text">@{{seguimiento.descripcion}}</p>
 			<p>
 				<small>

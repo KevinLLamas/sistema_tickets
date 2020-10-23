@@ -27,10 +27,10 @@ class ValidaToken
        
         Session::put([
             'key'=>$token,
-            'id_sgu'=>'1866',
-            'nombre'=> 'Luis Marquez',
+            'id_sgu'=>'1865',
+            'nombre'=> 'Kevin Llamas',
             'curp'=> 'MAHL920209HJCRRS02',
-            'usuario'=> 'luis.marquez@jalisco.gob.mx',
+            'usuario'=> 'kevindejesus.llamas@jalisco.gob.mx',
             'rol'=>'SUPER',
             'id_departamento'=>1,
             'departamento'=>'DTI',

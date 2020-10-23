@@ -51,15 +51,7 @@ Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
 Route::get('solicitudes_asignadas', function () {return view('solicitudes_asignadas');});
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
 
-//USUARIO
-
-
-});
-
 //Seguimiento
-Route::get('/ejemplo', function () {
-    return view('ejemplo');
-});
 Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
 Route::post('inserta_atencion',  [seguimientoController::class, 'inserta_atencion']);
@@ -71,4 +63,12 @@ Route::get('getUserData', [seguimientoController::class, 'getUserData']);
 Route::post('UpdateSolicitud_usuario',  [seguimientoController::class, 'UpdateSolicitud_usuario']);
 Route::get('getDepartamentos', [seguimientoController::class, 'getDepartamentos']);
 Route::post('inserta_atencion_externo',  [seguimientoController::class, 'inserta_atencion_externo']);
+
+});
+
+
+Route::get('/ejemplo', function () {
+    return view('ejemplo');
+});
+
 

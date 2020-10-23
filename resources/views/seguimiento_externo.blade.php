@@ -48,7 +48,9 @@
 		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Cerrada'; cambiarEstatus()">Confirmar</button>
 		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Atendiendo'; cambiarEstatus()">Abrir de Nuevo</button>
 	</div>
-	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo: 
+	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> <b>@{{seguimiento.fecha_creacion}}</b> - 
+		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
+		<b v-if="integrantesSeleccionados.length == 0">Sin personal asignado.</b> 
 		<select v-if="departamentoValido" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
 			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
 		</select>
