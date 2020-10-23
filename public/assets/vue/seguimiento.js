@@ -56,7 +56,11 @@ new Vue({
             let ban = false;
             if(this.nueva_atencion.detalle)
             {
+<<<<<<< HEAD
                 this.nueva_atencion.id_usuario = this.user.id;
+=======
+                this.nueva_atencion.id_usuario= this.user.id;
+>>>>>>> e7a4463f8759faa04af960403fde27fc7206423c
                 this.nueva_atencion.tipo_respuesta = tipo;
                 this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
                 //console.log(this.nueva_atencion);
@@ -64,7 +68,9 @@ new Vue({
                     data: this.nueva_atencion,
                     codigo: this.codigo,
                     email: this.seguimiento.usuario.correo,
+                    rol: this.user.rol,
                 }).then(result=>{
+                    console.log(result);
                     this.id_atencion = result.data;
                     if(this.id === '')
                         this.muestra();
