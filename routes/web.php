@@ -67,3 +67,7 @@ Route::post('cambiar_estatus',  [seguimientoController::class, 'cambiar_estatus'
 Route::get('seguimiento_externo/{id}', [seguimientoController::class, 'seguimiento_externo']); 
 Route::post('verifica_codigo', [seguimientoController::class, 'verifica_codigo']); 
 Route::get('get_file/{path}/{nombre_doc}', [seguimientoController::class, 'get_file']); 
+Route::get('getUserData', [seguimientoController::class, 'getUserData']);
+Route::post('UpdateSolicitud_usuario',  [seguimientoController::class, 'UpdateSolicitud_usuario']);
+Route::get('getDepartamentos', [seguimientoController::class, 'getDepartamentos']);
+

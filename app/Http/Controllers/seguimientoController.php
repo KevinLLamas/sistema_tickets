@@ -11,22 +11,40 @@ use App\Http\Controllers\UserController;
 use App\Models\Categoria;
 use App\Models\Solicitud;
 use App\Models\Solicitud_atencion;
+use App\Models\Solicitud_usuario;
 use App\Models\Atencion_externos;
 use App\Models\Atencion_adjunto;
-
+use App\Models\Usuario;
+use App\Models\Departamentos;
 
 class seguimientoController extends Controller 
 {
 	public function seguimiento($id){
 		//$categoria = Categoria::all();
 		//$categoria = Solicitud::with(['subcategoria','atencion'])->find($id);
-		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional'])->where('id_solicitud', $id)->first();
+		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		$atencion = $solicitud->atencion;
 		foreach($atencion as $at)
 		{
 			$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
 			$at->adjuntos = $adjuntos;
 		}
+
+		$departamentos = $solicitud->departamento;
+		foreach($departamentos as $dtp)
+		{
+			//$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
+			$usuarios = Usuario::where('id_departamento', $dtp->id)->get();
+			$dtp->integrantes = $usuarios;
+		}
+		/*$departamentos = $solicitud->departamento;
+		
+		foreach($departamentos as $dpt)
+		{
+			return $dtp;
+			$usuario = Usuario::where('id_departamento', $dtp->id)->get();
+			$dtp->integrantes = $usuario;
+		}*/
 		return $solicitud;
 	}
 	
@@ -85,5 +103,77 @@ class seguimientoController extends Controller
 	public function get_file($path, $nombre_doc)
 	{
 		return Storage::disk('public')->response("solicitudes/".$path."/".$nombre_doc."");
+	}
+
+	public function getUserData()
+	{
+		return $user = Usuario::where('id_sgu', Session::get('id_sgu'))->first(); 
+		//return Session::all();
+	}
+
+	public function UpdateSolicitud_usuario(Request $request)
+	{		
+		$integrantes_seleccionados = $request->input('integrantes');
+		$id_solicitud = $request->input('id_solicitud');		
+		
+		//Desactivar integrantes no seleccionados que existen	
+		$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
+		if(count($integrantes_seleccionados) != 0)	
+		{			
+			foreach($integrantes as $integ)
+			{
+				foreach($integrantes_seleccionados as $integ_sel)
+				{
+					if($integ->id_usuario != $integ_sel)
+					{
+						$integ->estado = 'Suspendido';
+						$integ->save();
+					}
+				}
+			}		
+		}
+		else if($integrantes != null)
+		{
+			foreach($integrantes as $integ)
+			{
+				$integ->estado = 'Suspendido';
+				$integ->save();	
+			}
+		}
+
+		//Reactivar usuario en una solicitud o agregarlo si no existe
+		$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->whereIn('id_usuario', $integrantes_seleccionados)->get();
+		$ban = false;
+		foreach($integrantes_seleccionados as $integ_sel)
+		{
+			foreach($integrantes as $integ)
+			{
+				if($integ->id_usuario == $integ_sel)
+				{
+					$ban = true;
+					$integ->estado = 'Atendiendo';
+					$integ->save();
+					$clave = array_search($integ_sel, $integrantes_seleccionados);
+					unset($integrantes_seleccionados[$clave]);
+					break;
+				}
+			}	
+		}
+
+		foreach($integrantes_seleccionados as $integ_sel)
+		{
+			$sol_usuario = new Solicitud_usuario;
+			$sol_usuario->id_solicitud = $id_solicitud;
+			$sol_usuario->id_usuario = $integ_sel;
+			$sol_usuario->save();
+		}
+		
+		
+		return true;
+	}
+
+	public function getDepartamentos()
+	{
+		return Departamentos::All();
 	}
 }

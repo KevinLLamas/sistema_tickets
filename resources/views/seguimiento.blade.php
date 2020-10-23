@@ -2,7 +2,7 @@
 @section('content')
 
 <!-- Begin Page Content -->
-<div class="container" id="app" v-cloak>
+<div  class="container" id="app" v-cloak>
 	<!-- Page Heading -->
 	<h1 class="h1 text-gray-800">@{{ seguimiento.descripcion }}</h1>
 	<div v-if="seguimiento.estatus">
@@ -18,15 +18,19 @@
 			<option option="Sin atender">Sin atender</option>
 			<option option="Atendiendo">Atendiendo</option>
 			<option option="Suspendida">Suspendida</option>
-			<option option="Cerrada">Cerrada</option>
+			<option option="Cerrada (En espera de aprobación)">Cerrada (En espera de aprobación)</option>
+			<option v-if="seguimiento.estatus === 'Cerrada'" option="Cerrada">Cerrada</option>
 		</select>
 	</div>
-	<p><i class="far fa-clock"></i> 10-01-20 10:53 - Atendiendo:
-		<select class="selectpicker" data-live-search="true">
-			<option data-tokens="ketchup mustard">Juan López García</option>
-			<option data-tokens="mustard">Armando González Gutierrez</option>
-			<option data-tokens="frosting">Luis Márquez Hernández</option>
-		</select></p>
+	<p><i class="far fa-clock"></i> @{{seguimiento.fecha_creacion}} - Atendiendo:
+		<select v-if="departamentoValido && user.rol === 'ADMIN'" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
+			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
+		</select>
+		<select v-if="departamentos && user.rol === 'SUPER'" class="selectpicker" data-live-search="true" v-model="seguimiento.departamento" multiple>
+			<option  :value="item" v-for="item in departamentos">@{{item.nombre}}</option>
+		</select>
+	</p>
+		
 	{{--<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
 			electrónico <i class="fas fa-reply-all"></i> Respuestas: 2</small></p>--}}
 	<hr>
@@ -42,10 +46,10 @@
 					Datos adicionales: 
 					<div v-for="item in seguimiento.dato_adicional">
 						<div v-if="item.tipo_dato == 'correo_institucional'">
-							<i class="fas fa-at"></i><h2>Correo institucional: @{{item.valor}} </h2>
+							<i class="fas"></i><h2>Correo institucional: <b>@{{item.valor}}</b> </h2>
 						</div>
 						<div v-else-if="item.tipo_dato == 'curp'">
-							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
+							<i class="far fa-id-badge"></i> CURP: <b>**********@{{item.valor.slice(10)}} </b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'telefono'">
 							<i class="fas fa-mobile-alt"></i> Celular: <b>@{{item.valor}} </b>
@@ -78,7 +82,7 @@
 			<div class="card-body">
 				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{seguimiento.usuario.correo}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
-				<p class="card-text">Documentos Adjuntos:</p>
+				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
 					<a :href="'../get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				

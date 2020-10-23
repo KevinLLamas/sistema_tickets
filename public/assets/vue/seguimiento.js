@@ -1,4 +1,3 @@
-
 var url = window.location.pathname;
 var getId = url.substring(url.lastIndexOf('/')+1);
 
@@ -24,9 +23,14 @@ new Vue({
         codigo: '',
         banVerif: false,
         id: '',
+        user: '',
+        departamentoValido: '',
+        integrantesSeleccionados: [],
+        departamentos: [],
     },
     created: function(){
         this.muestra();
+        this.getUserData();
     },
     methods:{
         muestra: function(){
@@ -261,9 +265,63 @@ new Vue({
                 //console.log(error);
             });
         },
-        test: function()
+        getUserData: function(){
+            axios.get('../getUserData').then(response=>{
+                //console.log(response.data);
+                this.user = response.data;   
+                this.validatePermission();             
+                //console.log(this.seguimiento.correo_atencion);
+            }).catch(function (error) {
+                //console.log(error);
+            });
+        },
+        validatePermission: function()
         {
-            return "Hola";
+            if(this.user.rol === "ADMIN" || this.user.rol === "SUPER")
+            {
+                for(var i = 0; i < this.seguimiento.departamento.length; i++)
+                {
+                    if(this.seguimiento.departamento[i].id == this.user.id_departamento)
+                        this.departamentoValido = this.seguimiento.departamento[i];
+                }
+                var c = 0;
+                for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
+                {
+                    for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
+                    {
+                        //console.log(this.departamentoValido.integrantes[i].id);
+                        if(this.departamentoValido.integrantes[i].id == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                        { 
+                            this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id;
+                            c++;
+                        }
+                    }                    
+                }    
+                this.getDepartamentos();            
+            }
+        },
+        updateIntegrantes: function()
+        {
+            axios.post('../UpdateSolicitud_usuario',{
+                integrantes: this.integrantesSeleccionados,
+                id_solicitud: this.seguimiento.id_solicitud,
+            }).then(response=>{
+                this.muestra();
+                //console.log(response);
+            }).catch(function (error) {
+                //console.log(error);
+            });
+        },
+
+        getDepartamentos: function()
+        {
+            axios.get('../getDepartamentos').then(response=>{
+                //console.log(response.data);
+                this.departamentos = response.data;            
+                //console.log(this.seguimiento.correo_atencion);
+            }).catch(function (error) {
+                //console.log(error);
+            });
         }
     }
 });
