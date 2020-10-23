@@ -29,8 +29,12 @@ class seguimientoController extends Controller
 		foreach($atencion as $at)
 		{
 			$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
+			//$usuario = Usuario::where('id', $at->id_usuario).first();
+			//$at->
 			$at->adjuntos = $adjuntos;
+			
 		}
+		
 
 		$departamentos = $solicitud->departamento;
 		foreach($departamentos as $dtp)
@@ -64,9 +68,12 @@ class seguimientoController extends Controller
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
 
-		//if(Session::get('rol') == "USUARIO")
+		if($request->input('rol') != 'USUARIO')
+		{
+			//return Crypt::encryptString($Sol_atencion['id_solicitud']);
+			//$atencion_externos = Atencion_externos::where('solicitud', Crypt::encryptString($Sol_atencion['id_solicitud']))->first();
 			if($this->send_mail_nueva($request->input('codigo'),$request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
-
+		}
 		return $atencion->id;
 	}
 	
@@ -195,7 +202,7 @@ class seguimientoController extends Controller
             $mail->Port = 587;
             $mail->setFrom("noreplay@jaliscoedu.mx", 'CASE');
             $mail->CharSet = 'UTF-8';
-            $mail->addAddress(trim($email));
+            $mail->addAddress(trim("iamjosear@outlook.com"));
 
             $mail->Subject = "Respuesta en solicitud #$id_solicitud";
             $mail->isHTML(true);
@@ -204,7 +211,7 @@ class seguimientoController extends Controller
 					<p>Te han contestado en la solicitud #$id_solicitud el sistema CASE.</p>
 					<p>Respuesta: $detalle </p>
                     <p>Para dar seguimiento a su solicitud de click <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$direccion'>aquí.</a></p>
-                    <p>Su código de verificación es: $atencion_externos</p>
+                    
             "; 
             $mail->Body = $mailContent;
 
