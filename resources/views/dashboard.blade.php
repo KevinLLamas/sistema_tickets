@@ -10,13 +10,13 @@
     <div id="dashboard">
         <input type="hidden" value="{{Session::get('rol')}}" id="rol" name="rol">
         <ul class="nav nav-tabs" id="myTab" role="tablist" >
-            <li class="nav-item">
-                <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                    aria-selected="true">Solicitudes Asignadas</a>
-            </li>
             <li class="nav-item" v-if="rol == 'SUPER'">
-                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                    aria-selected="false">Solicitudes</a>
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                    aria-selected="true">Solicitudes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                    aria-selected="false">Solicitudes Asignadas</a>
             </li>
             <li class="nav-item" v-if="rol == 'ADMIN' || rol == 'JEFE' || rol == 'SUPER'">
                 <a class="nav-link" id="profile2-tab" data-toggle="tab" href="#profile2" role="tab" aria-controls="profile2"
