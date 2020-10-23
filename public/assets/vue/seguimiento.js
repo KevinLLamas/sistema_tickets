@@ -58,7 +58,9 @@ new Vue({
                 this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
                 //console.log(this.nueva_atencion);
                 axios.post('../inserta_atencion',{
-                    data: this.nueva_atencion
+                    data: this.nueva_atencion,
+                    codigo: this.codigo,
+                    email: this.seguimiento.usuario.correo,
                 }).then(result=>{
                     this.id_atencion = result.data;
                     if(this.id === '')

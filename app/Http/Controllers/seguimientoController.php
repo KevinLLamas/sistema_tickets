@@ -16,6 +16,8 @@ use App\Models\Atencion_externos;
 use App\Models\Atencion_adjunto;
 use App\Models\Usuario;
 use App\Models\Departamentos;
+use \PHPMailer\PHPMailer\PHPMailer;
+use \PHPMailer\PHPMailer\Exception;
 
 class seguimientoController extends Controller 
 {
@@ -61,6 +63,8 @@ class seguimientoController extends Controller
 			$atencion->tipo_at = 'Atencion';
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
+
+		if($this->send_mail_nueva($request->input('codigo'),$request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
 
 		return $atencion->id;
 	}
@@ -176,4 +180,40 @@ class seguimientoController extends Controller
 	{
 		return Departamentos::All();
 	}
+
+	public function send_mail_nueva($atencion_externos,$email,$id_solicitud, $detalle){
+
+        $mail = new PHPMailer(true);
+        try{
+            $mail->isSMTP();
+            $mail->Host = 'email-smtp.us-east-1.amazonaws.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'AKIATCA5M63WVFEMVFE3';
+            $mail->Password = 'BG9yGrkHgndFSF0aJcQv1L8fFj9k+jnjHigMmpkkUSMA';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+            $mail->setFrom("noreplay@jaliscoedu.mx", 'CASE');
+            $mail->CharSet = 'UTF-8';
+            $mail->addAddress(trim("iamjosear@outlook.com"));
+
+            $mail->Subject = "Espuesta en solicitud #$id_solicitud";
+            $mail->isHTML(true);
+            $headers = "Content-Type: text/html; charset=UTF-8";
+            $mailContent = "
+					<p>Te han contestado en la solicitud #$id_solicitud el sistema CASE.</p>
+					<p>Respuesta: $detalle </p>
+                    <p>Para dar seguimiento a su solicitud de click <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/Crypt::encryptString($id_solicitud);'>aquí.</a></p>
+                    <p>Su código de verificación es: $atencion_externos</p>
+            "; 
+            $mail->Body = $mailContent;
+
+            if(!$mail->send()){
+               return $mail->ErrorInfo;
+            }else{
+                return 'Enviado';
+            }
+        }catch(phpmailerException $e){
+            return $e;
+        }
+    }
 }
