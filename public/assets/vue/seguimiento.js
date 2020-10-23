@@ -34,6 +34,7 @@ new Vue({
     },
     methods:{
         muestra: function(){
+            if(getId>0)
             axios.get(`../getSolicitud/`+getId).then(response=>{
                 //console.log(response.data);
                 this.seguimiento = response.data;
