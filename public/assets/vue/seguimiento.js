@@ -474,7 +474,7 @@ new Vue({
                     {
                         this.integrantesDesasignados[this.integrantesDesasignados.length] = this.integrantesSeleccionadoAntesUpdate[x];
                         this.banCambio = false;
-                        this.nueva_atencion.detalle= 'desasigno a ' + this.integrantesSeleccionadoAntesUpdate[x].correo;
+                        this.nueva_atencion.detalle= 'desasigno a ' + this.integrantesSeleccionadoAntesUpdate[x].nombre;
                         this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');
@@ -496,7 +496,7 @@ new Vue({
                     {
                         this.integrantesAsignados[this.integrantesAsignados.length] = this.integrantesSeleccionadosCompleto[x];
                         this.banCambio = false;
-                        this.nueva_atencion.detalle= 'asigno a ' + this.integrantesSeleccionadosCompleto[x].correo;
+                        this.nueva_atencion.detalle= 'asigno a ' + this.integrantesSeleccionadosCompleto[x].nombre;
                         this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');

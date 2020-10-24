@@ -25,16 +25,26 @@ class seguimientoController extends Controller
 		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		if($solicitud->atencion != null)
 		{
+			$res = $this->get_usuario($solicitud->usuario->id_sgu);
+			if($res['ok'])
+				$solicitud->usuario->nombre = $res['nombre'];
+			else
+				$solicitud->usuario->nombre = 'Usuario';
 			$atencion = $solicitud->atencion;
 			foreach($atencion as $at)
 			{
 				$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
 				if($at->id_usuario != null)
 				{
-                    
-                    $usuario = Usuario::where('id_sgu', $at->id_usuario)->first();
-                    if(isset($usuario->correo))
-                        $at->correo_usuario = $usuario->correo;
+					$res = $this->get_usuario($at->id_usuario);
+					if($res['ok']){
+						$at->nombre = $res['nombre'];
+						$at->correo_usuario = $res['usuario'];
+					}
+				}
+				else{
+					$at->nombre = 'Usuario';
+					$at->correo_usuario = 'Usuario';
 				}
 				$at->adjuntos = $adjuntos;
 				
@@ -45,10 +55,28 @@ class seguimientoController extends Controller
 		{
 			$usuarios = Usuario::where('id_departamento', $dtp->id)->get();
 			$dtp->integrantes = $usuarios;
+			foreach($dtp->integrantes as $usuario)
+			{
+				$usuario->nombre = $this->get_usuario($usuario->id_sgu)['nombre'];
+			}
 		}
 		return $solicitud;
 	}
-	
+	private function get_usuario($id){
+		$url = curl_init("http://10.9.4.152:3000/persona");
+		$llaveApp = "B0342DEF578109AD4C32E158B2702E884645493F84A0AFACA05A017D3E68D3F8";
+		$data = array(
+			"id_persona"=>$id,
+			"llaveApp" => $llaveApp
+		);
+		curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($url, CURLOPT_POSTFIELDS,http_build_query($data));
+		$response = curl_exec($url);
+		curl_close($url);
+		$res = json_decode($response, true);
+		return $res;
+	}
 	public function inserta_atencion(Request $request){
 		$atencion = new Solicitud_atencion;
 		$Sol_atencion = $request->input('data');	
