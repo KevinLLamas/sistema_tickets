@@ -58,6 +58,20 @@
         </div>
       </div>
     </li>
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud2" aria-expanded="true" aria-controls="collapseSolicitud">
+        <i class="fas fa-envelope-open-text"></i>
+        <span>Tickets Local</span>
+      </a>
+      <div id="collapseSolicitud2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <h6 class="collapse-header">Opciones:</h6>
+          <a class="collapse-item" href="/alta_ticket">Crear Ticket</a>
+          <a class="collapse-item" href="/dashboard">Listado</a>
+        </div>
+      </div>
+    </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
