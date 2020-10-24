@@ -110,7 +110,7 @@ class seguimientoController extends Controller
 		{
 			return response()->json([
                 'status' => true, 
-                'id_solicitud' =>Crypt::decryptString($id),
+                'id_solicitud' =>$this->desecriptar($id),
             ]);
 		}
 		else
@@ -120,7 +120,11 @@ class seguimientoController extends Controller
             ]);
 		}
 	}
-
+	private function desecriptar($texto)
+    {
+        $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );
+        return $decrypted = $newEncrypter->decrypt($texto);
+    }
 	public function get_file($path, $nombre_doc)
 	{
 		return Storage::disk('public')->response("solicitudes/".$path."/".$nombre_doc."");
