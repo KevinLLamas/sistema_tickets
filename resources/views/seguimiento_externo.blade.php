@@ -97,7 +97,7 @@
 					<!--
 					-->
 	<div v-for="item in seguimiento.atencion">
-		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Todos' && item.tipo_at != 'Estatus'">			
+		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Todos' && item.tipo_at != 'Asignacion'">			
 			<div class="card-body">
 				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.correo_usuario}}</b></p>
 				<p v-if="item.tipo_at == 'Externo'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Usuario Constesto</b></p>

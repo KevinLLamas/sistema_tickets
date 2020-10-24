@@ -57,6 +57,12 @@
             $('.selectpicker').selectpicker({
                 maxOptions:2
             });
+            
+            slim = new SlimSelect({
+                        select: '#agregar_usuarios',
+                        placeholder: 'Asignar solicitud ',
+                        limit: 4,
+                      })                    
         </script>
 </body>
 </html>

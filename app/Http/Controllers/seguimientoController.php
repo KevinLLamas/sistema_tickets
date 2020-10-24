@@ -63,9 +63,7 @@ class seguimientoController extends Controller
 
 		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion')
 		{
-			//return Crypt::encryptString($Sol_atencion['id_solicitud']);
-			//$atencion_externos = Atencion_externos::where('solicitud', Crypt::encryptString($Sol_atencion['id_solicitud']))->first();
-			if($this->send_mail_nueva($request->input('codigo'),$request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
+			if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
 		}
 		return $atencion->id;
 	}
@@ -134,6 +132,9 @@ class seguimientoController extends Controller
 
 	public function UpdateSolicitud_usuario(Request $request)
 	{		
+		$fuera = array();
+		$dentro = array();
+
 		$integrantes_seleccionados = $request->input('integrantes');
 		$id_solicitud = $request->input('id_solicitud');		
 		
@@ -198,7 +199,7 @@ class seguimientoController extends Controller
 		return Departamentos::All();
 	}
 
-	public function send_mail_nueva($atencion_externos,$email,$id_solicitud, $detalle){
+	public function send_mail_nueva($email,$id_solicitud, $detalle){
 		$direccion = Crypt::encryptString($id_solicitud);
         $mail = new PHPMailer(true);
         try{
@@ -211,7 +212,7 @@ class seguimientoController extends Controller
             $mail->Port = 587;
             $mail->setFrom("noreplay@jaliscoedu.mx", 'CASE');
             $mail->CharSet = 'UTF-8';
-            $mail->addAddress(trim("iamjosear@outlook.com"));
+            $mail->addAddress(trim($email));
 
             $mail->Subject = "Respuesta en solicitud #$id_solicitud";
             $mail->isHTML(true);
@@ -220,7 +221,6 @@ class seguimientoController extends Controller
 					<p>Te han contestado en la solicitud #$id_solicitud el sistema CASE.</p>
 					<p>Respuesta: $detalle </p>
                     <p>Para dar seguimiento a su solicitud de click <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$direccion'>aquí.</a></p>
-                    
             "; 
             $mail->Body = $mailContent;
 

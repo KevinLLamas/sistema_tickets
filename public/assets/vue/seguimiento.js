@@ -27,7 +27,11 @@ new Vue({
         departamentoValido: '',
         integrantesSeleccionados: [],
         integrantesSeleccionadosCompleto: [],
+        integrantesSeleccionadoAntesUpdate: [],
+        integrantesDesasignados: [],
+        integrantesAsignados: [],
         departamentos: [],
+        banCambio: false,
     },
     created: function(){
         this.muestra();        
@@ -43,6 +47,7 @@ new Vue({
             }).catch(function (error) {
                 console.log(error);
             });
+            
         },
         muestra2: function(){
             axios.get(`../getSolicitud/`+this.id).then(response=>{
@@ -74,7 +79,7 @@ new Vue({
                         this.muestra();
                     else
                         this.muestra2();
-                    if(accion != '')
+                    if(accion != '' && accion != 'Asignacion')
                     {
                         switch(accion)
                         {
@@ -102,15 +107,21 @@ new Vue({
                                     this.seguimiento.estatus = "Cerrada";
                                 }                                
                             break;
+                            default:
+
+                            break;
                         }  
                         this.cambiarEstatus();                      
                     }
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Comentario agregado correctamente.',
-                        showConfirmButton: false,
-                        timer: 1000
-                    });
+                    if(accion == '')
+                    {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Comentario agregado correctamente.',
+                            showConfirmButton: false,
+                            timer: 1000
+                        });
+                    }   
                     this.saveFiles();
                     this.nueva_atencion.detalle = '';
                     this.nueva_atencion.tipo_respuesta = '';
@@ -348,14 +359,11 @@ new Vue({
             axios.get('../getUserData').then(response=>{
                 console.log(response.data);
                 this.user = response.data;   
-                this.validatePermission();            
-                if(this.user.rol != 'TECNICO')
+                this.validatePermission();       
+                this.eventosCambiosAsignacion();
+                if(this.user.rol == 'TECNICO')
                 {
-                    slim = new SlimSelect({
-                        select: '#agregar_usuarios',
-                        placeholder: 'Asignar solicitud ',
-                        limit: 4,
-                      })
+                    slim.destroy();
                 } 
                 //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
@@ -364,7 +372,7 @@ new Vue({
         },
         validatePermission: function()
         {
-            console.log("HODA");
+            this.integrantesSeleccionadosCompleto = [];
             for(var i = 0; i < this.seguimiento.departamento.length; i++)
             {                
                 if(this.seguimiento.departamento[i].id == this.user.id_departamento)
@@ -388,13 +396,10 @@ new Vue({
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)' && this.user === '')
             {
                 Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
-            }  
-             
-            
+            }              
         },
         validatePermissionExterno: function()
         {
-            console.log("HODA");
             for(var i = 0; i < this.seguimiento.departamento.length; i++)
             {                
                 var c = 0;
@@ -411,11 +416,6 @@ new Vue({
                     }                    
                 }  
             }
-            
-            if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)')
-            {
-                Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
-            }  
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)')
             {
                 Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
@@ -424,22 +424,69 @@ new Vue({
         },
         updateIntegrantes: function()
         {
+            this.integrantesSeleccionadoAntesUpdate = [];
+            this.integrantesSeleccionadoAntesUpdate = this.integrantesSeleccionadosCompleto;
+            this.banCambio = true;
             axios.post('../UpdateSolicitud_usuario',{
                 integrantes: this.integrantesSeleccionados,
                 id_solicitud: this.seguimiento.id_solicitud,
             }).then(response=>{
-                this.muestra();
+                this.muestra();                
                 var c = 0;  
-                Swal.fire('Correcto','Se han actualizado los usuarios','success');
-                /*this.nueva_atencion.detalle = 'Cambio en asignación';
-                this.nueva_atencion.id_usuario= this.user.id;
-                this.nueva_atencion.tipo_at= 'Asignación';
-                this.agregarAtencion('Todos', '');
-                this.nueva_atencion.estatus = "";*/
-                //console.log(response);
+                Swal.fire('Correcto','Se han actualizado los usuarios','success');                
             }).catch(function (error) {
                 //console.log(error);
             });
+        },
+        eventosCambiosAsignacion: function()
+        {
+            if(this.banCambio)
+            {
+                this.integrantesDesasignados = [];
+                this.integrantesAsignados = [];
+                //Integrantes desasignados
+                for(var x = 0; x < this.integrantesSeleccionadoAntesUpdate.length; x++)
+                {
+                    let ban = false;
+                    for(var i = 0; i < this.integrantesSeleccionadosCompleto.length; i++)
+                    {
+                        if(this.integrantesSeleccionadoAntesUpdate[x].id == this.integrantesSeleccionadosCompleto[i].id)
+                            ban = true;
+                    }
+                    if(!ban)
+                    {
+                        this.integrantesDesasignados[this.integrantesDesasignados.length] = this.integrantesSeleccionadoAntesUpdate[x];
+                        this.banCambio = false;
+                        this.nueva_atencion.detalle= 'desasigno a ' + this.integrantesSeleccionadoAntesUpdate[x].correo;
+                        this.nueva_atencion.id_usuario= this.user.id;
+                        this.nueva_atencion.tipo_at= 'Asignacion';
+                        this.agregarAtencion('Todos', 'Asignacion');
+                        this.nueva_atencion.estatus = "";
+
+                    }
+                }
+
+                //Integrantes Asignados
+                for(var x = 0; x < this.integrantesSeleccionadosCompleto.length; x++)
+                {
+                    let ban = false;
+                    for(var i = 0; i < this.integrantesSeleccionadoAntesUpdate.length; i++)
+                    {
+                        if(this.integrantesSeleccionadosCompleto[x].id == this.integrantesSeleccionadoAntesUpdate[i].id)
+                            ban = true;
+                    }
+                    if(!ban)
+                    {
+                        this.integrantesAsignados[this.integrantesAsignados.length] = this.integrantesSeleccionadosCompleto[x];
+                        this.banCambio = false;
+                        this.nueva_atencion.detalle= 'asigno a ' + this.integrantesSeleccionadosCompleto[x].correo;
+                        this.nueva_atencion.id_usuario= this.user.id;
+                        this.nueva_atencion.tipo_at= 'Asignacion';
+                        this.agregarAtencion('Todos', 'Asignacion');
+                        this.nueva_atencion.estatus = "";
+                    }
+                }
+            }
         },
 
         getDepartamentos: function()
