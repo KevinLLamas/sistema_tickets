@@ -84,7 +84,7 @@ class SolicitudController extends Controller
             $solicitud_atencion->save();
 
             $atencion_externos = new Atencion_externos;
-            $atencion_externos->solicitud =  Crypt::encryptString($id_solicitud);
+            $atencion_externos->solicitud =  $this->encriptar($id_solicitud);
             $atencion_externos->codigo =  $this->generarCodigo();
             $atencion_externos->save();
             if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion,$id_solicitud) == 'Enviado');
@@ -105,6 +105,16 @@ class SolicitudController extends Controller
                 'message' => 'Correo invalido.'
             ]);
         }
+    }
+    private function encriptar($texto)
+    {
+        $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );
+        return $encrypted = $newEncrypter->encrypt($texto);
+    }
+    private function desecriptar($texto)
+    {
+        $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );
+        return $decrypted = $newEncrypter->decrypt($texto);
     }
     public function save_files(Request $request)
     {

@@ -26,7 +26,7 @@
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
 		<select class="col-md-5" v-model="integrantesSeleccionados"   id="agregar_usuarios" @change="updateIntegrantes" multiple>
-			<option  :value="item.id_sgu" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
+			<option  :value="item.id_sgu" v-for="item in departamentoValido.integrantes">@{{item.nombre}}</option>
 		</select>
 	</p>
 	<p v-if="user.rol == 'TECNICO'">
@@ -34,7 +34,7 @@
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
-		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}}, <br> </label>
+		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.nombre}}, <br> </label>
 	</p>
 	
 	<hr>
@@ -42,7 +42,8 @@
 	<div   class="card bg-white ">
 
 		<div class="card-body">
-			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.correo}}</b></p>
+			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.nombre}}</b></p>
+			<p v-if="!seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por Usuario</b></p>
 			<p class="card-text">@{{seguimiento.descripcion}}</p>
 			<p>
 				<small>
@@ -72,10 +73,10 @@
 	<div v-for="item in seguimiento.atencion">
 		<div class="card bg-white mb-3" v-if="item.tipo_respuesta == 'Todos'">			
 			<div class="card-body">
-				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.correo_usuario}}</b></p>
-				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{item.correo_usuario}}</b></p>
-				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{item.correo_usuario}}</b></p>
-				<p v-if="item.tipo_at == 'Asignacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - @{{item.correo_usuario}}</b></p>
+				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Asignacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - @{{item.nombre}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">

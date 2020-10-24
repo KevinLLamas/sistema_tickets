@@ -56,7 +56,7 @@ Route::get('seguimiento/{id}', function () {return view('seguimiento');});
 
 
 });
-
+Route::get('prueba/{id}', [seguimientoController::class, 'desencriptar']); 
 Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
 Route::post('inserta_atencion',  [seguimientoController::class, 'inserta_atencion']);
 Route::post('cambiar_estatus',  [seguimientoController::class, 'cambiar_estatus']);
