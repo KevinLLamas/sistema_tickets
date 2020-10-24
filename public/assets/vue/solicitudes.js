@@ -86,7 +86,9 @@ new Vue({
             } 
             else if (tipo == 'Cerrada') {
                 return 'text-success'
- 
+            }
+            else if (tipo == 'Cerrada (En espera de aprobación)') {
+                return 'text-light'
             }
         },
         asignarColorHex:function(tipo){
@@ -104,7 +106,9 @@ new Vue({
             } 
             else if (tipo == 'Cerrada') {
                 return '#28a745'
- 
+            }
+            else if (tipo == 'Cerrada (En espera de aprobación)') {
+                return '#CDCDCD'
             }
         },
         getRandomColor:function(){

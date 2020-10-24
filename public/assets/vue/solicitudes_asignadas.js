@@ -89,6 +89,9 @@ new Vue({
                 return 'text-success'
  
             }
+            else if (tipo == 'Cerrada (En espera de aprobación)') {
+                return 'text-light'
+            }
         },
         asignarColorHex:function(tipo){
             if (tipo == 'Sin atender') {
@@ -105,7 +108,9 @@ new Vue({
             } 
             else if (tipo == 'Cerrada') {
                 return '#28a745'
- 
+            }
+            else if (tipo == 'Cerrada (En espera de aprobación)') {
+                return '#CDCDCD'
             }
         },
         getNumSolicitudesByStatusAsignadas:async function(){

@@ -76,7 +76,7 @@ class SolicitudController extends Controller
 
             $solicitud_atencion = new Solicitud_atencion;
             $solicitud_atencion->id_solicitud = $id_solicitud;
-            $solicitud_atencion->id_usuario = 1;
+            $solicitud_atencion->id_usuario = Session::get('id_sgu');;
             $solicitud_atencion->detalle = 'Solicitud creada';
             $solicitud_atencion->tipo_respuesta = 'Todos';
             $solicitud_atencion->momento =now();

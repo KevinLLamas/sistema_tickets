@@ -3,12 +3,12 @@
 <div id="alta_solicitud" >
     <div class="col-md-12 mt-3">
         <ol class="breadcrumb w-100">
-            <li class="breadcrumb-item"><a href="inicio">Inicio</a></li>
-            <li class="breadcrumb-item">Alta de solicitud</li>
+            <li class="breadcrumb-item"><a href="/cast">Inicio</a></li>
+            <li class="breadcrumb-item">Alta de Ticket</li>
         </ol>
     </div>
     <form class="container mb-5" id="alumno" v-on:submit.prevent="guardar()">
-        <h1>Alta de solicitud</h1>
+        <h1>Alta de Ticket</h1>
         <div class="form-group">
             <label for="">Tipo de persona solicitante*</label>
             <select class="form-control" name="perfil" id="perfil" v-model="solicitud.perfil" @change="getCategorias()" required>
@@ -54,7 +54,7 @@
                 <div class="custom-file" >
                     <input type="file" class="custom-file-input" id="customFileLang" v-on:change="fileChangeFormato"  multiple>
                     <label class="custom-file-label" id="label_formato" for="customFileLang" data-browse="Seleccionar" >Seleccionar Archivos</label>
-                    <small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb</small>
+                    <small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb y se permiten máximo 4 archivos.</small>
                 </div>
             </div>
             <div class="form-group col-md-12 mt-3" v-if="Campos.length > 0">

@@ -10,7 +10,7 @@
   <meta name="author" content="">
 
   <title>CAST</title>
-  <link rel="icon" type="image/png" href="/assets/images/logo_edu.png" /> 
+  <link rel="icon" type="image/png" href="{{ asset('assets/images/logo_edu.png')}}" /> 
   <!-- Custom fonts for this template-->
   <link href="{{asset('assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -56,13 +56,7 @@
         
             $('.selectpicker').selectpicker({
                 maxOptions:2
-            });
-            
-            slim = new SlimSelect({
-                        select: '#agregar_usuarios',
-                        placeholder: 'Asignar solicitud ',
-                        limit: 4,
-                      })                    
+            });                 
         </script>
 </body>
 </html>

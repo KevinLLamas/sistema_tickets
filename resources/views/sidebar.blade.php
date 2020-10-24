@@ -47,12 +47,12 @@
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud" aria-expanded="true" aria-controls="collapseSolicitud">
         <i class="fas fa-envelope-open-text"></i>
-        <span>Solicitudes</span>
+        <span>Tickets</span>
       </a>
       <div id="collapseSolicitud" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <h6 class="collapse-header">Opciones:</h6>
-          <a class="collapse-item" href="/cast/alta_solicitud">Crear Solicitud</a>
+          <a class="collapse-item" href="/cast/alta_ticket">Crear Ticket</a>
           <!--a class="collapse-item" href="/cast/alta_solicitud_servicio">Solicitar un Servicio</a-->
           <a class="collapse-item" href="/cast/dashboard">Listado</a>
         </div>

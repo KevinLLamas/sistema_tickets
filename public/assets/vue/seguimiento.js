@@ -40,7 +40,7 @@ new Vue({
         muestra: function(){
             if(getId>0)
             axios.get(`../getSolicitud/`+getId).then(response=>{
-                //console.log(response.data);
+                console.log(response.data);
                 this.seguimiento = response.data;
                 this.getUserData();
                 //console.log(this.seguimiento.correo_atencion);
@@ -63,14 +63,14 @@ new Vue({
             var ban = false;
             if(this.nueva_atencion.detalle)
             {
-                this.nueva_atencion.id_usuario= this.user.id;
+                this.nueva_atencion.id_usuario= this.user.id_sgu;
                 this.nueva_atencion.tipo_respuesta = tipo;
                 this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
                 //console.log(this.nueva_atencion);
                 axios.post('../inserta_atencion',{
                     data: this.nueva_atencion,
                     codigo: this.codigo,
-                    email: this.seguimiento.usuario.correo,
+                    email: this.seguimiento.correo_atencion,
                     rol: this.user.rol,
                 }).then(result=>{
                     console.log(result);
@@ -79,7 +79,8 @@ new Vue({
                         this.muestra();
                     else
                         this.muestra2();
-                    if(accion != '' && accion != 'Asignacion')
+                    this.saveFiles();
+                    if(accion != '' && accion != 'Asignacion'  && action != 'cambio_estatus')
                     {
                         switch(accion)
                         {
@@ -96,15 +97,15 @@ new Vue({
                                 }                                
                             break;
                             case 'Resolver':
-                                if(this.seguimiento.estatus != "Cerrada")
+                                if(this.seguimiento.estatus != "Cerrada (En espera de aprobación)")
                                 {
-                                    this.seguimiento.estatus = "Cerrada";
+                                    this.seguimiento.estatus = "Cerrada (En espera de aprobación)";
                                 }                                
                             break;
                             case 'Terminar':
-                                if(this.seguimiento.estatus != "Cerrada")
+                                if(this.seguimiento.estatus != "Cerrada (En espera de aprobación)")
                                 {
-                                    this.seguimiento.estatus = "Cerrada";
+                                    this.seguimiento.estatus = "Cerrada (En espera de aprobación)";
                                 }                                
                             break;
                             default:
@@ -115,14 +116,22 @@ new Vue({
                     }
                     if(accion == '')
                     {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Comentario agregado correctamente.',
-                            showConfirmButton: false,
-                            timer: 1000
-                        });
-                    }   
-                    this.saveFiles();
+                        if(tipo == 'Interna')
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Nota agregada correctamente.',
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                        else
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Comentario agregado correctamente.',
+                                showConfirmButton: false,
+                                timer: 1000
+                            });
+                        
+                    }
                     this.nueva_atencion.detalle = '';
                     this.nueva_atencion.tipo_respuesta = '';
                     this.nueva_atencion.tipo_at = '';
@@ -210,16 +219,24 @@ new Vue({
              }).then(result=>{           
                  //this.getSesiones();
                  this.seguimiento.estatus = result.data;
+                 if(this.seguimiento.estatus == 'Cerrada')
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'El ticket fue cerrado correctamente',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }) 
+                else
                  Swal.fire({
                      icon: 'success',
-                     title: 'Se cambio el estatus',
+                     title: 'Se cambio el estatus a '+this.seguimiento.estatus,
                      showConfirmButton: false,
-                     timer: 1000
+                     timer: 2000
                  })                 
                 this.nueva_atencion.detalle= 'Cambio de estatus a ' + this.seguimiento.estatus;
-                this.nueva_atencion.id_usuario= this.user.id;
+                this.nueva_atencion.id_usuario= this.user.id_sgu;
                 this.nueva_atencion.tipo_at= 'Estatus';
-                this.agregarAtencion('Todos', '');
+                this.agregarAtencion('Todos', 'cambio_estatus');
                 this.nueva_atencion.estatus = "";
              }).catch(error=>{
                 console.log(error);
@@ -270,12 +287,12 @@ new Vue({
                          }
                      }
                      this.files = e.target.files;
-                     $("#label_formato").text(e.target.files.length + ' Archivos');
+                     $("#label_formato_notes").text(e.target.files.length + ' Archivos');
                  }
                  else{
                      swal.fire('Incorrecto','Solo puedes seleccionar un maximo de 4 archivos','warning');
                      this.files = {};
-                     $("#label_formato").text('Selecciona Archivos');
+                     $("#label_formato_notes").text('Selecciona Archivos');
                  }
             }
             else{
@@ -286,7 +303,7 @@ new Vue({
                      return;
                  }
                  this.files = e.target.files;
-                 $("#label_formato").text(e.target.files[0].name);
+                 $("#label_formato_notes").text(e.target.files[0].name);
                  
             }
          },
@@ -357,7 +374,7 @@ new Vue({
         getUserData: function(){
              //console.log("User data");
             axios.get('../getUserData').then(response=>{
-                console.log(response.data);
+                //console.log(response.data);
                 this.user = response.data;   
                 this.validatePermission();       
                 this.eventosCambiosAsignacion();
@@ -385,9 +402,9 @@ new Vue({
                 for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
                 {
                     //console.log(this.departamentoValido.integrantes[i].id);
-                    if(this.departamentoValido.integrantes[i].id == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                    if(this.departamentoValido.integrantes[i].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
                     { 
-                        this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id;
+                        this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id_sgu;
                         this.integrantesSeleccionadosCompleto[c] = this.departamentoValido.integrantes[i];
                         c++;
                     }
@@ -407,9 +424,9 @@ new Vue({
                 {
                     for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
                     {
-                        if(this.seguimiento.departamento[i].integrantes[z].id == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                        if(this.seguimiento.departamento[i].integrantes[z].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
                         { 
-                            this.integrantesSeleccionados[c] = this.seguimiento.departamento[i].integrantes[z].id;
+                            this.integrantesSeleccionados[c] = this.seguimiento.departamento[i].integrantes[z].id_sgu;
                             this.integrantesSeleccionadosCompleto[c] = this.seguimiento.departamento[i].integrantes[z];
                             c++;
                         }
@@ -450,7 +467,7 @@ new Vue({
                     let ban = false;
                     for(var i = 0; i < this.integrantesSeleccionadosCompleto.length; i++)
                     {
-                        if(this.integrantesSeleccionadoAntesUpdate[x].id == this.integrantesSeleccionadosCompleto[i].id)
+                        if(this.integrantesSeleccionadoAntesUpdate[x].id_sgu== this.integrantesSeleccionadosCompleto[i].id_sgu)
                             ban = true;
                     }
                     if(!ban)
@@ -458,7 +475,7 @@ new Vue({
                         this.integrantesDesasignados[this.integrantesDesasignados.length] = this.integrantesSeleccionadoAntesUpdate[x];
                         this.banCambio = false;
                         this.nueva_atencion.detalle= 'desasigno a ' + this.integrantesSeleccionadoAntesUpdate[x].correo;
-                        this.nueva_atencion.id_usuario= this.user.id;
+                        this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');
                         this.nueva_atencion.estatus = "";
@@ -472,7 +489,7 @@ new Vue({
                     let ban = false;
                     for(var i = 0; i < this.integrantesSeleccionadoAntesUpdate.length; i++)
                     {
-                        if(this.integrantesSeleccionadosCompleto[x].id == this.integrantesSeleccionadoAntesUpdate[i].id)
+                        if(this.integrantesSeleccionadosCompleto[x].id_sgu == this.integrantesSeleccionadoAntesUpdate[i].id_sgu)
                             ban = true;
                     }
                     if(!ban)
@@ -480,7 +497,7 @@ new Vue({
                         this.integrantesAsignados[this.integrantesAsignados.length] = this.integrantesSeleccionadosCompleto[x];
                         this.banCambio = false;
                         this.nueva_atencion.detalle= 'asigno a ' + this.integrantesSeleccionadosCompleto[x].correo;
-                        this.nueva_atencion.id_usuario= this.user.id;
+                        this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');
                         this.nueva_atencion.estatus = "";

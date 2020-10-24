@@ -31,8 +31,10 @@ class seguimientoController extends Controller
 				$adjuntos = Atencion_adjunto::where('id_atencion', $at->id)->get();
 				if($at->id_usuario != null)
 				{
-					$usuario = Usuario::where('id', $at->id_usuario)->first();
-					$at->correo_usuario = $usuario->correo;
+                    
+                    $usuario = Usuario::where('id_sgu', $at->id_usuario)->first();
+                    if(isset($usuario->correo))
+                        $at->correo_usuario = $usuario->correo;
 				}
 				$at->adjuntos = $adjuntos;
 				

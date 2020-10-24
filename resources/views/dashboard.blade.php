@@ -5,32 +5,31 @@
 <!-- Begin Page Content -->
 <div  class="container" >
     <!-- Content Row -->
-    <div class="row">
-    </div>    
     <div id="dashboard">
         <input type="hidden" value="{{Session::get('rol')}}" id="rol" name="rol">
         <ul class="nav nav-tabs" id="myTab" role="tablist" >
-            <li class="nav-item" v-if="rol == 'SUPER'">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
-                    aria-selected="true">Solicitudes</a>
-            </li>
+            
             <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
-                    aria-selected="false">Solicitudes Asignadas</a>
+                <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                    aria-selected="false">Tickets Asignados</a>
+            </li>
+            <li class="nav-item" v-if="rol == 'SUPER'">
+                <a class="nav-link " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                    aria-selected="true">Tickets</a>
             </li>
             <li class="nav-item" v-if="rol == 'ADMIN' || rol == 'JEFE' || rol == 'SUPER'">
                 <a class="nav-link" id="profile2-tab" data-toggle="tab" href="#profile2" role="tab" aria-controls="profile2"
-                    aria-selected="false">Solicitudes Departamento</a>
+                    aria-selected="false">Tickets Departamento</a>
             </li>
             <li class="nav-item" >
                 <a class="nav-link" id="profile3-tab" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile3"
-                    aria-selected="false">Mis Solicitudes</a>
+                    aria-selected="false">Mis Tickets</a>
             </li>
 
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="form-group row mt-3">
                 <div id="solicitudes" class="container-fluid">
                     <div class="row">
@@ -39,7 +38,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Solicitudes</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Tickets</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -56,7 +55,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body" v-show="!ocultarListaSolicitudes">
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
-                                        <h1>Listado de Solicitudes</h1>
+                                        <h1>Listado de Tickets</h1>
                                         <div class="form-row">
                                             <div class="form-group col-lg-1">
                                                 <label for="paginado1">Paginado</label>
@@ -92,7 +91,7 @@
                                                 <label for="busquedaid1">Busqueda por ID</label>
                                                 <input type="text"
                                                     class="form-control" name="busquedaid1" id="busquedaid1" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesAdmin">
-                                                <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                <small id="helpId" class="form-text text-muted">Escribe el ID ticket</small>
                                                 
                                             </div>
                                             <div class="form-group col-lg-4">
@@ -127,7 +126,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -166,7 +165,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Tickets</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -198,7 +197,7 @@
             </div>
             
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade  show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
             <div class="form-group row mt-3">
                 <div id="mis_solicitudes_asignadas" class="container-fluid">
@@ -208,7 +207,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Solicitudes Asignadas</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Tickets Asignados</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -225,7 +224,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body" v-show="!ocultarTabla">
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
-                                        <h1>Solicitudes Asignadas</h1>
+                                        <h1>Tickets Asignados</h1>
                                         <div class="form-row">
                                             <div class="form-group col-lg-1">
                                                 <label for="">Paginado</label>
@@ -261,7 +260,7 @@
                                                     <label for="">Busqueda por ID</label>
                                                     <input type="text"
                                                         class="form-control" name="busquedaid2" id="busquedaid2" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesAsignadas">
-                                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                    <small id="helpId" class="form-text text-muted">Escribe el ID ticket</small>
                                                 </div>
                                             </div>
                                             <div class="form-group col-lg-4">
@@ -293,7 +292,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -334,7 +333,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes Asignadas</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Tickets Asignados</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -374,7 +373,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Solicitudes Departamento</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Tickets Departamento</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -391,7 +390,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body" v-show="!ocultarListaSolicitudes">
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
-                                        <h1>Listado de Solicitudes</h1>
+                                        <h1>Solicitudes Departamento</h1>
                                         <div class="form-row">
                                             <div class="form-group col-lg-1">
                                                 <label for="">Paginado</label>
@@ -427,7 +426,7 @@
                                                     <label for="">Busqueda por ID</label>
                                                     <input type="text"
                                                         class="form-control" name="busquedaid3" id="busquedaid3" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getSolicitudesDepartamento">
-                                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                    <small id="helpId" class="form-text text-muted">Escribe el ID ticket</small>
                                                 </div>
                                             </div>
                                             <div class="form-group col-lg-4">
@@ -463,7 +462,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -504,7 +503,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes Departamento</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Tickets Departamento</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -543,7 +542,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Mis Solicitudes</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Mis Tickets</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -596,7 +595,7 @@
                                                     <label for="">Busqueda por ID</label>
                                                     <input type="text"
                                                         class="form-control" name="busquedaid4" id="busquedaid4" aria-describedby="helpId" placeholder="ID" v-model="busquedaid" @input="getMisSolicitudes">
-                                                    <small id="helpId" class="form-text text-muted">Escribe el ID</small>
+                                                    <small id="helpId" class="form-text text-muted">Escribe el ID ticket</small>
                                                 </div>
                                             </div>
                                             <div class="form-group col-lg-4">
@@ -628,7 +627,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                            
                                             </tbody>
@@ -669,7 +668,7 @@
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Mis Solicitudes</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Grafica de Mis Tickets</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>

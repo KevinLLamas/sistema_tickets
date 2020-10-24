@@ -1,9 +1,13 @@
 @extends('app')
 @section('content')
 <script src="https://unpkg.com/slim-select@1.25.0/dist/slimselect.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.23.1/slimselect.css">
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/slim.css')}}">
 <!-- Begin Page Content -->
 <div  class="container" id="app" v-cloak>
+        <ol class="breadcrumb w-100">
+            <li class="breadcrumb-item"><a href="/cast">Inicio</a></li>
+            <li class="breadcrumb-item">Seguimiento</li>
+        </ol>
 	<!-- Page Heading -->
 	<h1 class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} @{{ seguimiento.descripcion }}</h1>
 	<div v-if="seguimiento.estatus">
@@ -16,13 +20,13 @@
 			<option v-if="seguimiento.estatus === 'Cerrada'" option="Cerrada">Cerrada</option>
 		</select>
 	</div>
-	<p v-if="user.rol != 'TECNICO'">
+	<p v-if="user.rol != 'TECNICO'" class="mt-3" v-cloak>
 		<i class="far fa-clock"></i> 
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
-		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
-		<select  class="col-md-5" v-model="integrantesSeleccionados"   id="agregar_usuarios" @change="updateIntegrantes" multiple>
-			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
+		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
+		<select class="col-md-5" v-model="integrantesSeleccionados"   id="agregar_usuarios" @change="updateIntegrantes" multiple>
+			<option  :value="item.id_sgu" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
 		</select>
 	</p>
 	<p v-if="user.rol == 'TECNICO'">
@@ -48,13 +52,13 @@
 							<i class="fas"></i><h2>Correo institucional: <b>@{{item.valor}}</b> </h2>
 						</div>
 						<div v-else-if="item.tipo_dato == 'curp'">
-							<i class="far fa-id-badge"></i> CURP: <b>**********@{{item.valor.slice(10)}} </b>
+							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'telefono'">
-							<i class="fas fa-mobile-alt"></i> Celular: ******<b>@{{item.valor.slice(6)}} </b>
+							<i class="fas fa-mobile-alt"></i> Celular: <b>@{{item.valor}} </b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'matricula'">
-							<i class="fas fa-mobile-alt"></i> Matricula: *****<b>@{{item.valor.slice(5)}} </b>
+							<i class="fas fa-mobile-alt"></i> Matricula: <b>@{{item.valor}} </b>
 						</div>
 					</div>
 				</small>
@@ -85,7 +89,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/cast//get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>	
@@ -95,7 +99,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'../get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/cast/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>		
 		</div>
@@ -135,7 +139,7 @@
 
 
 
-	<ul v-if="seguimiento.estatus != 'Cerrada' && seguimiento.estatus != 'Suspendida'" class="nav nav-tabs mt-5" id="myTab" role="tablist">
+	<ul v-if="seguimiento.estatus != 'Cerrada' && seguimiento.estatus != 'Cerrada (En espera de aprobación)' && seguimiento.estatus != 'Suspendida'" class="nav nav-tabs mt-5" id="myTab" role="tablist">
 		<li class="nav-item">
 			<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
 				aria-selected="true">Responder</a>
@@ -146,7 +150,7 @@
 		</li>
 
 	</ul>
-	<div v-if="seguimiento.estatus != 'Cerrada' && seguimiento.estatus != 'Suspendida'" class="tab-content" id="myTabContent">
+	<div v-if="seguimiento.estatus != 'Cerrada' && seguimiento.estatus != 'Cerrada (En espera de aprobación)' && seguimiento.estatus != 'Suspendida'" class="tab-content" id="myTabContent">
 		<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 			<div class="form-group row mt-2">
 
@@ -158,7 +162,7 @@
 				<div class="custom-file" >
 					<input type="file" class="custom-file-input" id="customFileLang" v-on:change="fileChangeFormato"  multiple>
 					<label class="custom-file-label" id="label_formato" for="customFileLang" data-browse="Seleccionar" >Seleccionar Archivos</label>
-					<small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb</small>
+					<small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb y se permiten máximo 4 archivos.</small>
 				</div>
 			</div>
 			<div class="form-group row">
@@ -192,7 +196,7 @@
 				<div class="custom-file" >
 					<input type="file" class="custom-file-input" id="customFileLangNotes" v-on:change="fileChangeFormatoNotes"  multiple>
 					<label class="custom-file-label" id="label_formato_notes" for="customFileLangNotes" data-browse="Seleccionar" >Seleccionar Archivos</label>
-					<small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb</small>
+					<small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb y se permiten máximo 4 archivos.</small>
 				</div>
 			</div>
 
@@ -246,5 +250,11 @@
 </div>
 
 <script type="text/javascript" src="{{asset('assets/vue/seguimiento.js')}}"></script>
-
+<script>
+    slim = new SlimSelect({
+                select: '#agregar_usuarios',
+                placeholder: 'Asignar solicitud ',
+                limit: 4,
+              })                    
+</script>
 @endsection

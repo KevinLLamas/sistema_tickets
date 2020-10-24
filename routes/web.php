@@ -15,7 +15,7 @@ Route::group(['middleware' => 'validar', 'web'], function()
 {
 Route::get('logout', [LoginController::class, 'logout']);
 //SOLICITUDES
-Route::get('/alta_solicitud', function(){return view('alta_solicitud');});
+Route::get('/alta_ticket', function(){return view('alta_solicitud');});
 Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
 Route::post('save_files', [SolicitudController::class, 'save_files']);
 Route::get('getCampos', [SolicitudController::class, 'getCampos']);
@@ -52,8 +52,12 @@ Route::get('solicitudes_asignadas', function () {return view('solicitudes_asigna
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
 
 //Seguimiento
-Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
+
+
+});
+
+Route::get('getSolicitud/{id}', [seguimientoController::class, 'seguimiento']);
 Route::post('inserta_atencion',  [seguimientoController::class, 'inserta_atencion']);
 Route::post('cambiar_estatus',  [seguimientoController::class, 'cambiar_estatus']);
 Route::get('seguimiento_externo/{id}', [seguimientoController::class, 'seguimiento_externo']); 
@@ -63,9 +67,6 @@ Route::get('getUserData', [seguimientoController::class, 'getUserData']);
 Route::post('UpdateSolicitud_usuario',  [seguimientoController::class, 'UpdateSolicitud_usuario']);
 Route::get('getDepartamentos', [seguimientoController::class, 'getDepartamentos']);
 Route::post('inserta_atencion_externo',  [seguimientoController::class, 'inserta_atencion_externo']);
-
-});
-
 
 Route::get('/ejemplo', function () {
     return view('ejemplo');

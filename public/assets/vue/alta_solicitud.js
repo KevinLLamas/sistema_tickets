@@ -113,7 +113,7 @@ new Vue({
                 if(result.data.status){
                     this.solicitud.id = result.data.id_solicitud;
                     this.solicitud.id_atencion = result.data.id_atencion;
-                    Swal.fire('Correcto','Solicitud guardada correctamente','success');
+                    Swal.fire('Correcto','Ticket guardado correctamente','success');
                     this.saveFiles();
                 }
                 else
@@ -178,18 +178,18 @@ new Vue({
                     console.log(response.data);
                     if(response.data.status){
                         swal.close();
-                        Swal.fire('Atención','Solicitud '+this.solicitud.id+' creada con éxito','success');
+                        Swal.fire('Ticket creado','Tu ID de ticket es: '+this.solicitud.id,'success');
                     }
                     else{
                         swal.close();
-                        Swal.fire('Atención','No se pudieron subir los archivos, tu solicitud es: '+this.solicitud.id,'warning');
+                        Swal.fire('Ticket creado','No se pudieron subir los archivos, Tu ID de ticket es: '+this.solicitud.id,'warning');
                     }
                 }).catch(error=>{
                     console.log(error);
                 })
             }
             else{
-                Swal.fire('Atención','Solicitud '+this.solicitud.id+' creada con éxito','success');
+                Swal.fire('Ticket creado','Tu ID de ticket es: '+this.solicitud.id,'success');
             }
         },
     },

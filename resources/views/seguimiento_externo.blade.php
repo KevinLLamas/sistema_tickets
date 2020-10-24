@@ -54,7 +54,7 @@
 		<select v-if="departamentoValido" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
 			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
 		</select>
-		<label v-if="integrantesSeleccionadosCompleto" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}} <br> </label>
+		<label v-if="integrantesSeleccionadosCompleto" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}}, <br> </label>
 		
 		<!--select class="selectpicker" data-live-search="true">
 			<option data-tokens="ketchup mustard">Juan López García</option>
@@ -106,7 +106,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/cast/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>	
@@ -116,7 +116,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/cast/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>	
@@ -175,7 +175,7 @@
 				<div class="custom-file" >
 					<input type="file" class="custom-file-input" id="customFileLang" v-on:change="fileChangeFormato"  multiple>
 					<label class="custom-file-label" id="label_formato" for="customFileLang" data-browse="Seleccionar" >Seleccionar Archivos</label>
-					<small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb</small>
+					<small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb y se permiten máximo 4 archivos.</small>
 				</div>
 			</div>
 			<div class="form-group row">
