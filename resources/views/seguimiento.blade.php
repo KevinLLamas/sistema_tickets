@@ -34,7 +34,7 @@
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
-		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.correo}}, <br> </label>
+		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.nombre}}, <br> </label>
 	</p>
 	
 	<hr>
@@ -43,6 +43,7 @@
 
 		<div class="card-body">
 			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.nombre}}</b></p>
+			<p v-if="!seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por Usuario</b></p>
 			<p class="card-text">@{{seguimiento.descripcion}}</p>
 			<p>
 				<small>

@@ -25,11 +25,16 @@ class seguimientoController extends Controller
 		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		if($solicitud->atencion != null)
 		{
-			$res = $this->get_usuario($solicitud->usuario->id_sgu);
-			if($res['ok'])
-				$solicitud->usuario->nombre = $res['nombre'];
+			if(!is_null($solicitud->usuario))
+			{
+				$res = $this->get_usuario($solicitud->usuario->id_sgu);
+				if($res['ok'])
+					$solicitud->usuario->nombre = $res['nombre'];
+				else
+					$solicitud->usuario->nombre = 'Usuario';
+			}
 			else
-				$solicitud->usuario->nombre = 'Usuario';
+				$solicitud->usuario = (object) ['nombre'=>'Usuario'];
 			$atencion = $solicitud->atencion;
 			foreach($atencion as $at)
 			{
@@ -138,7 +143,7 @@ class seguimientoController extends Controller
 		{
 			return response()->json([
                 'status' => true, 
-                'id_solicitud' =>Crypt::decryptString($id),
+                'id_solicitud' =>$this->desecriptar($id),
             ]);
 		}
 		else
@@ -228,9 +233,18 @@ class seguimientoController extends Controller
 	{
 		return Departamentos::All();
 	}
-
+	private function encriptar($texto)
+    {
+        $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );
+        return $encrypted = $newEncrypter->encrypt($texto);
+    }
+    private function desencriptar($texto)
+    {
+        $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );
+        return $decrypted = $newEncrypter->decrypt($texto);
+    }
 	public function send_mail_nueva($email,$id_solicitud, $detalle){
-		$direccion = Crypt::encryptString($id_solicitud);
+		$direccion = $this->ecriptar($id_solicitud);
         $mail = new PHPMailer(true);
         try{
             $mail->isSMTP();

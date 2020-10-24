@@ -58,7 +58,7 @@
         </div>
       </div>
     </li>
-    <!-- Nav Item - Pages Collapse Menu -->
+    <!-- Nav Item - Pages Collapse Menu 
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud2" aria-expanded="true" aria-controls="collapseSolicitud">
         <i class="fas fa-envelope-open-text"></i>
@@ -70,8 +70,8 @@
           <a class="collapse-item" href="/alta_ticket">Crear Ticket</a>
           <a class="collapse-item" href="/dashboard">Listado</a>
         </div>
-      </div>
-    </li>
+      </div> 
+    </li>-->
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
