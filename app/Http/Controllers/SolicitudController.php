@@ -325,13 +325,15 @@ class SolicitudController extends Controller
         $medio=$request->input('medio');
         $estado=$request->input('estado');
         $id=$request->input('id');
-        
+        $orden=$request->input('orden');
         try{
             $solicitud=Solicitud::with('usuario_many')
                 ->where('id_solicitud','like',"%$id%")
                 ->where('estatus','like',"%$estado%")
                 ->where('descripcion','like',"%$busqueda%")
-                ->where('medio_reporte','like',"%$medio%")->paginate($num);
+                ->where('medio_reporte','like',"%$medio%")
+                ->orderBy('id_solicitud',$orden)
+                ->paginate($num);
             return $solicitud;
         }catch(Exception $e){
             return response()->json([
@@ -348,7 +350,7 @@ class SolicitudController extends Controller
         $estado=$request->input('estado');
         $id_solicitud=$request->input('id_solicitud');
         $idDep=Session::get('id_departamento');
-        
+        $orden=$request->input('orden');
         
         
         try{
@@ -358,6 +360,7 @@ class SolicitudController extends Controller
                 ->where('solicitud.medio_reporte','like',"%$medio%")
                 ->where('solicitud.estatus','like',"%$estado%")
                 ->with('usuario_many')
+                ->orderBy('solicitud.id_solicitud',$orden)
             ->paginate($num);
              return $solicitudes_dep;
         }catch(Exception $e){
@@ -375,8 +378,7 @@ class SolicitudController extends Controller
         $medio=$request->input('medio');
         $estado=$request->input('estado');
         $id=$request->input('id');
-        //$idUsuario=$request->input('idUsuario');
-        
+        $orden=$request->input('orden');
         try{
             $solicitud_usuario = Usuario::find($idUsuario);
             if(!is_null($solicitud_usuario))
@@ -385,6 +387,7 @@ class SolicitudController extends Controller
                 ->where('solicitud.descripcion','like',"%$busqueda%")
                 ->where('solicitud.medio_reporte','like',"%$medio%")
                 ->where('solicitud.estatus','like',"%$estado%")
+                ->orderBy('solicitud.id_solicitud',$orden)
                 ->paginate($num);
             else
                 return response()->json([
@@ -410,12 +413,14 @@ class SolicitudController extends Controller
         $num = $request->input('num');
         $medio = $request->input('medio');
         $estado = $request->input('estado');
+        $orden = $request->input('orden');
         try{
             $solicitud_usuario = Solicitud::where('id_usuario',$idUsuario)
             ->where('id_solicitud','like',"%$busquedaid%")
             ->where('descripcion','like',"%$busqueda%")
             ->where('medio_reporte','like',"%$medio%")
             ->where('estatus','like',"%$estado%")
+            ->orderBy('id_solicitud',$orden)
             ->paginate($num);
        
         return $solicitud_usuario;

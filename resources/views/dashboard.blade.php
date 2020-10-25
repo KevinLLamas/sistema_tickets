@@ -106,7 +106,7 @@
                                         <table class="table table-responsive">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th><button type="button" name="ordenID1" id="ordenID1" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAdmin">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
                                                     <th>Asignada a</th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
@@ -126,7 +126,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -276,7 +276,7 @@
                                         <table class="table table-responsive" >
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th><button type="button" name="ordenID2" id="ordenID2" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAsignadas">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
                                                     <th>Estado</th>
@@ -442,7 +442,7 @@
                                         <table class="table table-responsive">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th><button type="button" name="ordenID3" id="ordenID3" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesDepartamento">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
                                                     <th>Asignada a</th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
@@ -611,7 +611,7 @@
                                         <table class="table table-responsive" >
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
+                                                    <th><button type="button" name="ordenID4" id="ordenID4" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getMisSolicitudes">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
                                                     <th>Estado</th>

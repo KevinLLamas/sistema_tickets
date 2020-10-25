@@ -6,7 +6,7 @@ new Vue({
         Estatus:[],
         colorEstatus:[],
         coloresHex:[],
-
+        orden:'ASC',
         estado_ticket:'',
         ocultarTabla:false,
         ocultarGrafica:false,
@@ -171,6 +171,7 @@ new Vue({
                 medio: this.medioReporte,
                 estado: this.estadoReporte,
                 busquedaid: this.busquedaid,
+                orden: this.orden,
             })
             .then(response => {
                 //console.log(response.data);
