@@ -175,19 +175,20 @@ class SolicitudController extends Controller
             $mail->Password = 'BG9yGrkHgndFSF0aJcQv1L8fFj9k+jnjHigMmpkkUSMA';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-            $mail->setFrom("noreplay@jaliscoedu.mx", 'CASE');
+            $mail->setFrom("noreplay@jaliscoedu.mx", 'SAS');
             $mail->CharSet = 'UTF-8';
             $mail->addAddress(trim($email));
 
-            $mail->Subject = "Confirmación de solicitud #$id_solicitud creada";
+            $mail->Subject = "Confirmación de ticket creado.";
             $mail->isHTML(true);
             $headers = "Content-Type: text/html; charset=UTF-8";
             $mailContent = "
-                    <p>Confirmación de solicitud creada.</p>
-                    <p>Usted ha creado la solicitud #$id_solicitud con éxito en el sistema CASE.</p>
-                    <p>Para dar seguimiento a su solicitud de click <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$atencion_externos->solicitud'>aquí.</a></p>
+                    <p>Usted ha creado el ticket #$id_solicitud con éxito en el sistema SAS.</p><br>
+                    <p>ID de ticket: $id_solicitud</p>
+                    <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$atencion_externos->solicitud'>por favor ingrese a este enlace.</a></p>
                     <p>Su código de verificación es: $atencion_externos->codigo</p>
             ";  
+
             $mail->Body = $mailContent;
 
             if(!$mail->send()){

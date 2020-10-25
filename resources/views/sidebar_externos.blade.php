@@ -12,12 +12,12 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <!-- Nav Item - Dashboard-->
+    <!-- Nav Item - Dashboard
     <li class="nav-item active">
       <a class="nav-link" href="/cast">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span></a>
-    </li>
+    </li>-->
     
     <!--<li class="nav-item">
       <a class="nav-link" href="lista_solicitudes">
@@ -43,7 +43,7 @@
     <div class="sidebar-heading">
       Interfaz
     </div>
-    <!-- Nav Item - Pages Collapse Menu -->
+    <!-- Nav Item - Pages Collapse Menu
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud" aria-expanded="true" aria-controls="collapseSolicitud">
         <i class="fas fa-envelope-open-text"></i>
@@ -53,27 +53,13 @@
         <div class="bg-white py-2 collapse-inner rounded">
           <h6 class="collapse-header">Opciones:</h6>
           <a class="collapse-item" href="/cast/alta_ticket">Crear Ticket</a>
-          <!--a class="collapse-item" href="/cast/alta_solicitud_servicio">Solicitar un Servicio</a-->
+          a class="collapse-item" href="/cast/alta_solicitud_servicio">Solicitar un Servicio</a
           <a class="collapse-item" href="/cast/dashboard">Listado</a>
         </div>
       </div>
-    </li>
-    <!-- Nav Item - Pages Collapse Menu 
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud2" aria-expanded="true" aria-controls="collapseSolicitud">
-        <i class="fas fa-envelope-open-text"></i>
-        <span>Tickets Local</span>
-      </a>
-      <div id="collapseSolicitud2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Opciones:</h6>
-          <a class="collapse-item" href="/alta_ticket">Crear Ticket</a>
-          <a class="collapse-item" href="/dashboard">Listado</a>
-        </div>
-      </div> 
-    </li>-->
+    </li> -->
 
-    <!-- Nav Item - Pages Collapse Menu -->
+    <!-- Nav Item - Pages Collapse Menu 
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
         <i class="fas fa-fw fa-cog"></i>
@@ -86,7 +72,7 @@
           <a class="collapse-item" href="cards.html">Cards</a>
         </div>
       </div>
-    </li>
+    </li>-->
 
     <!-- Nav Item - Utilities Collapse Menu 
     <li class="nav-item">
@@ -172,14 +158,3 @@
           <i class="fa fa-bars"></i>
         </button>
 
-        <!-- Topbar Search -->
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-          <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar ticket..." aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button">
-                <i class="fas fa-search fa-sm"></i>
-              </button>
-            </div>
-          </div>
-        </form>

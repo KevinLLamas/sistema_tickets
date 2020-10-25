@@ -1,14 +1,8 @@
-@extends('app')
+@extends('app_externo')
 @section('content')
 <div id="app" v-cloak>
-    <div class="col-md-12 mt-3">
-        <ol class="breadcrumb w-100">
-            <li class="breadcrumb-item"><a href="inicio">Inicio</a></li>
-            <li class="breadcrumb-item">Seguimiento Externo</li>
-        </ol>
-    </div>
     <form v-if="!banVerif"  class="container mb-5" id="alumno" v-on:submit.prevent="verificar()">
-        <h1 class="mb-5">Seguimiento Externo</h1>
+        <h1 class="mb-5">Seguimiento Externo<hr></h1>
         <div class="row h-100 justify-content-center align-items-center mb-5 mt-5" id="verificar">
             <div class="col-10 col-md-10 col-lg-6">
                 <label for=""  class="font-weight-bold ml-3">Para dar seguimiento a su solicitud es necesario que ingrese su código de verificación</label>
@@ -76,7 +70,7 @@
 					Datos adicionales: 
 					<div v-for="item in seguimiento.dato_adicional">
 						<div v-if="item.tipo_dato == 'correo_institucional'">
-							<i class="fas fa-at"></i><h2>Correo institucional: @{{item.valor}} </h2>
+							<i class="far fa-envelope"></i></i>Correo institucional: @{{item.valor}} 
 						</div>
 						<div v-else-if="item.tipo_dato == 'curp'">
 							<i class="far fa-id-badge"></i> CURP: <b>**********@{{item.valor.slice(10)}} </b>
@@ -86,6 +80,9 @@
 						</div>
 						<div v-else-if="item.tipo_dato == 'matricula'">
 							<i class="fas fa-mobile-alt"></i> Matricula: *****<b>@{{item.valor.slice(5)}} </b>
+						</div>
+						<div v-else-if="item.tipo_dato == 'n_plaza'">
+							<i class="fas fa-list-ol"></i> Número de plaza: *****<b>@{{item.valor.slice(5)}} </b>
 						</div>
 					</div>
 				</small>
