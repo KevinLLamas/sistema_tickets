@@ -105,7 +105,7 @@ class seguimientoController extends Controller
 		}
 
 		$primer = false;
-		if($request->input('estatus') != "Atendiendo" && $Sol_atencion['tipo_respuesta'] == 'Todos')
+		if($request->input('estatus') != "Atendiendo" && $Sol_atencion['tipo_respuesta'] == 'Todos' && $atencion->tipo_at == 'Atencion')
 			$primer = $this->ContarAtenciones($atencion->id_solicitud);
 
 		return response()->json([
