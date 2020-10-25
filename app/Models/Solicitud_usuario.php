@@ -10,10 +10,10 @@ class Solicitud_usuario extends Model
     public $timestamps = false;
 
 
-    /**public function usuario(){
-        return $this->hasOne('App\Models\Usuario','id');
+    public function usuario(){
+        return $this->hasOne('App\Models\Usuario','id_sgu', 'id_usuario');
     }
-    public function solicitud(){
+    /*public function solicitud(){
         return $this->hasOne('App\Models\Solicitud','id_solicitud');
     }**/
 }

@@ -15,6 +15,7 @@ use App\Models\Solicitud_usuario;
 use App\Models\Atencion_externos;
 use App\Models\Atencion_adjunto;
 use App\Models\Usuario;
+use App\Models\Perfil;
 use App\Models\Departamentos;
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
@@ -65,6 +66,8 @@ class seguimientoController extends Controller
 				$usuario->nombre = $this->get_usuario($usuario->id_sgu)['nombre'];
 			}
 		}
+		$solicitud->categoria = Categoria::find($solicitud->subcategoria->id_categoria);
+		$solicitud->perfil = Perfil::find($solicitud->id_perfil);
 		return $solicitud;
 	}
 	private function get_usuario($id){
@@ -98,9 +101,17 @@ class seguimientoController extends Controller
 		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion' && $Sol_atencion['tipo_respuesta'] == 'Todos')
 		{
             if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
-                return $atencion->id;
+              //  return $atencion->id;
 		}
-		return $atencion->id;
+
+		$primer = false;
+		if($request->input('estatus') != "Atendiendo" && $Sol_atencion['tipo_respuesta'] == 'Todos')
+			$primer = $this->ContarAtenciones($atencion->id_solicitud);
+
+		return response()->json([
+            'primer' => $primer, 
+            'id' =>$atencion->id,
+        ]);
 	}
 
 	public function inserta_atencion_externo(Request $request){
@@ -171,24 +182,31 @@ class seguimientoController extends Controller
 
 	public function UpdateSolicitud_usuario(Request $request)
 	{		
+		//$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
+
 		$fuera = array();
 		$dentro = array();
 
 		$integrantes_seleccionados = $request->input('integrantes');
-		$id_solicitud = $request->input('id_solicitud');		
+		$id_solicitud = $request->input('id_solicitud');	
+		$id_departamento = $request->input('id_departamento');		
 		
 		//Desactivar integrantes no seleccionados que existen	
-		$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
+		//$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
+		$integrantes = Solicitud_usuario::with(['usuario'])->where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
 		if(count($integrantes_seleccionados) != 0)	
 		{			
 			foreach($integrantes as $integ)
 			{
-				foreach($integrantes_seleccionados as $integ_sel)
+				if($integ->usuario->id_departamento == $id_departamento)
 				{
-					if($integ->id_usuario != $integ_sel)
+					foreach($integrantes_seleccionados as $integ_sel)
 					{
-						$integ->estado = 'Suspendido';
-						$integ->save();
+						if($integ->id_usuario != $integ_sel)
+						{
+							$integ->estado = 'Suspendido';
+							$integ->save();
+						}
 					}
 				}
 			}		
@@ -197,8 +215,11 @@ class seguimientoController extends Controller
 		{
 			foreach($integrantes as $integ)
 			{
-				$integ->estado = 'Suspendido';
-				$integ->save();	
+				if($integ->usuario->id_departamento == $id_departamento)
+				{
+					$integ->estado = 'Suspendido';
+					$integ->save();	
+				}
 			}
 		}
 
@@ -262,7 +283,7 @@ class seguimientoController extends Controller
             $mail->CharSet = 'UTF-8';
             $mail->addAddress(trim($email));
 
-            $mail->Subject = "Confirmación de ticket creado.";
+            $mail->Subject = "Contestación en Ticket levantado.";
             $mail->isHTML(true);
             $headers = "Content-Type: text/html; charset=UTF-8";
             $mailContent = "
@@ -280,5 +301,15 @@ class seguimientoController extends Controller
         }catch(phpmailerException $e){
             return $e;
         }
-    }
+	}
+	
+	public function ContarAtenciones($id)
+	{
+		$num = Solicitud_atencion::where('id_solicitud', $id)->where('tipo_respuesta', 'Todos')->where('tipo_at', 'Atencion')->count();
+		if($num == 1)
+		{
+			return true;
+		}
+		return false;
+	}
 }
