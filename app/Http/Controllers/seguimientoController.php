@@ -95,10 +95,10 @@ class seguimientoController extends Controller
 			$atencion->tipo_at = 'Atencion';
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
-
-		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion')
+		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion' && $Sol_atencion['tipo_respuesta'] == 'Todos')
 		{
-			if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
+            if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
+                return $atencion->id;
 		}
 		return $atencion->id;
 	}
@@ -248,7 +248,7 @@ class seguimientoController extends Controller
         return $decrypted = $newEncrypter->decrypt($texto);
     }
 	public function send_mail_nueva($email,$id_solicitud, $detalle){
-		$direccion = $this->ecriptar($id_solicitud);
+		$direccion = $this->encriptar($id_solicitud);
         $mail = new PHPMailer(true);
         try{
             $mail->isSMTP();
@@ -258,17 +258,17 @@ class seguimientoController extends Controller
             $mail->Password = 'BG9yGrkHgndFSF0aJcQv1L8fFj9k+jnjHigMmpkkUSMA';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-            $mail->setFrom("noreplay@jaliscoedu.mx", 'CASE');
+            $mail->setFrom("noreplay@jaliscoedu.mx", 'SAS');
             $mail->CharSet = 'UTF-8';
             $mail->addAddress(trim($email));
 
-            $mail->Subject = "Respuesta en solicitud #$id_solicitud";
+            $mail->Subject = "Confirmación de ticket creado.";
             $mail->isHTML(true);
             $headers = "Content-Type: text/html; charset=UTF-8";
             $mailContent = "
-					<p>Te han contestado en la solicitud #$id_solicitud el sistema CASE.</p>
+					<p>Te han contestado en el ticket #$id_solicitud el sistema SAS.</p>
 					<p>Respuesta: $detalle </p>
-                    <p>Para dar seguimiento a su solicitud de click <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$direccion'>aquí.</a></p>
+                    <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$direccion'>por favor ingrese a este enlace.</a></p>
             "; 
             $mail->Body = $mailContent;
 

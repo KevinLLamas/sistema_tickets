@@ -43,14 +43,13 @@
 
 		<div class="card-body">
 			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.nombre}}</b></p>
-			<p v-if="!seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por Usuario</b></p>
 			<p class="card-text">@{{seguimiento.descripcion}}</p>
 			<p>
 				<small>
 					Datos adicionales: 
 					<div v-for="item in seguimiento.dato_adicional">
 						<div v-if="item.tipo_dato == 'correo_institucional'">
-							<i class="fas"></i><h2>Correo institucional: <b>@{{item.valor}}</b> </h2>
+							<i class="far fa-envelope"></i>Correo institucional: <b>@{{item.valor}}</b>
 						</div>
 						<div v-else-if="item.tipo_dato == 'curp'">
 							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
@@ -90,7 +89,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/cast//get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/cast/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>	

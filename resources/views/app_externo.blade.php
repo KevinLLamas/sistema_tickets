@@ -29,8 +29,8 @@
 
   <!-- Page Wrapper -->
 <div id="wrapper">
-    @include('sidebar'){{-- Sidebar /Menu lateral --}}
-        @include('navbar') {{-- Menu superior --}}
+    @include('sidebar_externos'){{-- Sidebar /Menu lateral --}}
+        @include('navbar_externo') {{-- Menu superior --}}
             @yield('content') {{-- Cotenido de la pagina --}}
            
 
