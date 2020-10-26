@@ -22,7 +22,7 @@
 
     <div class="container" v-if="banVerif">
         <!-- Page Heading -->
-	<h1 class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} @{{ seguimiento.descripcion }}</h1>
+	<h1  class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} - @{{ seguimiento.perfil.nombre }} - @{{ seguimiento.categoria.nombre }} - @{{ seguimiento.subcategoria.nombre }}</h1>
 	<div v-if="seguimiento.estatus">
 		<!--select class="selectpicker my-2" data-style="btn-primary" v-model="seguimiento.estatus" @change="cambiarEstatus">
 			<option value="" disabled>Seleccione una opción</option>

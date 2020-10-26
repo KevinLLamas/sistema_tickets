@@ -6,10 +6,18 @@ new Vue({
     data:{
         var: '',
         seguimiento: {
-            subategoria:
+            subcategoria:
             {
                 nombre: '',
-            }
+            },
+            perfil:
+            {
+                nombre: '',
+            },
+            categoria:
+            {
+                nombre: '',
+            },
         },
         nueva_atencion:{
             detalle: '',
@@ -72,15 +80,20 @@ new Vue({
                     codigo: this.codigo,
                     email: this.seguimiento.correo_atencion,
                     rol: this.user.rol,
-                }).then(result=>{
-                    console.log(result);
-                    this.id_atencion = result.data;
+                    estatus: this.seguimiento.estatus
+                }).then(response=>{
+                    console.log(response);
+                    this.id_atencion = response.data.id;
+                    if(response.data.primer)
+                    {
+                        accion = 'Abrir';
+                    }
                     if(this.id === '')
                         this.muestra();
                     else
                         this.muestra2();
                     this.saveFiles();
-                    if(accion != '' && accion != 'Asignacion'  && action != 'cambio_estatus')
+                    if(accion != '' && accion != 'Asignacion'  && accion != 'cambio_estatus')
                     {
                         switch(accion)
                         {
@@ -447,7 +460,9 @@ new Vue({
             axios.post('../UpdateSolicitud_usuario',{
                 integrantes: this.integrantesSeleccionados,
                 id_solicitud: this.seguimiento.id_solicitud,
+                id_departamento: this.user.id_departamento,
             }).then(response=>{
+                console.log(response);
                 this.muestra();                
                 var c = 0;  
                 Swal.fire('Correcto','Se han actualizado los usuarios','success');                
@@ -474,7 +489,7 @@ new Vue({
                     {
                         this.integrantesDesasignados[this.integrantesDesasignados.length] = this.integrantesSeleccionadoAntesUpdate[x];
                         this.banCambio = false;
-                        this.nueva_atencion.detalle= 'desasigno a ' + this.integrantesSeleccionadoAntesUpdate[x].nombre;
+                        this.nueva_atencion.detalle= 'desasignó a ' + this.integrantesSeleccionadoAntesUpdate[x].nombre + ' de esta solicitud';;
                         this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');
@@ -496,7 +511,7 @@ new Vue({
                     {
                         this.integrantesAsignados[this.integrantesAsignados.length] = this.integrantesSeleccionadosCompleto[x];
                         this.banCambio = false;
-                        this.nueva_atencion.detalle= 'asigno a ' + this.integrantesSeleccionadosCompleto[x].nombre;
+                        this.nueva_atencion.detalle= 'asignó a ' + this.integrantesSeleccionadosCompleto[x].nombre + ' a esta solicitud';
                         this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');

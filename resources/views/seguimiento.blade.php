@@ -9,7 +9,7 @@
             <li class="breadcrumb-item">Seguimiento</li>
         </ol>
 	<!-- Page Heading -->
-	<h1 class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} @{{ seguimiento.descripcion }}</h1>
+	<h1  class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} - @{{ seguimiento.perfil.nombre }} - @{{ seguimiento.categoria.nombre }} - @{{ seguimiento.subcategoria.nombre }}</h1>
 	<div v-if="seguimiento.estatus">
 		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()">
 			<option value="" disabled>Seleccione una opción</option>
@@ -75,7 +75,7 @@
 				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.nombre}}</b></p>
 				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{item.nombre}}</b></p>
 				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{item.nombre}}</b></p>
-				<p v-if="item.tipo_at == 'Asignacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Asignacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - El usuario @{{item.nombre}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
