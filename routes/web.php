@@ -31,6 +31,9 @@ Route::get('get_num_solicitudes_bystatus_mis_solicitudes', [SolicitudController:
 Route::get('get_num_solicitudes_bystatus_departamento', [SolicitudController::class, 'get_num_solicitudes_bystatus_departamento']);
 Route::get('get_num_solicitudes_bystatus_asignadas', [SolicitudController::class, 'get_num_solicitudes_bystatus_asignadas']);
 
+//reportes
+Route::get('get_num_solicitudes_through_time', [SolicitudController::class, 'get_num_solicitudes_through_time']);
+
 //SOLICITAR SERVICIO
 Route::get('/alta_solicitud_servicio', function(){return view('alta_solicitud_servicio');});
 
@@ -50,11 +53,12 @@ Route::get('lista_solicitudes', function () {return view('lista_solicitudes');})
 Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
 Route::get('solicitudes_asignadas', function () {return view('solicitudes_asignadas');});
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
-
+Route::get('charts', function () {return view('charts');});
 Route::get('reportes', function () {return view('reportes');});
 
 //Seguimiento
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
+
 
 
 });
