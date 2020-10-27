@@ -51,6 +51,8 @@ Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
 Route::get('solicitudes_asignadas', function () {return view('solicitudes_asignadas');});
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
 
+Route::get('reportes', function () {return view('reportes');});
+
 //Seguimiento
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
 
