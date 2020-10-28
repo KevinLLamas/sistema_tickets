@@ -9,7 +9,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\seguimientoController;
 use App\Http\Controllers\LoginController;
-
+use App\Http\Controllers\NotificacionController;
 
 Route::group(['middleware' => 'validar', 'web'], function()
 {
@@ -56,6 +56,11 @@ Route::get('reportes', function () {return view('reportes');});
 //Seguimiento
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
 
+//NOTIFICACIONES
+Route::post('get_notificaciones', [NotificacionController::class, 'get_notificaciones']);
+Route::post('set_notificacion_leida', [NotificacionController::class, 'set_notificacion_leida']);
+Route::post('get_listado_notificaciones', [NotificacionController::class, 'get_listado_notificaciones']);
+Route::get('notificaciones', function () {return view('notificaciones');}); 
 
 });
 Route::get('prueba/{id}', [seguimientoController::class, 'desencriptar']); 

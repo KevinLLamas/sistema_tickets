@@ -19,7 +19,7 @@ use App\Models\Perfil;
 use App\Models\Departamentos;
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
-
+use App\Models\Solicitud_notificacion;
 class seguimientoController extends Controller 
 {
 	public function seguimiento($id){
@@ -88,7 +88,6 @@ class seguimientoController extends Controller
 	public function inserta_atencion(Request $request){
 		$atencion = new Solicitud_atencion;
 		$Sol_atencion = $request->input('data');	
-			
 		$atencion->detalle = $Sol_atencion['detalle'];
 		$atencion->id_solicitud = $Sol_atencion['id_solicitud'];
 		$atencion->id_usuario = $Sol_atencion['id_usuario'];
@@ -98,22 +97,41 @@ class seguimientoController extends Controller
 			$atencion->tipo_at = 'Atencion';
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
-		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion' && $Sol_atencion['tipo_respuesta'] == 'Todos')
-		{
-            if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
-              //  return $atencion->id;
-		}
-
 		$primer = false;
 		if($request->input('estatus') != "Atendiendo" && $Sol_atencion['tipo_respuesta'] == 'Todos' && $atencion->tipo_at == 'Atencion')
 			$primer = $this->ContarAtenciones($atencion->id_solicitud);
 
+		//NOTIFICACION
+		$usuarios = Solicitud_usuario::where('id_solicitud',$atencion->id_solicitud)->get();
+		foreach ($usuarios as $usuario) {
+			//if($usuario->id_usuario != Session::get('id_sgu')){
+				$notificacion = new Solicitud_notificacion;
+				$notificacion->id_solicitud = $atencion->id_solicitud;
+				$notificacion->id_atencion = $atencion->id;
+				$notificacion->id_usuario = $usuario->id_usuario;
+				$notificacion->status = 'No leida';
+				$notificacion->save();
+			//}
+		}
+
+		//EMAIL
+		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion' && $Sol_atencion['tipo_respuesta'] == 'Todos')
+		{
+			if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
+				return response()->json([
+					'ok'=> true,
+					'primer' => $primer, 
+					'id' =>$atencion->id,
+					'message'=>'Se envio el correo.'
+				]);
+		}
 		return response()->json([
+			'ok'=> true,
             'primer' => $primer, 
-            'id' =>$atencion->id,
+			'id' =>$atencion->id,
+			'message'=>'No se pudo enviar el correo.'
         ]);
 	}
-
 	public function inserta_atencion_externo(Request $request){
 		$atencion = new Solicitud_atencion;
 		$Sol_atencion = $request->input('data');	
@@ -127,6 +145,17 @@ class seguimientoController extends Controller
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
 
+		//NOTIFICACION
+		$usuarios = Solicitud_usuario::where('id_solicitud',$atencion->id_solicitud)->get();
+		
+		foreach ($usuarios as $usuario) {
+			$notificacion = new Solicitud_notificacion;
+			$notificacion->id_solicitud = $atencion->id_solicitud;
+			$notificacion->id_atencion = $atencion->id;
+			$notificacion->id_usuario = $usuario->id_usuario;
+			$notificacion->status = 'No leida';
+			$notificacion->save();
+		}
 		return $atencion->id;
 	}
 	

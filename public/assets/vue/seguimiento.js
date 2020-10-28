@@ -48,10 +48,9 @@ new Vue({
         muestra: function(){
             if(getId>0)
             axios.get(`../getSolicitud/`+getId).then(response=>{
-                console.log(response.data);
+                //console.log(response.data);
                 this.seguimiento = response.data;
                 this.getUserData();
-                //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -60,7 +59,6 @@ new Vue({
         muestra2: function(){
             axios.get(`../getSolicitud/`+this.id).then(response=>{
                 this.seguimiento = response.data;
-                //this.getUserData();
                 this.validatePermissionExterno();
                 //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
@@ -74,7 +72,6 @@ new Vue({
                 this.nueva_atencion.id_usuario= this.user.id_sgu;
                 this.nueva_atencion.tipo_respuesta = tipo;
                 this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
-                //console.log(this.nueva_atencion);
                 axios.post('../inserta_atencion',{
                     data: this.nueva_atencion,
                     codigo: this.codigo,
@@ -163,7 +160,6 @@ new Vue({
             {
                 this.nueva_atencion.tipo_respuesta = tipo;
                 this.nueva_atencion.id_solicitud = this.seguimiento.id_solicitud;
-                //console.log(this.nueva_atencion);
                 axios.post('../inserta_atencion_externo',{
                     data: this.nueva_atencion,
                     codigo: this.codigo,
@@ -368,7 +364,6 @@ new Vue({
                 codigo: this.codigo,
                 id: this.id
             }).then(response=>{
-                console.log(response);
                 this.banVerif = response.data.status;
                 if(this.banVerif)
                 {
@@ -379,15 +374,11 @@ new Vue({
                 {
                     Swal.fire('Incorrecto','Codigo no corresponde','warning');
                 }
-                //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
-                //console.log(error);
             });
         },
         getUserData: function(){
-             //console.log("User data");
             axios.get('../getUserData').then(response=>{
-                //console.log(response.data);
                 this.user = response.data;   
                 this.validatePermission();       
                 this.eventosCambiosAsignacion();
@@ -395,9 +386,8 @@ new Vue({
                 {
                     slim.destroy();
                 } 
-                //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
-                //console.log(error);
+                console.log(error);
             });
         },
         validatePermission: function()
@@ -411,7 +401,7 @@ new Vue({
             var c = 0;
             for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
             {
-                console.log(this.seguimiento.departamentoValido);
+                //console.log(this.seguimiento.departamentoValido);
                 for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
                 {
                     //console.log(this.departamentoValido.integrantes[i].id);
@@ -425,7 +415,7 @@ new Vue({
             }  
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)' && this.user === '')
             {
-                Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
+                Swal.fire('Espera de aprobación','El ticket se ha marcado como cerrado, reviselo y apruebe este estado, o cancele para volver a abrirla','info');
             }              
         },
         validatePermissionExterno: function()
@@ -448,7 +438,7 @@ new Vue({
             }
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)')
             {
-                Swal.fire('Espera de aprobación','La solicitud se ha marcado como cerrada, revisela y apruebe este estado, o cancele para volver a abrirla','info');
+                Swal.fire('Espera de aprobación','El ticket se ha marcado como cerrado, reviselo y apruebe este estado, o cancele para volver a abrirlo','info');
             }    
             
         },
@@ -462,7 +452,7 @@ new Vue({
                 id_solicitud: this.seguimiento.id_solicitud,
                 id_departamento: this.user.id_departamento,
             }).then(response=>{
-                console.log(response);
+                //console.log(response);
                 this.muestra();                
                 var c = 0;  
                 Swal.fire('Correcto','Se han actualizado los usuarios','success');                
@@ -489,7 +479,7 @@ new Vue({
                     {
                         this.integrantesDesasignados[this.integrantesDesasignados.length] = this.integrantesSeleccionadoAntesUpdate[x];
                         this.banCambio = false;
-                        this.nueva_atencion.detalle= 'desasignó a ' + this.integrantesSeleccionadoAntesUpdate[x].nombre + ' de esta solicitud';;
+                        this.nueva_atencion.detalle= 'desasignó a ' + this.integrantesSeleccionadoAntesUpdate[x].nombre + ' de este ticket.';;
                         this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');
@@ -511,7 +501,7 @@ new Vue({
                     {
                         this.integrantesAsignados[this.integrantesAsignados.length] = this.integrantesSeleccionadosCompleto[x];
                         this.banCambio = false;
-                        this.nueva_atencion.detalle= 'asignó a ' + this.integrantesSeleccionadosCompleto[x].nombre + ' a esta solicitud';
+                        this.nueva_atencion.detalle= 'asignó a ' + this.integrantesSeleccionadosCompleto[x].nombre + ' a este ticket.';
                         this.nueva_atencion.id_usuario= this.user.id_sgu;
                         this.nueva_atencion.tipo_at= 'Asignacion';
                         this.agregarAtencion('Todos', 'Asignacion');
