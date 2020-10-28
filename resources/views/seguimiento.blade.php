@@ -253,7 +253,7 @@
 <script>
     slim = new SlimSelect({
                 select: '#agregar_usuarios',
-                placeholder: 'Asignar solicitud ',
+                placeholder: 'Asignar Ticket',
                 limit: 4,
               })                    
 </script>

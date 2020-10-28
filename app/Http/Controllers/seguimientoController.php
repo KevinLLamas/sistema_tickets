@@ -196,22 +196,25 @@ class seguimientoController extends Controller
 		$integrantes = Solicitud_usuario::with(['usuario'])->where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
 		if(count($integrantes_seleccionados) != 0)	
 		{			
-			foreach($integrantes as $integ)
+			if(count($integrantes) != 0)
 			{
-				if($integ->usuario->id_departamento == $id_departamento)
+				foreach($integrantes as $integ)
 				{
-					foreach($integrantes_seleccionados as $integ_sel)
+					if($integ->usuario->id_departamento == $id_departamento)
 					{
-						if($integ->id_usuario != $integ_sel)
+						foreach($integrantes_seleccionados as $integ_sel)
 						{
-							$integ->estado = 'Suspendido';
-							$integ->save();
+							if($integ->id_usuario != $integ_sel)
+							{
+								$integ->estado = 'Suspendido';
+								$integ->save();
+							}
 						}
 					}
-				}
-			}		
+				}		
+			}
 		}
-		else if($integrantes != null)
+		else if($integrantes != 0)
 		{
 			foreach($integrantes as $integ)
 			{
@@ -226,20 +229,23 @@ class seguimientoController extends Controller
 		//Reactivar usuario en una solicitud o agregarlo si no existe
 		$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->whereIn('id_usuario', $integrantes_seleccionados)->get();
 		$ban = false;
-		foreach($integrantes_seleccionados as $integ_sel)
+		if(count($integrantes) != 0)
 		{
-			foreach($integrantes as $integ)
+			foreach($integrantes_seleccionados as $integ_sel)
 			{
-				if($integ->id_usuario == $integ_sel)
+				foreach($integrantes as $integ)
 				{
-					$ban = true;
-					$integ->estado = 'Atendiendo';
-					$integ->save();
-					$clave = array_search($integ_sel, $integrantes_seleccionados);
-					unset($integrantes_seleccionados[$clave]);
-					break;
-				}
-			}	
+					if($integ->id_usuario == $integ_sel)
+					{
+						$ban = true;
+						$integ->estado = 'Atendiendo';
+						$integ->save();
+						$clave = array_search($integ_sel, $integrantes_seleccionados);
+						unset($integrantes_seleccionados[$clave]);
+						break;
+					}
+				}	
+			}
 		}
 
 		foreach($integrantes_seleccionados as $integ_sel)
