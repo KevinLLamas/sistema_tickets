@@ -6,10 +6,14 @@ new Vue({
         tipoEstatus:[],
         Estatus:[],
         colorEstatus:[],
-        coloresHex:[]
+        coloresHex:[],
+        numCerradas: '',
+        numAtendiendo: '',
+        numSinAtender: '',
+        porcentajeCerrados: '',
     },
-    created: function(){
-        
+    created: function(){       
+        this.getInfoOfTickets();
     },
     mounted: async function(){
         this.generar_Grafica_Comparacion();
@@ -269,7 +273,66 @@ new Vue({
                 }
             }
             });
-        }
-       
+        },
+        getSolicitudesDepartamento: function(page){
+            var url = 'get_solicitudes_departamento';
+            axios.post(url,{
+                page: page,
+                busqueda: this.busqueda,
+                num: this.numFiltro,
+                medio: this.medioReporte,
+                estado: this.estadoReporte,
+                id_solicitud: this.busquedaid,
+                orden: this.orden,
+            })
+            .then(response => {
+                //console.log(response.data);
+                this.pagination=response.data;
+                this.Solicitudes=response.data.data;
+            });
+        },
+        getInfoOfTickets: function()
+        {
+            this.getSolicitudesDeptoCerradas();
+            this.getSolicitudesDeptoAtendiendo();
+            this.getSolicitudesDeptoSinAtender();            
+        },
+        getSolicitudesDeptoCerradas: function(){
+            var url = 'get_solicitudes_departamento';
+            axios.post(url,{
+                estado: 'Cerrada',
+                orden: 'ASC',
+            })
+            .then(response => {
+                //console.log(response.data);
+                //this.solicitudesDepto = response.data;
+                this.numCerradas = response.data.data.length;
+            });
+        },
+        getSolicitudesDeptoAtendiendo: function(){
+            var url = 'get_solicitudes_departamento';
+            axios.post(url,{
+                estado: 'Atendiendo',
+                orden: 'ASC',
+            })
+            .then(response => {
+                //console.log(response.data);
+                //this.solicitudesDepto = response.data;
+                this.numAtendiendo = response.data.data.length;
+            });
+        },
+        getSolicitudesDeptoSinAtender: function(){
+            var url = 'get_solicitudes_departamento';
+            axios.post(url,{
+                estado: 'Sin Atender',
+                orden: 'ASC',
+            })
+            .then(response => {
+                //console.log(response.data);
+                //this.solicitudesDepto = response.data;
+                this.numSinAtender = response.data.data.length;
+                this.porcentajeCerrados = ((this.numCerradas/(this.numAtendiendo + this.numSinAtender + this.numCerradas)) * 100).toFixed(2);
+            });
+        },
     }
 });

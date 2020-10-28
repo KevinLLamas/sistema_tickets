@@ -17,8 +17,8 @@
                       <div class="card-body">
                         <div class="row no-gutters align-items-center">
                           <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tickets Resueltos</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">10</div>
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tickets Cerrados</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">@{{numCerradas}}</div>
                           </div>
                           <div class="col-auto">
                             <i class="fas fa-check fa-2x text-gray-300"></i>
@@ -32,8 +32,23 @@
                       <div class="card-body">
                         <div class="row no-gutters align-items-center">
                           <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Tickets Pendientes</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">30</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Tickets Atendiendo</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@{{numAtendiendo}}</div>
+                          </div>
+                          <div class="col-auto">
+                            <i class="fas fa-ticket-alt fa-2x text-gray-300"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="mx-auto mb-4">
+                    <div class="card border-left-secondary shadow h-100 py-2">
+                      <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                          <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Tickets Sin Atender</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@{{numSinAtender}}</div>
                           </div>
                           <div class="col-auto">
                             <i class="fas fa-ticket-alt fa-2x text-gray-300"></i>
@@ -47,8 +62,8 @@
                       <div class="card-body">
                         <div class="row no-gutters align-items-center">
                           <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Procentaje Resueltos</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">33.33</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Procentaje Cerrados</div>
+                          <div class="h5 mb-0 font-weight-bold text-gray-800">@{{porcentajeCerrados}}</div>
                           </div>
                           <div class="col-auto">
                             <i class="fas fa-percentage fa-2x text-gray-300"></i>
