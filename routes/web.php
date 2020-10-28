@@ -31,6 +31,9 @@ Route::get('get_num_solicitudes_bystatus_mis_solicitudes', [SolicitudController:
 Route::get('get_num_solicitudes_bystatus_departamento', [SolicitudController::class, 'get_num_solicitudes_bystatus_departamento']);
 Route::get('get_num_solicitudes_bystatus_asignadas', [SolicitudController::class, 'get_num_solicitudes_bystatus_asignadas']);
 
+//reportes
+Route::get('get_num_solicitudes_through_time', [SolicitudController::class, 'get_num_solicitudes_through_time']);
+
 //SOLICITAR SERVICIO
 Route::get('/alta_solicitud_servicio', function(){return view('alta_solicitud_servicio');});
 
@@ -50,7 +53,7 @@ Route::get('lista_solicitudes', function () {return view('lista_solicitudes');})
 Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
 Route::get('solicitudes_asignadas', function () {return view('solicitudes_asignadas');});
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
-
+Route::get('charts', function () {return view('charts');});
 Route::get('reportes', function () {return view('reportes');});
 
 //Seguimiento
@@ -61,6 +64,7 @@ Route::post('get_notificaciones', [NotificacionController::class, 'get_notificac
 Route::post('set_notificacion_leida', [NotificacionController::class, 'set_notificacion_leida']);
 Route::post('get_listado_notificaciones', [NotificacionController::class, 'get_listado_notificaciones']);
 Route::get('notificaciones', function () {return view('notificaciones');}); 
+
 
 });
 Route::get('prueba/{id}', [seguimientoController::class, 'desencriptar']); 
