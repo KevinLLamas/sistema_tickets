@@ -39,10 +39,12 @@
                                     <div class="form-group col-lg-12">
                                         <div class="form-group">
                                           <label for="">Periodo de tiempo</label>
-                                          <select class="form-control" name="periodo" id="periodo">
-                                            <option>7 Dias</option>
-                                            <option>1 Mes</option>
-                                            <option>3 Meses</option>
+                                          <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="getNumSolicitudesThroughTime();generar_Grafica_Comparacion;">
+                                            
+                                            <option value="1" selected>Hoy</option>
+                                            <option value="7">7 Dias</option>
+                                            <option value="31">1 Mes</option>
+                                            <option value="90">3 Meses</option>
                                           </select>
                                         </div>
                                     </div>
@@ -85,9 +87,9 @@
                                 <canvas id="SolicitudesUsuarioChart"></canvas>
                             </div>
                             <div class="mt-5 text-center small">
-                                <span class="mr-2" v-for="(e,index) in Estatus">
+                                {{--<span class="mr-2" v-for="(e,index) in Estatus">
                                     <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]"></i>@{{e.estatus}}-@{{e.total}}
-                                </span>
+                                </span>--}}
                             </div>
                         </div>
                     </div>

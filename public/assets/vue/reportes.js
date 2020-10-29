@@ -1,18 +1,16 @@
 new Vue({
     el: '#reportes',
     data:{
-        rangoTiempo:'',
-        numReportes:[],
-        tipoEstatus:[],
-        Estatus:[],
-        colorEstatus:[],
-        coloresHex:[]
+        rangoTiempo:'31',
+        comparacionChart:'',
+        EstatusbyTime:[]
     },
     created: function(){
-        
+        this.getNumSolicitudesThroughTime();
     },
     mounted: async function(){
         this.generar_Grafica_Comparacion();
+        
         /*await this.getNumSolicitudesByStatus();
         console.log("ok",this.Estatus);
         this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
@@ -71,15 +69,18 @@ new Vue({
             }
             return color;
         },
-        getNumSolicitudesThroughTime:async function(){
+        getNumSolicitudesThroughTime:function(){
             url="get_num_solicitudes_through_time";
-            data= await axios.post(url,{
+            data=axios.post(url,{
                 rangoTiempo:this.rangoTiempo,
             })
             .then(response=>{
                 console.log(response.data);
+                this.EstatusbyTime=response.data;
                 
-                this.Estatus= response.data;
+                
+                
+                //this.Estatus= response.data;
             })
             
             
@@ -124,7 +125,7 @@ new Vue({
 
         },
         
-        generar_Grafica_Comparacion:function(){
+        generar_Grafica_Comparacion:function(datos){
             // Set new default font family and font color to mimic Bootstrap's default styling
             Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#858796';
@@ -156,7 +157,7 @@ new Vue({
 
             // Area Chart Example
             var ctx = document.getElementById("ComparacionSolicitudesChart");
-            var myLineChart = new Chart(ctx, {
+            var comparacionChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -173,7 +174,7 @@ new Vue({
                     pointHoverRadius: 5,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
-                    data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+                    data: [20,30,50],
                     
                 },{
                     label: "Tickets Pendientes",
@@ -188,7 +189,7 @@ new Vue({
                     pointHoverRadius: 5,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
-                    data: [0, 9000, 4000, 10000, 12000, 18000, 13000, 28000, 15000, 35000, 20000, 50000],
+                    data: [10,20,30],
                 }],
             },
             options: {
@@ -269,7 +270,17 @@ new Vue({
                 }
             }
             });
+            this.EstatusbyTime.forEach(s => {
+                console.log(s.fecha);
+                comparacionChart.labels.push(s.fecha);
+                comparacionChart.dataset[1].data.push(s.total);
+            });
+            
+            
+            comparacionChart.update();
+            
         }
+        
        
     }
 });

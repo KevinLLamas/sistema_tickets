@@ -500,6 +500,24 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    public function get_num_solicitudes_through_time(Request $request){
+        $idUsuario=Session::get('id_sgu');
+        $rangoTiempo=$request->input('rangoTiempo');
+        $idDepartamento=Session::get('id_departamento');
+        try{
+            $num_status=Departamentos::find($idDepartamento)
+            ->solicitudes()
+            ->select(DB::raw('date(solicitud.fecha_creacion) as fecha'),DB::raw('count(*) as total'))
+            ->whereBetween('solicitud.fecha_creacion',[DB::raw("(CURRENT_DATE - INTERVAL $rangoTiempo day)"),DB::raw('(CURRENT_DATE)')])
+            ->groupBy('fecha')->get();
+            return $num_status;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $rangoTiempo
+            ]);
+        }
+    }
     
     public function insert(Request $request){
 

@@ -7,6 +7,9 @@ class Solicitud extends Model
     protected $primaryKey = 'id_solicitud';
     public $timestamps = false;
 
+    public function fecha_creacion_date(){
+        return $this->fecha_creacion->format('Y.m.d');
+    }
     public function usuario_many(){
         return $this->belongsToMany('App\Models\Usuario','solicitud_usuario','id_solicitud','id_usuario');
     }
