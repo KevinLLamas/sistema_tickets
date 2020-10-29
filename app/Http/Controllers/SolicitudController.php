@@ -19,6 +19,8 @@ use App\Models\Atencion_externos;
 use App\Models\Subcategoria_departamento;
 use App\Models\Solicitud_departamento;
 use App\Models\Departamentos;
+use App\Models\Solicitud_usuario;
+use App\Models\Solicitud_notificacion;
 use Illuminate\Support\Facades\Session;
 class SolicitudController extends Controller
 {
@@ -39,7 +41,7 @@ class SolicitudController extends Controller
     {
         if(filter_var($request->input('solicitud.correo_contacto'), FILTER_VALIDATE_EMAIL))
         {
-            //return $request->all();
+            //CREAMOS SOLICITUD
             $solicitud = new Solicitud;
             $solicitud->id_usuario = Session::get('id_sgu');
             $solicitud->estatus = "Sin atender";
@@ -53,9 +55,9 @@ class SolicitudController extends Controller
             $solicitud -> save();
             $id_solicitud = $solicitud->id_solicitud;
 
+            //AGREGAMOS DATOS ADICIONALES A LA SOLICITUD
             $datos = $request->input('datos');
-            foreach ($datos as $key)
-            {
+            foreach ($datos as $key){
                 $solicitud_dato = new Solicitud_dato_adicional;
                 $solicitud_dato->id_solicitud = $id_solicitud;
                 $solicitud_dato->valor = $key['respuesta'];
@@ -63,17 +65,7 @@ class SolicitudController extends Controller
                 $solicitud_dato -> save();
             }
 
-            $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->get();
-            foreach ($departamentos as $departamento)
-            {
-                $solicitud_departamento = new Solicitud_departamento;
-                $solicitud_departamento->id_solicitud = $id_solicitud;
-                $solicitud_departamento->id_departamento = $departamento->id_departamento;
-                $solicitud_departamento->aceptada = 'true';
-                $solicitud_departamento->razon = '';
-                $solicitud_departamento->save();
-            }
-
+            //AGREGAMOS EL MENSAJE DE SOLICITUD CREADA
             $solicitud_atencion = new Solicitud_atencion;
             $solicitud_atencion->id_solicitud = $id_solicitud;
             $solicitud_atencion->id_usuario = Session::get('id_sgu');;
@@ -83,10 +75,74 @@ class SolicitudController extends Controller
             $solicitud_atencion->tipo_at = 'Creacion';
             $solicitud_atencion->save();
 
+            //BUSCAMOS Y ASIGNAMOS A LOS DEPARTAMENTOS A LOS QUE PERTENECE LA SOLICITUD
+            $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->get();
+            foreach ($departamentos as $departamento)
+            {
+                $solicitud_departamento = new Solicitud_departamento;
+                $solicitud_departamento->id_solicitud = $id_solicitud;
+                $solicitud_departamento->id_departamento = $departamento->id_departamento;
+                $solicitud_departamento->aceptada = 'true';
+                $solicitud_departamento->razon = '';
+                $solicitud_departamento->save();
+                
+                //TRAEMOS TECNICOS DE EL DEPARTAMENTO ACTUAL
+                $usuarios_depa = Usuario::with('ultima_asignada')
+                ->where('id_departamento', $departamento->id_departamento)
+                ->where('id_sgu','!=','1')
+                ->where('rol','TECNICO')
+                ->get();
+
+                //BUSCAMOS A EL USUARIO EL CUAL TENGA MAS TIEMPO SIN QUE SE LE ASIGNE UNA SOLICITUD
+                $usuario_asignar = $usuarios_depa[0];
+                foreach ($usuarios_depa as $usuario) {
+                    if(is_null($usuario->ultima_asignada)){
+                        $usuario_asignar = $usuario;
+                        break;
+                    }
+                    if(new \DateTime($usuario->ultima_asignada->momento) < new \DateTime($usuario_asignar->ultima_asignada->momento))
+                        $usuario_asignar = $usuario;
+                }
+                //ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
+                $solicitud_usuario = new Solicitud_usuario;
+                $solicitud_usuario->id_solicitud = $id_solicitud;
+                $solicitud_usuario->id_usuario = $usuario_asignar->id_sgu;
+                $solicitud_usuario->momento = now();
+                $solicitud_usuario->estado = 'Atendiendo';
+                $solicitud_usuario->save();
+
+                //CREAMOS EL MENSAJE DE ATENCION Y ASIGNACION
+                $atencion = new Solicitud_atencion;
+                $atencion->id_solicitud = $id_solicitud;
+                //$atencion->id_usuario = $id_solicitud;
+                $atencion->detalle = 'asignó a '.$this->get_usuario($usuario_asignar->id_sgu)['nombre'].' a este ticket.';
+                $atencion->tipo_respuesta = 'Todos';
+                $atencion->momento = now();
+                $atencion->save();
+
+                //CREAMOS LA SOLICITUD PARA EL ASIGNADO
+                $notificacion = new Solicitud_notificacion;
+                $notificacion->id_solicitud = $id_solicitud;
+                $notificacion->id_atencion = $atencion->id;
+                $notificacion->id_usuario = $usuario_asignar->id_sgu;
+                $notificacion->status = 'No leida';
+                $notificacion->save();
+
+                //ACTUALIZAMOS EL ESTATUS DE LA SOLICITUD
+                if($solicitud->estatus == 'Sin atender'){
+                    $solicitud->estatus = 'Atendiendo';
+                    $solicitud->save();
+                }
+            }
+
+            
+            //GUARDAMOS INFORMACION PARA EL USUARIO EXTERNO
             $atencion_externos = new Atencion_externos;
             $atencion_externos->solicitud =  $this->encriptar($id_solicitud);
             $atencion_externos->codigo =  $this->generarCodigo();
             $atencion_externos->save();
+
+            //MANDAMOS LA INFORMACION POR CORREO
             if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion,$id_solicitud) == 'Enviado');
                 return response()->json([
                     'status' => true, 
@@ -106,6 +162,21 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    private function get_usuario($id){
+		$url = curl_init("http://10.9.4.152:3000/persona");
+		$llaveApp = "B0342DEF578109AD4C32E158B2702E884645493F84A0AFACA05A017D3E68D3F8";
+		$data = array(
+			"id_persona"=>$id,
+			"llaveApp" => $llaveApp
+		);
+		curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($url, CURLOPT_POSTFIELDS,http_build_query($data));
+		$response = curl_exec($url);
+		curl_close($url);
+		$res = json_decode($response, true);
+		return $res;
+	}
     private function encriptar($texto)
     {
         $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );

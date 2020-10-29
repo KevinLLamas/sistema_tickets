@@ -43,7 +43,7 @@
           </h6>
           <div v-for="(notificacion,index) in notificaciones" v-if="index < 10">
             <a :class="'dropdown-item d-flex align-items-center ' + esLeida(notificacion.status)"  v-on:click="verSolicitud(notificacion.id,notificacion.id_solicitud)">
-              <div class="mr-3" v-if="notificacion.atencion.tipo_at == 'Atencion'">
+              <div class="mr-3" v-if="notificacion.atencion.tipo_at == 'Atencion' || notificacion.atencion.tipo_at == 'Atención'">
                 <div class="icon-circle bg-primary">
                   <i class="far fa-comment-dots text-white"></i>
                 </div>

@@ -282,6 +282,7 @@ class seguimientoController extends Controller
 					{
 						$ban = true;
 						$integ->estado = 'Atendiendo';
+						$integ->momento = now();
 						$integ->save();
 						$clave = array_search($integ_sel, $integrantes_seleccionados);
 						unset($integrantes_seleccionados[$clave]);
