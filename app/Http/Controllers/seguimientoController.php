@@ -49,8 +49,16 @@ class seguimientoController extends Controller
 					}
 				}
 				else{
-					$at->nombre = 'Usuario';
-					$at->correo_usuario = 'Usuario';
+					if($at->detalle != 'Vencio tiempo. Solicitud cerrada automaticamente por el sistema')
+					{
+						$at->nombre = 'Usuario';
+						$at->correo_usuario = 'Usuario';
+					}
+					else
+					{
+						$at->nombre = 'Sistema';
+						$at->correo_usuario = 'Sistema';
+					}
 				}
 				$at->adjuntos = $adjuntos;
 				
@@ -142,6 +150,8 @@ class seguimientoController extends Controller
 			$atencion->tipo_at = $Sol_atencion['tipo_at'];
 		else
 			$atencion->tipo_at = 'Atencion';
+		if($Sol_atencion['fecha_finalizado'] != '')
+			$atencion->momento = $Sol_atencion['fecha_finalizado'];
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
 
@@ -164,6 +174,10 @@ class seguimientoController extends Controller
 		$id = $request->input('id');
 		$solicitud = Solicitud::find($id);
 		$solicitud->estatus =  $request->input('estatus');
+		if($solicitud->estatus == 'Cerrada')
+			$solicitud->fecha_finalizado = now();
+		else
+		$solicitud->fecha_finalizado = null;
 		$solicitud->save();
 		return $solicitud->estatus;
 	}
