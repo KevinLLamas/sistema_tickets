@@ -77,7 +77,7 @@ class SolicitudController extends Controller
             $solicitud_atencion = new Solicitud_atencion;
             $solicitud_atencion->id_solicitud = $id_solicitud;
             $solicitud_atencion->id_usuario = Session::get('id_sgu');;
-            $solicitud_atencion->detalle = 'Solicitud creada';
+            $solicitud_atencion->detalle = 'Ticket creado';
             $solicitud_atencion->tipo_respuesta = 'Todos';
             $solicitud_atencion->momento =now();
             $solicitud_atencion->tipo_at = 'Creacion';
@@ -470,7 +470,6 @@ class SolicitudController extends Controller
     public function get_num_solicitudes_bystatus_asignadas(Request $request){
         
         $idUsuario=Session::get('id_sgu');
-        
         try{
             $num_status=Usuario::find($idUsuario)
             ->solicitudes()

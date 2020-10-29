@@ -9,7 +9,7 @@
             <li class="breadcrumb-item">Seguimiento</li>
         </ol>
 	<!-- Page Heading -->
-	<h1  class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} - @{{ seguimiento.perfil.nombre }} - @{{ seguimiento.categoria.nombre }} - @{{ seguimiento.subcategoria.nombre }}</h1>
+	<h1  class="h1 text-gray-800" v-if="seguimiento.id_solicitud">#@{{ seguimiento.id_solicitud }} - @{{ seguimiento.perfil.nombre }} - @{{ seguimiento.categoria.nombre }} - @{{ seguimiento.subcategoria.nombre }}</h1>
 	<div v-if="seguimiento.estatus">
 		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()">
 			<option value="" disabled>Seleccione una opción</option>
@@ -42,7 +42,7 @@
 	<div   class="card bg-white ">
 
 		<div class="card-body">
-			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.nombre}}</b></p>
+			<p v-if="seguimiento.usuario" ><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.nombre}}</b></p>
 			<p class="card-text">@{{seguimiento.descripcion}}</p>
 			<p>
 				<small>
@@ -79,7 +79,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'../get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'cast/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>	
@@ -176,7 +176,6 @@
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', '')">Responder</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Abrir')">Responder y abrir</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Suspender')">Responder y suspender</a>
-							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Resolver')">Responder y resolver</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Terminar')">Responder y terminar</a>
 						</div>
 					</div>
@@ -211,7 +210,6 @@
 							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', '')">Responder</a>
 							<a v-if="" class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Abrir')">Responder y abrir</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Suspender')">Responder y suspender</a>
-							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Resolver')">Responder y resolver</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Terminar')">Responder y terminar</a>
 						</div>
 					</div>
@@ -253,7 +251,7 @@
 <script>
     slim = new SlimSelect({
                 select: '#agregar_usuarios',
-                placeholder: 'Asignar solicitud ',
+                placeholder: 'Asignar Ticket',
                 limit: 4,
               })                    
 </script>

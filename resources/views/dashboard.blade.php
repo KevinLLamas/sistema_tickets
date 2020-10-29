@@ -103,11 +103,11 @@
                                                 
                                             </div>
                                         </div>
-                                        <table class="table table-responsive">
+                                        <table class="table table-responsive table-sm">
                                             <thead>
                                                 <tr>
-                                                    <th><button type="button" name="ordenID1" id="ordenID1" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAdmin">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
-                                                    <th>Asignada a</th>
+                                                    <th><button type="button" name="ordenID1" id="ordenID1" class="btn btn-sm btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAdmin">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
+                                                    <th>Asignado</th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
                                                     <th>Estado</th>
@@ -126,7 +126,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -273,10 +273,10 @@
                                             </div>
                                         </div>
                                     
-                                        <table class="table table-responsive" >
+                                        <table class="table table-responsive table-sm" >
                                             <thead>
                                                 <tr>
-                                                    <th><button type="button" name="ordenID2" id="ordenID2" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAsignadas">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
+                                                    <th><button type="button" name="ordenID2" id="ordenID2" class="btn btn-sm btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAsignadas">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
                                                     <th>Estado</th>
@@ -292,7 +292,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -390,7 +390,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body" v-show="!ocultarListaSolicitudes">
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
-                                        <h1>Solicitudes Departamento</h1>
+                                        <h1>Tickets Departamento</h1>
                                         <div class="form-row">
                                             <div class="form-group col-lg-1">
                                                 <label for="">Paginado</label>
@@ -439,10 +439,10 @@
                                             </div>
                                         </div>
                                     
-                                        <table class="table table-responsive">
+                                        <table class="table table-responsive table-sm">
                                             <thead>
                                                 <tr>
-                                                    <th><button type="button" name="ordenID3" id="ordenID3" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesDepartamento">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
+                                                    <th><button type="button" name="ordenID3" id="ordenID3" class="btn btn-sm btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesDepartamento">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
                                                     <th>Asignada a</th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
@@ -462,7 +462,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -559,7 +559,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body" v-show="!ocultarTabla">
                                     <div class=" mt-4 mb-2  container-fluid border-bottom">
-                                        <h1>Mis Solicitudes</h1>
+                                        <h1>Mis Tickets</h1>
                                         <div class="form-row">
                                             <div class="form-group col-lg-1">
                                                 <label for="">Paginado</label>
@@ -608,10 +608,10 @@
                                             </div>
                                         </div>
                                     
-                                        <table class="table table-responsive" >
+                                        <table class="table table-responsive table-sm">
                                             <thead>
                                                 <tr>
-                                                    <th><button type="button" name="ordenID4" id="ordenID4" class="btn btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getMisSolicitudes">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
+                                                    <th><button type="button" name="ordenID4" id="ordenID4" class="btn btn-sm btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getMisSolicitudes">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
                                                     <th>Descripcion</th>
                                                     <th>Fecha</th>
                                                     <th>Estado</th>
@@ -627,7 +627,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-outline-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/cast/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                            
                                             </tbody>
