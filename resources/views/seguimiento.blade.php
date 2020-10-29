@@ -35,7 +35,7 @@
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
-		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.nombre}}, <br> </label>
+		<b><label v-if="integrantesSeleccionadosCompletoSolicitud" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label></b>
 	</p>
 	
 	<hr>
