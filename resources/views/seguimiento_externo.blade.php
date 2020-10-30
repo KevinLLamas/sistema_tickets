@@ -39,16 +39,13 @@
 			<option option="Cerrada (En espera de aprobación)">Cerrada (En espera de aprobación)</option>
 			<option option="Cerrada">Cerrada</option>
 		</select>
-		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Cerrada'; cambiarEstatus()">Confirmar</button>
-		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Atendiendo'; cambiarEstatus()">Abrir de Nuevo</button>
+		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="cambiarEstatusExterno('Cerrada')">Confirmar</button>
+		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="cambiarEstatusExterno('Atendiendo')">Abrir de Nuevo</button>
 	</div>
 	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> <b>@{{seguimiento.fecha_creacion}}</b> - 
-		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
-		<b v-if="integrantesSeleccionados.length == 0">Sin personal asignado.</b> 
-		<select v-if="departamentoValido" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
-			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
-		</select>
-		<label v-if="integrantesSeleccionadosCompleto" v-for="item in integrantesSeleccionadosCompleto">@{{item.nombre}}, <br> </label>
+		<b v-if="integrantesSeleccionadosSolicitud.length > 0">Atendiendo: </b>
+		<b v-if="integrantesSeleccionadosSolicitud.length == 0">Sin personal asignado.</b> 
+		<label v-if="integrantesSeleccionadosCompletoSolicitud" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label>
 		
 		<!--select class="selectpicker" data-live-search="true">
 			<option data-tokens="ketchup mustard">Juan López García</option>
