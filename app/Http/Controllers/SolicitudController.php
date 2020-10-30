@@ -596,18 +596,7 @@ class SolicitudController extends Controller
                 ->get();
                 return $num_status;
             }
-            
-            /*$num_status=Departamentos::find($idDepartamento)
-            ->solicitudes()
-            ->select(DB::raw('date(solicitud.fecha_creacion) as fecha'),DB::raw('count(*) as total'),'solicitud.estatus')
-            ->whereBetween(DB::raw('date(solicitud.fecha_creacion)'),[DB::raw("(CURRENT_DATE - $rangoTiempo)"),DB::raw('(CURRENT_DATE)')])
-            ->where(DB::raw('date(solicitud.fecha_creacion)'),'<=',DB::raw("(CURRENT_DATE - $rangoTiempo)"))
-            ->whereBetween('solicitud.fecha_creacion',[DB::raw("(CURRENT_DATE - $rangoTiempo)"),DB::raw('(CURRENT_DATE)')])
-            ->where('solicitud.estatus',$estatus)
-            ->groupBy('fecha')
-            ->get();
-            return $num_status;*/
-            
+
             
         }catch(Exception $e){
             return response()->json([

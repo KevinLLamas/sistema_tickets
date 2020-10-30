@@ -20,7 +20,7 @@ new Vue({
         numAtendiendo: '',
         numSinAtender: '',
         porcentajeCerrados: '',
-        rangoTiempo:'INTERVAL 3 MONTH',
+        rangoTiempo:'INTERVAL 7 DAY',
         EstatusbyTime:[],
         EstatusbyTimeCerradas:[],
     },
