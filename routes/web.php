@@ -33,6 +33,7 @@ Route::get('get_num_solicitudes_bystatus_asignadas', [SolicitudController::class
 
 //reportes
 Route::post('get_num_solicitudes_through_time', [SolicitudController::class, 'get_num_solicitudes_through_time']);
+Route::post('get_num_solicitudes_through_time_cerradas', [SolicitudController::class, 'get_num_solicitudes_through_time_cerradas']);
 
 //SOLICITAR SERVICIO
 Route::get('/alta_solicitud_servicio', function(){return view('alta_solicitud_servicio');});
