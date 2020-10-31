@@ -120,7 +120,7 @@ class SolicitudController extends Controller
                 $atencion->momento = now();
                 $atencion->save();
 
-                //CREAMOS LA SOLICITUD PARA EL ASIGNADO
+                //CREAMOS LA NOTIFICACION PARA EL ASIGNADO
                 $notificacion = new Solicitud_notificacion;
                 $notificacion->id_solicitud = $id_solicitud;
                 $notificacion->id_atencion = $atencion->id;
