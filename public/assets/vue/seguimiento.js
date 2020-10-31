@@ -25,6 +25,7 @@ new Vue({
             id_usuario: '',
             tipo_at: '',
             tipo_respuesta: '',
+            fecha_finalizado: '',
         },
         files: {},
         id_atencion: '',
@@ -35,6 +36,8 @@ new Vue({
         departamentoValido: '',
         integrantesSeleccionados: [],
         integrantesSeleccionadosCompleto: [],
+        integrantesSeleccionadosSolicitud: [],
+        integrantesSeleccionadosCompletoSolicitud: [],
         integrantesSeleccionadoAntesUpdate: [],
         integrantesDesasignados: [],
         integrantesAsignados: [],
@@ -51,10 +54,10 @@ new Vue({
                 //console.log(response.data);
                 this.seguimiento = response.data;
                 this.getUserData();
+                this.compruebaCerradoAuto();
             }).catch(function (error) {
                 console.log(error);
-            });
-            
+            });            
         },
         muestra2: function(){
             axios.get(`../getSolicitud/`+this.id).then(response=>{
@@ -164,7 +167,8 @@ new Vue({
                 axios.post('../inserta_atencion_externo',{
                     data: this.nueva_atencion,
                     codigo: this.codigo,
-                    email: this.seguimiento.usuario.correo
+                    email: this.seguimiento.usuario.correo,
+                    fecha_finalizado: this.nueva_atencion.fecha_finalizado,
                 }).then(result=>{
                     console.log(result);
                     this.id_atencion = result.data;
@@ -172,7 +176,7 @@ new Vue({
                         this.muestra();
                     else
                         this.muestra2();
-                    if(accion != '')
+                    if(accion != '' && accion != 'cambio_estatus')
                     {
                         switch(accion)
                         {
@@ -203,12 +207,15 @@ new Vue({
                         }  
                         this.cambiarEstatus();                      
                     }
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Comentario agregado correctamente.',
-                        showConfirmButton: false,
-                        timer: 1000
-                    })
+                    if(accion == '')
+                    {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Comentario agregado correctamente.',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+                    }
                     this.saveFiles();
                     this.nueva_atencion.detalle = '';
                     this.nueva_atencion.tipo_respuesta = '';
@@ -247,6 +254,36 @@ new Vue({
                 this.nueva_atencion.id_usuario= this.user.id_sgu;
                 this.nueva_atencion.tipo_at= 'Estatus';
                 this.agregarAtencion('Todos', 'cambio_estatus');
+                this.nueva_atencion.estatus = "";
+             }).catch(error=>{
+                console.log(error);
+             });
+        },
+        cambiarEstatusExterno: function(estatus){
+            this.seguimiento.estatus = estatus;
+            axios.post('../cambiar_estatus',{
+                id: this.seguimiento.id_solicitud,
+                estatus: this.seguimiento.estatus
+             }).then(result=>{           
+                 //this.getSesiones();
+                 this.seguimiento.estatus = result.data;
+                 if(this.seguimiento.estatus == 'Cerrada')
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'El ticket fue cerrado correctamente',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }) 
+                else
+                 Swal.fire({
+                     icon: 'success',
+                     title: 'Se cambio el estatus a '+this.seguimiento.estatus,
+                     showConfirmButton: false,
+                     timer: 2000
+                 })                 
+                this.nueva_atencion.detalle= 'Cambio de estatus a ' + this.seguimiento.estatus;
+                this.nueva_atencion.tipo_at= 'Estatus';
+                this.agregarAtencionExterno('Todos', 'cambio_estatus');
                 this.nueva_atencion.estatus = "";
              }).catch(error=>{
                 console.log(error);
@@ -394,12 +431,25 @@ new Vue({
         validatePermission: function()
         {
             this.integrantesSeleccionadosCompleto = [];
+            var c = 0;
             for(var i = 0; i < this.seguimiento.departamento.length; i++)
             {                
                 if(this.seguimiento.departamento[i].id == this.user.id_departamento)
                     this.departamentoValido = this.seguimiento.departamento[i];
+                for(var z = 0; z < this.seguimiento.departamento[i].integrantes.length; z++)
+                {
+                    for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
+                    {
+                        if(this.seguimiento.departamento[i].integrantes[z].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                        { 
+                            this.integrantesSeleccionadosSolicitud[c] = this.seguimiento.departamento[i].integrantes[z].id_sgu;
+                            this.integrantesSeleccionadosCompletoSolicitud[c] = this.seguimiento.departamento[i].integrantes[z];
+                            c++;
+                        }
+                    }                    
+                }  
             }
-            var c = 0;
+            c = 0;
             for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
             {
                 //console.log(this.seguimiento.departamentoValido);
@@ -421,17 +471,17 @@ new Vue({
         },
         validatePermissionExterno: function()
         {
+            var c = 0;
             for(var i = 0; i < this.seguimiento.departamento.length; i++)
-            {                
-                var c = 0;
+            {               
                 for(var z = 0; z < this.seguimiento.departamento[i].integrantes.length; z++)
                 {
                     for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
                     {
                         if(this.seguimiento.departamento[i].integrantes[z].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
                         { 
-                            this.integrantesSeleccionados[c] = this.seguimiento.departamento[i].integrantes[z].id_sgu;
-                            this.integrantesSeleccionadosCompleto[c] = this.seguimiento.departamento[i].integrantes[z];
+                            this.integrantesSeleccionadosSolicitud[c] = this.seguimiento.departamento[i].integrantes[z].id_sgu;
+                            this.integrantesSeleccionadosCompletoSolicitud[c] = this.seguimiento.departamento[i].integrantes[z];
                             c++;
                         }
                     }                    
@@ -512,15 +562,26 @@ new Vue({
             }
         },
 
-        getDepartamentos: function()
-        {
-            axios.get('../getDepartamentos').then(response=>{
-                //console.log(response.data);
-                this.departamentos = response.data;            
-                //console.log(this.seguimiento.correo_atencion);
-            }).catch(function (error) {
-                //console.log(error);
-            });
+        compruebaCerradoAuto: function (){           
+            if(this.seguimiento.estatus == 'Cerrada')
+            {
+                var ultimaAtencionUsuario = '';
+                var ultimaAtencionDetalle = '';
+                if(this.seguimiento.atencion.length > 0)
+                {
+                    ultimaAtencionUsuario = this.seguimiento.atencion[this.seguimiento.atencion.length-1].correo_usuario;
+                    ultimaAtencionDetalle = this.seguimiento.atencion[this.seguimiento.atencion.length-1].detalle;
+                    if(ultimaAtencionUsuario != 'Sistema' && ultimaAtencionDetalle != 'Cambio de estatus a Cerrada')
+                    {
+                        this.nueva_atencion.detalle= 'Vencio tiempo. Solicitud cerrada automaticamente por el sistema';
+                        this.nueva_atencion.tipo_at= 'Estatus';
+                        this.nueva_atencion.fecha_finalizado = this.seguimiento.fecha_finalizado;
+                        this.agregarAtencionExterno('Todos', 'cambio_estatus');
+                        this.nueva_atencion.estatus = "";                        
+                    }
+                }
+
+            }
         }
     }
 });

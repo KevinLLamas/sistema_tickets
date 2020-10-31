@@ -1,3 +1,12 @@
+//Declaracion de variables para las graficas de manera global
+var comparacionChart=null;
+var ctx = document.getElementById("ComparacionSolicitudesChart");
+comparacionChart = new Chart(ctx, {
+    type: 'line',
+    data: {},
+    options: {}
+});
+
 new Vue({
     el: '#reportes',
     data:{
@@ -11,29 +20,19 @@ new Vue({
         numAtendiendo: '',
         numSinAtender: '',
         porcentajeCerrados: '',
-        rangoTiempo:'31',
-        comparacionChart:'',
+        rangoTiempo:'INTERVAL 7 DAY',
         EstatusbyTime:[],
+        EstatusbyTimeCerradas:[],
     },
     created: function(){      
-        this.getNumSolicitudesThroughTime();
+        
         this.getInfoOfTickets();
+        this.generar_Grafica_Comparacion();
     },
     mounted: async function(){
-        this.generar_Grafica_Comparacion();
+        this.generar_Grafica_ByTime()
         
-        /*await this.getNumSolicitudesByStatus();
-        console.log("ok",this.Estatus);
-        this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
-        this.numEstatus=await this.Estatus.map(n=>n.total);
         
-        await this.Estatus.forEach(e => {
-            this.colorEstatus.push(this.asignarColor(e.estatus));
-            this.coloresHex.push(this.asignarColorHex(e.estatus))
-        });
-        //this.colorEstatus=await this.Estatus.map(c=>c.color);
-        //await console.log("ök",colorEstatus);
-        this.generar_Grafica_ByStatus();*/
     },
     methods:{
         asignarColor:function(tipo){
@@ -80,21 +79,25 @@ new Vue({
             }
             return color;
         },
-        getNumSolicitudesThroughTime:function(){
+        getNumSolicitudesThroughTime:async function(){
             url="get_num_solicitudes_through_time";
-            data=axios.post(url,{
+            data=await axios.post(url,{
                 rangoTiempo:this.rangoTiempo,
             })
             .then(response=>{
-                console.log(response.data);
+                //console.log(response.data);
                 this.EstatusbyTime=response.data;
-                
-                
-                
-                //this.Estatus= response.data;
             })
-            
-            
+        },
+        getNumSolicitudesThroughTimeCerradas:async function(){
+            url="get_num_solicitudes_through_time_cerradas";
+            data=await axios.post(url,{
+                rangoTiempo:this.rangoTiempo,
+            })
+            .then(response=>{
+                //console.log(response.data);
+                this.EstatusbyTimeCerradas=response.data;
+            })
         },
         generar_Grafica_ByStatus:function(){
             
@@ -135,8 +138,129 @@ new Vue({
             });
 
         },
+        generar_Grafica_Comparacion:async function(){
+            //console.log("Tickets en total");
+            await this.getNumSolicitudesThroughTime();
+            await this.getNumSolicitudesThroughTimeCerradas();
+            //console.log(this.EstatusbyTime);
+            switch(this.rangoTiempo){
+                case 'INTERVAL 1 DAY':
+                        this.LastDays(2).forEach(d => {
+
+                            console.log(d.toString());
+                            this.addLabelChart(comparacionChart,d.toString());
+                            
+                        });
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.fecha,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
+                        });
+                    break;
+                case 'INTERVAL 7 DAY':
+                        
+                        this.LastDays(7).forEach(d => {
+
+                            console.log(d.toString());
+                            this.addLabelChart(comparacionChart,d.toString());
+                            
+                            
+                        });
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.fecha,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
+                        });
+                    break;
+                case 'INTERVAL 1 MONTH':
+                        
+                        this.LastMonths(2).forEach(m => {
+                            console.log(m);
+                            this.addLabelChart(comparacionChart,m.toString());
+                        });
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.mes,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
+                        });
+                    break;
+                case 'INTERVAL 3 MONTH':
+                        this.LastMonths(3).forEach(m => {
+                            console.log(m);
+                            this.addLabelChart(comparacionChart,m.toString());
+                        });
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.mes,1);
+                        });
+                    break;
+            }
+            
+            /*console.log("Tickets cerrados");
+            await this.getNumSolicitudesThroughTime('Cerrada');
+            this.EstatusbyTime.forEach(s => {
+                this.addDataChart(comparacionChart,s.fecha,s.total,0);
+            });
+            console.log(this.EstatusbyTime);*/
+            
+        },
+        addLabelChart:function(chart,label){
+            chart.data.labels.push(label);
+        },
+        addDataChart:function(chart, data,label, dataset) {
+            console.log("ingresando dato en fecha")
+            console.log(label);
+            posicion=chart.data.labels.findIndex((f) => f == label);
+            chart.data.datasets[dataset].data[posicion]=data;   
+            console.log("posicion: "+ posicion);
+            //chart.data.datasets[dataset].data.push(data);
+            chart.update();
+        },
+        LastDays:function(days) {
+            var result = [];
+            for (var i=days-1; i>=0; i--) {
+                var d = new Date();
+                d.setDate(d.getDate() - i);
+                result.push( this.formatDate(d) );
+            }
         
-        generar_Grafica_Comparacion:function(datos){
+            return(result);
+        },
+        formatDate:function(date){
+            //console.log(`fecha a convertir ${date}`);
+            let day = date.getDate()
+            let month = date.getMonth() + 1
+            let year = date.getFullYear()
+            //console.log(`dia ${day}`);
+            //console.log(`mes ${month}`);
+            //console.log(`anio ${year}`);
+            if(month < 10){
+                return `${day}-0${month}-${year}`;
+            }else{
+                return `${day}-${month}-${year}`;
+            }
+        },
+        LastMonths:function(months) {
+            var monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+                "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+            ];
+            var d = new Date();
+            var result = []
+
+            for (i = months-1; i >= 0; i--) {
+                result.push(monthNames[(d.getMonth() - i)] + ' - ' +d.getFullYear()  );
+            }
+            return result;
+        },
+        formatMonth:function(date){
+            var monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            return monthNames[(date.getMonth() - i)] + ' - ' +date.getFullYear();
+        },
+        generar_Grafica_ByTime:function(){
             // Set new default font family and font color to mimic Bootstrap's default styling
             Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#858796';
@@ -167,11 +291,12 @@ new Vue({
             }
 
             // Area Chart Example
+            comparacionChart.destroy();
             var ctx = document.getElementById("ComparacionSolicitudesChart");
-            var comparacionChart = new Chart(ctx, {
+            comparacionChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                labels: [],
                 datasets: [{
                     label: "Tickets Resueltos",
                     yAxesID:"Tickets Resueltos",
@@ -185,7 +310,8 @@ new Vue({
                     pointHoverRadius: 5,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
-                    data: [20,30,50],
+                    data: [],
+                    spanGaps:true
                     
                 },{
                     label: "Tickets Pendientes",
@@ -200,7 +326,8 @@ new Vue({
                     pointHoverRadius: 5,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
-                    data: [10,20,30],
+                    data: [],
+                    spanGaps:true
                 }],
             },
             options: {
@@ -281,14 +408,7 @@ new Vue({
                 }
             }
             });
-            this.EstatusbyTime.forEach(s => {
-                console.log(s.fecha);
-                comparacionChart.labels.push(s.fecha);
-                comparacionChart.dataset[1].data.push(s.total);
-            });
-
-
-            comparacionChart.update();
+            
 
         },
         getSolicitudesDepartamento: function(page){

@@ -101,12 +101,12 @@
                                     <div class="form-group col-lg-12">
                                         <div class="form-group">
                                           <label for="">Periodo de tiempo</label>
-                                          <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="getNumSolicitudesThroughTime();generar_Grafica_Comparacion;">
+                                          <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="generar_Grafica_ByTime();generar_Grafica_Comparacion();">
                                             
-                                            <option value="1" selected>Hoy</option>
-                                            <option value="7">7 Dias</option>
-                                            <option value="31">1 Mes</option>
-                                            <option value="90">3 Meses</option>
+                                            <option value="INTERVAL 1 DAY">Hoy</option>
+                                            <option value="INTERVAL 7 DAY">7 Dias</option>
+                                            <option value="INTERVAL 1 DAY">1 Mes</option>
+                                            <option value="INTERVAL 3 MONTH">3 Meses</option>
                                           </select>
                                         </div>
                                     </div>

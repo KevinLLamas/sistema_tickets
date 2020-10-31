@@ -574,13 +574,78 @@ class SolicitudController extends Controller
         $idUsuario=Session::get('id_sgu');
         $rangoTiempo=$request->input('rangoTiempo');
         $idDepartamento=Session::get('id_departamento');
+        
         try{
-            $num_status=Departamentos::find($idDepartamento)
+            
+            if($rangoTiempo == 'INTERVAL 1 DAY' || $rangoTiempo == 'INTERVAL 7 DAY'){
+                $num_status=Departamentos::find($idDepartamento)
+                ->solicitudes()
+                ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%d-%m-%Y') as fecha"))
+                ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                ->groupBy('fecha')
+                ->get();
+                return $num_status;
+            }
+            else{
+                DB::statement("SET lc_time_names = 'es_ES'");
+                $num_status=Departamentos::find($idDepartamento)
+                ->solicitudes()
+                ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes"))
+                ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                ->groupBy("mes")
+                ->get();
+                return $num_status;
+            }
+
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $rangoTiempo
+            ]);
+        }
+    }
+    public function get_num_solicitudes_through_time_cerradas(Request $request){
+        $idUsuario=Session::get('id_sgu');
+        $rangoTiempo=$request->input('rangoTiempo');
+        $idDepartamento=Session::get('id_departamento');
+        
+        try{
+            
+            if($rangoTiempo == 'INTERVAL 1 DAY' || $rangoTiempo == 'INTERVAL 7 DAY'){
+                $num_status=Departamentos::find($idDepartamento)
+                ->solicitudes()
+                ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%d-%m-%Y') as fecha, solicitud.estatus as estatus"))
+                ->where('estatus','Cerrada')
+                ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                ->groupBy('fecha')
+                ->get();
+                return $num_status;
+            }
+            else{
+                DB::statement("SET lc_time_names = 'es_ES'");
+                $num_status=Departamentos::find($idDepartamento)
+                ->solicitudes()
+                ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes, solicitud.estatus as estatus"))
+                ->where('estatus','Cerrada')
+                ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                ->groupBy("mes")
+                ->get();
+                return $num_status;
+            }
+            
+            /*$num_status=Departamentos::find($idDepartamento)
             ->solicitudes()
-            ->select(DB::raw('date(solicitud.fecha_creacion) as fecha'),DB::raw('count(*) as total'))
-            ->whereBetween('solicitud.fecha_creacion',[DB::raw("(CURRENT_DATE - INTERVAL $rangoTiempo day)"),DB::raw('(CURRENT_DATE)')])
-            ->groupBy('fecha')->get();
-            return $num_status;
+            ->select(DB::raw('date(solicitud.fecha_creacion) as fecha'),DB::raw('count(*) as total'),'solicitud.estatus')
+            ->whereBetween(DB::raw('date(solicitud.fecha_creacion)'),[DB::raw("(CURRENT_DATE - $rangoTiempo)"),DB::raw('(CURRENT_DATE)')])
+            ->where(DB::raw('date(solicitud.fecha_creacion)'),'<=',DB::raw("(CURRENT_DATE - $rangoTiempo)"))
+            ->whereBetween('solicitud.fecha_creacion',[DB::raw("(CURRENT_DATE - $rangoTiempo)"),DB::raw('(CURRENT_DATE)')])
+            ->where('solicitud.estatus',$estatus)
+            ->groupBy('fecha')
+            ->get();
+            return $num_status;*/
+            
+            
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
