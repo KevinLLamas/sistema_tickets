@@ -85,3 +85,4 @@ Route::get('/ejemplo', function () {
 });
 
 
+Route::get('getUsers', [seguimientoController::class, 'getUsers']); 
