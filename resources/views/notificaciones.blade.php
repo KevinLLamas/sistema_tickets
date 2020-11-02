@@ -41,12 +41,16 @@
                             </div>
                             <div class="form-group col-md-5">
                                 <div class="form-group">
-                                    <label for="">Busqueda por Descripcion</label>
-                                    <input type="text"
-                                        class="form-control" name="busqueda" id="busqueda" aria-describedby="helpId" placeholder="Escribe aqui la busqueda" v-model="busqueda" @input="getNotificaciones">
-                                    <small id="helpId" class="form-text text-muted">Escribe el dato a buscar</small>
+                                    <label for="">Ver</label>
+                                    <select class="form-control" name="" id="" v-model="ver" @change="getNotificaciones">
+                                        <option value="">Todas</option>
+                                        <option value='No leida'>Sin ver</option>
+                                    </select>
                                 </div>
                             </div>
+                        </div>
+                        <div v-if="notificaciones.length == 0">
+                            No tienes notificaciones por el momento.
                         </div>
                         <div v-for="(notificacion, index) in notificaciones" v-if="index < 10">
                             <a :class="'mb-2 card container '+ tipo(notificacion.atencion.tipo_at)+' '+esLeida(notificacion.status)"  v-on:click="verSolicitud(notificacion.id,notificacion.id_solicitud)">

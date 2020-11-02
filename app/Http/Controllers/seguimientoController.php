@@ -22,6 +22,35 @@ use \PHPMailer\PHPMailer\Exception;
 use App\Models\Solicitud_notificacion;
 class seguimientoController extends Controller 
 {
+	protected $users = array();
+	private function get_usuario($id){
+		//LOCAL
+		if($id == null || $id == 0)
+			return ['ok'=>false,'nombre'=>'Usuario'];
+		foreach ($this->users as $user) {
+			if($user['id_sgu'] == $id)
+				return $user;
+		}
+		//API
+		$url = curl_init("http://10.9.4.152:3000/persona");
+		$llaveApp = "B0342DEF578109AD4C32E158B2702E884645493F84A0AFACA05A017D3E68D3F8";
+		$data = array(
+			"id_persona"=>$id,
+			"llaveApp" => $llaveApp
+		);
+		curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($url, CURLOPT_POSTFIELDS,http_build_query($data));
+		$response = curl_exec($url);
+		curl_close($url);
+		$res = json_decode($response, true);
+		array_push($this->users, ['ok'=>true,'id_sgu'=>$id,'nombre'=>$res['nombre']]);
+		return $res;
+	}
+	public function getUsers()
+	{
+		return $this->users;
+	}
 	public function seguimiento($id){
 		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		if($solicitud->atencion != null)
@@ -45,7 +74,7 @@ class seguimientoController extends Controller
 					$res = $this->get_usuario($at->id_usuario);
 					if($res['ok']){
 						$at->nombre = $res['nombre'];
-						$at->correo_usuario = $res['usuario'];
+						//$at->correo_usuario = $res['usuario'];
 					}
 				}
 				else{
@@ -76,22 +105,8 @@ class seguimientoController extends Controller
 		}
 		$solicitud->categoria = Categoria::find($solicitud->subcategoria->id_categoria);
 		$solicitud->perfil = Perfil::find($solicitud->id_perfil);
-		return $solicitud;
-	}
-	private function get_usuario($id){
-		$url = curl_init("http://10.9.4.152:3000/persona");
-		$llaveApp = "B0342DEF578109AD4C32E158B2702E884645493F84A0AFACA05A017D3E68D3F8";
-		$data = array(
-			"id_persona"=>$id,
-			"llaveApp" => $llaveApp
-		);
-		curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
-		curl_setopt($url, CURLOPT_POSTFIELDS,http_build_query($data));
-		$response = curl_exec($url);
-		curl_close($url);
-		$res = json_decode($response, true);
-		return $res;
+		//return $solicitud;
+		return $this->users;
 	}
 	public function inserta_atencion(Request $request){
 		$atencion = new Solicitud_atencion;

@@ -34,9 +34,11 @@ class NotificacionController extends Controller
     function get_listado_notificaciones(Request $request)
     {
         $busquedaid = $request->input('busquedaid');
+        $leidas = $request->input('leidas');
         $notificaciones = Solicitud_notificacion::with('atencion')
         ->where('id_usuario',Session::get('id_sgu'))
         ->where('id_solicitud','like',"%$busquedaid%")
+        ->where('status','like',"%$leidas%")
         ->orderBy('id','DESC')
         ->get();
         $cont = 0;

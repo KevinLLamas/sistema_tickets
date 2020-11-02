@@ -9,6 +9,7 @@ new Vue({
         numFiltro: '20',
         busqueda: '',
         busquedaid:'',
+        ver: '',
         pagination: {
             'total'         : 0,
             'current_page'  : 0,
@@ -55,6 +56,7 @@ new Vue({
             axios.post('/get_listado_notificaciones',
             {
                 busquedaid: this.busquedaid,
+                leidas: this.ver,
             })
             .then(response => {
                 console.log(response);

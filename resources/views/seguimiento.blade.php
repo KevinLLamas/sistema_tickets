@@ -48,6 +48,9 @@
 			<p>
 				<small>
 					Datos adicionales: 
+					<div v-if="seguimiento.correo_atencion">
+						<i class="far fa-envelope"></i>Correo contacto: <b>@{{seguimiento.correo_atencion}}</b>
+					</div>
 					<div v-for="item in seguimiento.dato_adicional">
 						<div v-if="item.tipo_dato == 'correo_institucional'">
 							<i class="far fa-envelope"></i>Correo institucional: <b>@{{item.valor}}</b>
@@ -60,6 +63,9 @@
 						</div>
 						<div v-else-if="item.tipo_dato == 'matricula'">
 							<i class="fas fa-mobile-alt"></i> Matricula: <b>@{{item.valor}} </b>
+						</div>
+						<div v-else-if="item.tipo_dato == 'n_plaza'">
+							<i class="fas fa-list-ol"></i> Número de plaza: <b>@{{item.valor}} </b>
 						</div>
 					</div>
 				</small>
