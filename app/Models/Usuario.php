@@ -15,9 +15,9 @@ class Usuario extends Model
     {
         return $this->hasOne('App\Models\Solicitud_usuario','id_usuario','id_sgu')->latest('momento');
     }
-    
+
     public function departamento(){
-        return $this->hasOne('App\Models\Departamentos','id','id_departamento');
+        return $this->belongsTo('App\Models\Departamentos');
     }
 
 }

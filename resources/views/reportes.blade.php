@@ -105,7 +105,7 @@
                                             
                                             <option value="INTERVAL 1 DAY">Hoy</option>
                                             <option value="INTERVAL 7 DAY">7 Dias</option>
-                                            <option value="INTERVAL 1 DAY">1 Mes</option>
+                                            <option value="INTERVAL 1 MONTH">1 Mes</option>
                                             <option value="INTERVAL 3 MONTH">3 Meses</option>
                                           </select>
                                         </div>
@@ -130,7 +130,7 @@
                     <div class="card shadow mb-4">
                         <!-- Card Header - Dropdown -->
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Grafica de Tickets</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Grafica de Tickets por Usuario</h6>
                             <div class="dropdown no-arrow">
                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -145,14 +145,26 @@
                         </div>
                         <!-- Card Body -->
                         <div class="card-body" >
-                            <div class="chart-pie pt-4 pb-3">
-                                <canvas id="SolicitudesUsuarioChart"></canvas>
-                            </div>
-                            <div class="mt-5 text-center small">
-                                {{--<span class="mr-2" v-for="(e,index) in Estatus">
-                                    <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]"></i>@{{e.estatus}}-@{{e.total}}
-                                </span>--}}
-                            </div>
+                          <div class="form-group">
+                            <label for="listaUsuarios">Usuarios en mi departamento</label>
+                            <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-model="usuarioSeleccionado" @change="generar_Grafica_ByStatus();generar_Grafica_Estados();">
+                              <option value="" disabled selected>Selecciona a una usuario</option>
+                              <option  v-for="u in listaUsuarios" :value="u.id_sgu" >@{{u.id_sgu+' - '+u.correo}}</option>
+                              
+                            </select>
+                            
+                          </div>
+                          <div class="chart-pie pt-4 pb-3">
+                            <canvas id="solicitudesUsuarioChart"></canvas>
+  
+                          </div>
+                          
+                          <div class="mt-5 text-center small">
+                            
+                              <span class="mr-2" v-for="(e,index) in Estatus">
+                                  <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]"></i>@{{e.estatus}}-@{{e.total}}
+                              </span>
+                          </div>
                         </div>
                     </div>
                 </div>

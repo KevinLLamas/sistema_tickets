@@ -10,4 +10,7 @@ class Departamentos extends Model
     public function solicitudes(){
         return $this->belongsToMany('App\Models\Solicitud','solicitud_departamento','id_departamento','id_solicitud');
     }
+    public function usuarios(){
+        return $this->hasMany('App\Models\Usuario', 'id_departamento', 'id');
+    }
 } 

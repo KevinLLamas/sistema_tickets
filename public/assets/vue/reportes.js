@@ -1,8 +1,15 @@
 //Declaracion de variables para las graficas de manera global
 var comparacionChart=null;
+var solicitudesUsuarioChart=null;
 var ctx = document.getElementById("ComparacionSolicitudesChart");
 comparacionChart = new Chart(ctx, {
     type: 'line',
+    data: {},
+    options: {}
+});
+var ctx = document.getElementById("solicitudesUsuarioChart");
+solicitudesUsuarioChart = new Chart(ctx, {
+    type: 'doughnut',
     data: {},
     options: {}
 });
@@ -10,7 +17,8 @@ comparacionChart = new Chart(ctx, {
 new Vue({
     el: '#reportes',
     data:{
-        
+        usuarioSeleccionado:'1865',
+        listaUsuarios:[],
         numReportes:[],
         tipoEstatus:[],
         Estatus:[],
@@ -20,55 +28,61 @@ new Vue({
         numAtendiendo: '',
         numSinAtender: '',
         porcentajeCerrados: '',
-        rangoTiempo:'INTERVAL 7 DAY',
+        rangoTiempo:'INTERVAL 1 DAY',
         EstatusbyTime:[],
         EstatusbyTimeCerradas:[],
     },
     created: function(){      
-        
+        this.getUsuariosbyDepartamento()
         this.getInfoOfTickets();
         this.generar_Grafica_Comparacion();
+        this.generar_Grafica_Estados();
     },
     mounted: async function(){
-        this.generar_Grafica_ByTime()
-        
+        this.generar_Grafica_ByTime();
+        this.generar_Grafica_ByStatus();
         
     },
     methods:{
         asignarColor:function(tipo){
             if (tipo == 'Sin atender') {
-                return 'text-danger'
+                return 'text-primary'
             } 
             else if (tipo == 'Atendiendo') {
-                return 'text-warning'
+                return 'text-info'
             } 
             else if (tipo == 'Suspendida') {
-                return 'text-dark'
+                return 'text-secundary'
             } 
             else if (tipo == 'Cancelada') {
-                return 'text-info'
+                return 'text-warning'
             } 
             else if (tipo == 'Cerrada') {
                 return 'text-success'
  
             }
+            else if (tipo == 'Cerrada (En espera de aprobación)') {
+                return 'text-light'
+            }
         },
         asignarColorHex:function(tipo){
             if (tipo == 'Sin atender') {
-                return '#d9534f'
+                return '#E9004C'
             } 
             else if (tipo == 'Atendiendo') {
-                return '#f0ad4e'
+                return '#007bff'
             } 
             else if (tipo == 'Suspendida') {
-                return '#343a40'
+                return '#6c757d'
             } 
             else if (tipo == 'Cancelada') {
-                return '#5bc0de'
+                return '#ffc107'
             } 
             else if (tipo == 'Cerrada') {
-                return '#5cb85c'
- 
+                return '#28a745'
+            }
+            else if (tipo == 'Cerrada (En espera de aprobación)') {
+                return '#CDCDCD'
             }
         },
         getRandomColor:function(){
@@ -79,13 +93,31 @@ new Vue({
             }
             return color;
         },
+        getUsuariosbyDepartamento:async function(){
+            url="get_usuarios_by_departamento";
+            data=await axios.get(url)
+            .then(response=>{
+                //console.log(response.data);
+                this.listaUsuarios=response.data;
+            })
+        },
+        getNumSolicitudesByEstatusUsuario:async function(){
+            url="get_num_solicitudes_by_estatus_usuario";
+            data=await axios.post(url,{
+                idUsuario:this.usuarioSeleccionado,
+            })
+            .then(response=>{
+                //console.log(response.data);
+                this.Estatus=response.data;
+            })
+        },
         getNumSolicitudesThroughTime:async function(){
             url="get_num_solicitudes_through_time";
             data=await axios.post(url,{
                 rangoTiempo:this.rangoTiempo,
             })
             .then(response=>{
-                //console.log(response.data);
+                console.log(response.data);
                 this.EstatusbyTime=response.data;
             })
         },
@@ -106,159 +138,38 @@ new Vue({
             Chart.defaults.global.defaultFontColor = '#858796';
             //console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
-            var ctx = document.getElementById("SolicitudesUsuarioChart");
-            var myPieChart = new Chart(ctx, {
+            solicitudesUsuarioChart.destroy();
+            var ctx = document.getElementById("solicitudesUsuarioChart");
+            solicitudesUsuarioChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: this.tipoEstatus,
+                
+                labels: [],
                 datasets: [{
-                    data: this.numEstatus,
+                    data: [],
                     backgroundColor: this.coloresHex,
-                    hoverBackgroundColor: this.coloresHex,
                     hoverBorderColor: "rgba(234, 236, 244, 1)",
                 }],
             },
             options: {
                 maintainAspectRatio: false,
                 tooltips: {
-                backgroundColor: "rgb(255,255,255)",
-                bodyFontColor: "#858796",
-                borderColor: '#dddfeb',
-                borderWidth: 1,
-                xPadding: 15,
-                yPadding: 15,
-                displayColors: false,
-                caretPadding: 10,
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
                 },
                 legend: {
-                display: false
+                    display: false
                 },
                 cutoutPercentage: 80,
             },
             });
 
-        },
-        generar_Grafica_Comparacion:async function(){
-            //console.log("Tickets en total");
-            await this.getNumSolicitudesThroughTime();
-            await this.getNumSolicitudesThroughTimeCerradas();
-            //console.log(this.EstatusbyTime);
-            switch(this.rangoTiempo){
-                case 'INTERVAL 1 DAY':
-                        this.LastDays(2).forEach(d => {
-
-                            console.log(d.toString());
-                            this.addLabelChart(comparacionChart,d.toString());
-                            
-                        });
-                        this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChart,s.total,s.fecha,1);
-                        });
-                        this.EstatusbyTimeCerradas.forEach(c => {
-                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
-                        });
-                    break;
-                case 'INTERVAL 7 DAY':
-                        
-                        this.LastDays(7).forEach(d => {
-
-                            console.log(d.toString());
-                            this.addLabelChart(comparacionChart,d.toString());
-                            
-                            
-                        });
-                        this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChart,s.total,s.fecha,1);
-                        });
-                        this.EstatusbyTimeCerradas.forEach(c => {
-                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
-                        });
-                    break;
-                case 'INTERVAL 1 MONTH':
-                        
-                        this.LastMonths(2).forEach(m => {
-                            console.log(m);
-                            this.addLabelChart(comparacionChart,m.toString());
-                        });
-                        this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChart,s.total,s.mes,1);
-                        });
-                        this.EstatusbyTimeCerradas.forEach(c => {
-                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
-                        });
-                    break;
-                case 'INTERVAL 3 MONTH':
-                        this.LastMonths(3).forEach(m => {
-                            console.log(m);
-                            this.addLabelChart(comparacionChart,m.toString());
-                        });
-                        this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChart,s.total,s.mes,1);
-                        });
-                    break;
-            }
-            
-            /*console.log("Tickets cerrados");
-            await this.getNumSolicitudesThroughTime('Cerrada');
-            this.EstatusbyTime.forEach(s => {
-                this.addDataChart(comparacionChart,s.fecha,s.total,0);
-            });
-            console.log(this.EstatusbyTime);*/
-            
-        },
-        addLabelChart:function(chart,label){
-            chart.data.labels.push(label);
-        },
-        addDataChart:function(chart, data,label, dataset) {
-            console.log("ingresando dato en fecha")
-            console.log(label);
-            posicion=chart.data.labels.findIndex((f) => f == label);
-            chart.data.datasets[dataset].data[posicion]=data;   
-            console.log("posicion: "+ posicion);
-            //chart.data.datasets[dataset].data.push(data);
-            chart.update();
-        },
-        LastDays:function(days) {
-            var result = [];
-            for (var i=days-1; i>=0; i--) {
-                var d = new Date();
-                d.setDate(d.getDate() - i);
-                result.push( this.formatDate(d) );
-            }
-        
-            return(result);
-        },
-        formatDate:function(date){
-            //console.log(`fecha a convertir ${date}`);
-            let day = date.getDate()
-            let month = date.getMonth() + 1
-            let year = date.getFullYear()
-            //console.log(`dia ${day}`);
-            //console.log(`mes ${month}`);
-            //console.log(`anio ${year}`);
-            if(month < 10){
-                return `${day}-0${month}-${year}`;
-            }else{
-                return `${day}-${month}-${year}`;
-            }
-        },
-        LastMonths:function(months) {
-            var monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
-                "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
-            ];
-            var d = new Date();
-            var result = []
-
-            for (i = months-1; i >= 0; i--) {
-                result.push(monthNames[(d.getMonth() - i)] + ' - ' +d.getFullYear()  );
-            }
-            return result;
-        },
-        formatMonth:function(date){
-            var monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-            ];
-            return monthNames[(date.getMonth() - i)] + ' - ' +date.getFullYear();
         },
         generar_Grafica_ByTime:function(){
             // Set new default font family and font color to mimic Bootstrap's default styling
@@ -314,8 +225,8 @@ new Vue({
                     spanGaps:true
                     
                 },{
-                    label: "Tickets Pendientes",
-                    yAxesID:"Tickets Pendientes",
+                    label: "Tickets Creados",
+                    yAxesID:"Tickets Creados",
                     fill:false,
                     lineTension: 0.3,
                     //backgroundColor: "#E9004C",
@@ -367,7 +278,7 @@ new Vue({
                             zeroLineBorderDash: [2]
                         }
                     },{
-                        id:"Tickets Pendientes",
+                        id:"Tickets Creados",
                         ticks: {
                             maxTicksLimit: 5,
                             padding: 10,
@@ -411,6 +322,199 @@ new Vue({
             
 
         },
+        generar_Grafica_Estados:async function(){   
+            await this.getNumSolicitudesByEstatusUsuario();
+            this.Estatus.forEach(e => {
+                this.coloresHex.push(this.asignarColorHex(e.estatus))
+            });
+            this.Estatus.forEach(e => {
+                //console.log(e.estatus);
+                this.addLabelChart(solicitudesUsuarioChart,e.estatus.toString());
+                this.addDataChartsinOrden(solicitudesUsuarioChart,e.total,0);
+                
+            });
+        },
+        generar_Grafica_Comparacion:async function(){
+            //console.log("Tickets en total");
+            await this.getNumSolicitudesThroughTime();
+            await this.getNumSolicitudesThroughTimeCerradas();
+            //console.log(this.EstatusbyTime);
+            switch(this.rangoTiempo){
+                case 'INTERVAL 1 DAY':
+                        let horas = this.LastHours(24);
+                        horas.forEach(h => {
+                            this.addLabelChart(comparacionChart,h.toString());
+                        });
+                        
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.hora,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.hora,0);
+                        });
+                        this.fillNullDataChart(comparacionChart,0,horas.length);
+                        this.fillNullDataChart(comparacionChart,1,horas.length);
+                    break;
+                case 'INTERVAL 7 DAY':
+                        
+                        this.LastDays(7).forEach(d => {
+                            this.addLabelChart(comparacionChart,d.toString());
+                        });
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.fecha,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
+                        });
+                        this.fillNullDataChart(comparacionChart,0,7);
+                        this.fillNullDataChart(comparacionChart,1,7);
+                    break;
+                case 'INTERVAL 1 MONTH':
+                        
+                        this.LastDays(30).forEach(m => {
+                            //console.log(m);
+                            this.addLabelChart(comparacionChart,m.toString());
+                        });
+                        
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.fecha,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.fecha,0);
+                        });
+                        this.fillNullDataChart(comparacionChart,0,30);
+                        this.fillNullDataChart(comparacionChart,1,30);
+                    break;
+                case 'INTERVAL 3 MONTH':
+                        this.LastMonths(3).forEach(m => {
+                            //console.log(m);
+                            this.addLabelChart(comparacionChart,m.toString());
+                        });
+                        this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChart,s.total,s.mes,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.mes,0);
+                        });
+                        this.fillNullDataChart(comparacionChart,0,3);
+                        this.fillNullDataChart(comparacionChart,1,3);
+                    break;
+            }
+            
+            /*console.log("Tickets cerrados");
+            await this.getNumSolicitudesThroughTime('Cerrada');
+            this.EstatusbyTime.forEach(s => {
+                this.addDataChart(comparacionChart,s.fecha,s.total,0);
+            });
+            console.log(this.EstatusbyTime);*/
+            
+        },
+        addLabelChart:function(chart,label){
+            chart.data.labels.push(label);
+        },
+        addDataChart:function(chart, data,label, dataset) {
+            console.log("ingresando dato en:")
+            console.log(label);
+            posicion=chart.data.labels.findIndex((f) => f == label);
+            chart.data.datasets[dataset].data[posicion]=data;   
+            //console.log("posicion: "+ posicion);
+            //chart.data.datasets[dataset].data.push(data);
+            chart.update();
+        },
+        addDataChartsinOrden:function(chart, data,dataset) {
+            //console.log("ingresando dato sin orden:");
+           // console.log(data);
+            chart.data.datasets[dataset].data.push(data);   
+            //console.log("posicion: "+ posicion);
+            //chart.data.datasets[dataset].data.push(data);
+            chart.update();
+        },
+        fillNullDataChart:function(chart,dataset,total){
+            console.log(`array ${chart.data.datasets[dataset].data}`)
+            d=chart.data.datasets[dataset].data;
+            for (let p = 0; p < total; p++) {
+                if(d[p]==null){
+                    d[p]=0;
+                }
+                
+            }
+            console.log(`array resulta: ${d}`)
+            chart.data.datasets[dataset].data=d;
+            chart.update();
+        },
+        LastHours:function(hours) {
+            var result = [];
+            for (var i=0; i<=hours && result[result.length - 1]!="0 Horas"; i++) {
+                var t = new Date();
+                t.setTime(t.getTime() - (i*60*60*1000));
+                
+                
+                result.push(this.formatHour(t));
+            }
+        
+            return(result.reverse());
+        },
+        formatHour:function(date){
+            //console.log(`fecha a convertir ${date}`);
+            let hour = date.getHours().toString()+' Horas';
+            return hour;
+            /*if(month < 10){
+                return `0$`;
+            }else{
+                return `${day}-${month}-${year}`;
+            }*/
+            
+        },
+        lastWeeks:function(){
+
+        },
+        LastDays:function(days) {
+            var result = [];
+            for (var i=days-1; i>=0; i--) {
+                var d = new Date();
+                d.setDate(d.getDate() - i);
+                result.push( this.formatDate(d) );
+            }
+        
+            return(result);
+        },
+        
+        formatDate:function(date){
+            //console.log(`fecha a convertir ${date}`);
+            let day = date.getDate()
+            let month = date.getMonth() + 1
+            let year = date.getFullYear()
+            //console.log(`dia ${day}`);
+            //console.log(`mes ${month}`);
+            //console.log(`anio ${year}`);
+            if(month < 10){
+                return `${day}-0${month}-${year}`;
+            }else{
+                return `${day}-${month}-${year}`;
+            }
+            
+        },
+        
+        LastMonths:function(months) {
+            var monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+                "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+            ];
+            var d = new Date();
+            var result = []
+
+            for (i = months-1; i >= 0; i--) {
+                result.push(monthNames[(d.getMonth() - i)] + ' - ' +d.getFullYear()  );
+            }
+            return result;
+        },
+        formatMonth:function(date){
+            var monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            return monthNames[(date.getMonth() - i)] + ' - ' +date.getFullYear();
+        },
+        
+        
         getSolicitudesDepartamento: function(page){
             var url = 'get_solicitudes_departamento';
             axios.post(url,{
