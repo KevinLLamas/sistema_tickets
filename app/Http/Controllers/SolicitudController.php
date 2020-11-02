@@ -117,6 +117,7 @@ class SolicitudController extends Controller
                 //$atencion->id_usuario = $id_solicitud;
                 $atencion->detalle = 'asignó a '.$this->get_usuario($usuario_asignar->id_sgu)['nombre'].' a este ticket.';
                 $atencion->tipo_respuesta = 'Todos';
+                $atencion->tipo_at = 'Atencion';
                 $atencion->momento = now();
                 $atencion->save();
 
