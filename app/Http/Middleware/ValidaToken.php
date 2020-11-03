@@ -31,7 +31,7 @@ class ValidaToken
             'nombre'=> 'Kevin Llamas',
             'curp'=> 'MAHL920209HJCRRS02',
             'usuario'=> 'kevindejesus.llamas@jalisco.gob.mx',
-            'rol'=>'SUPER',
+            'rol'=>'ADMIN',
             'id_departamento'=>1,
             'departamento'=>'DTI',
         ]);

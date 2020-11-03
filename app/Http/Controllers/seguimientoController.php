@@ -78,7 +78,7 @@ class seguimientoController extends Controller
 					}
 				}
 				else{
-					if($at->detalle != 'Vencio tiempo. Solicitud cerrada automaticamente por el sistema' && $at->id_usuario != 0)
+					if($at->detalle != 'Vencio tiempo. Solicitud cerrada automaticamente por el sistema')
 					{
 						$at->nombre = 'Usuario';
 						$at->correo_usuario = 'Usuario';

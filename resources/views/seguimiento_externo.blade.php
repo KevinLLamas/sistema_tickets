@@ -31,7 +31,7 @@
 			<option option="Suspendida">Suspendida</option>
 			<option option="Cerrada">Cerrada</option>
 		</select-->
-		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()" disabled="true">
+		<select  class="form-control col-md-5" v-model="seguimiento.estatus" disabled="true">
 			<option value="" disabled>Seleccione una opción</option>
 			<option option="Sin atender">Sin atender</option>
 			<option option="Atendiendo">Atendiendo</option>
@@ -45,15 +45,8 @@
 	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> <b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionadosSolicitud.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionadosSolicitud.length == 0">Sin personal asignado.</b> 
-		<label v-if="integrantesSeleccionadosCompletoSolicitud" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label>
-		
-		<!--select class="selectpicker" data-live-search="true">
-			<option data-tokens="ketchup mustard">Juan López García</option>
-			<option data-tokens="mustard">Armando González Gutierrez</option>
-			<option data-tokens="frosting">Luis Márquez Hernández</option>
-		</select--></p>
-	{{--<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
-			electrónico <i class="fas fa-reply-all"></i> Respuestas: 2</small></p>--}}
+		<label v-if="integrantesSeleccionadosCompletoSolicitud" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label>	
+	</p>
 	<hr>
 
 	<h3 class="h3 text-gray-800">Resumen</h3>
@@ -216,5 +209,5 @@
 
 
 
-<script src="{{asset('assets/vue/seguimiento.js')}}"></script>
+<script src="{{asset('assets/vue/seguimiento_externo.js')}}"></script>
 @endsection
