@@ -1,3 +1,5 @@
+Chart.defaults.global.defaultFontFamily = 'Montserrat';
+Chart.defaults.global.defaultFontColor = '#858796';
 new Vue({
     el: '#mis_solicitudes',
     data:{
@@ -123,11 +125,6 @@ new Vue({
             
         },
         generar_Grafica_ByStatus:function(){
-            
-            // Set new default font family and font color to mimic Bootstrap's default styling
-            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-            Chart.defaults.global.defaultFontColor = '#858796';
-            //console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
             var ctx = document.getElementById("MisSolicitudesChart");
             var myPieChart = new Chart(ctx, {

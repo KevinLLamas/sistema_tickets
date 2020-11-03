@@ -47,7 +47,7 @@
                       <div class="card-body">
                         <div class="row no-gutters align-items-center">
                           <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Procentaje Cerrados</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Porcentaje Cerrados</div>
                           <div class="h5 mb-0 font-weight-bold text-gray-800">@{{porcentajeCerrados}}</div>
                           </div>
                           <div class="col-auto">
@@ -79,16 +79,15 @@
                   <div class="card shadow mb-4">
                       <!-- Card Header - Dropdown -->
                       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                          <h6 class="m-0 font-weight-bold text-primary">Reportes : {{Session::get('rol')}}</h6>
+                          <h6 class="m-0 font-weight-bold text-primary">Reporte de Tickets Creados vs Tickets Cerrados : {{Session::get('rol')}}</h6>
                           <div class="dropdown no-arrow">
                               <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                               </a>
                               <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                   <div class="dropdown-header">Opciones:</div>
-                                  <button class="dropdown-item" >Recargar</button>
-                                  <button class="dropdown-item" >Ocultar</button>
-                                  <button class="dropdown-item" >Mostrar</button>
+                                  <button class="dropdown-item" @click="generar_Grafica_ByTime();generar_Grafica_Comparacion();">Recargar</button>
+                                  
                               
                               </div>
                           </div>
@@ -115,8 +114,15 @@
                                   </div>
                                   
                                   
+                                  
                               </div>
-                              
+                              <div class="mt-5 text-center small">
+                            
+                                <span class="mr-2">
+                                  <i  class="fas fa-circle" style="color:#E9004C"></i> - Creadas
+                                  <i  class="fas fa-circle" style="color:#28a745"></i> - Cerradas
+                                </span>
+                              </div>
                               <!---->
                           
                           </div>
@@ -161,7 +167,7 @@
                           <div class="mt-5 text-center small">
                             
                             <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
-                              <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]" ></i>@{{e.estatus}}-@{{e.total}}
+                              <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i>@{{e.estatus}}-@{{e.total}}
                             </span>
                           </div>
                         </div>
