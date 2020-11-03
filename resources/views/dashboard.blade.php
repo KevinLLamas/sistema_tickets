@@ -184,8 +184,8 @@
                                         <canvas id="SolicitudesAdminChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
-                                        <span class="mr-2" v-for="(e,index) in Estatus">
-                                            <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]"></i>@{{e.estatus}}-@{{e.total}}
+                                        <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
+                                            <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i>@{{e.estatus}}-@{{e.total}}
                                         </span>
                                     </div>
                                 </div>
@@ -352,9 +352,9 @@
                                         <canvas id="SolicitudesAsignadasChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
-                                        <span class="mr-2" v-for="(e,index) in Estatus">
-                                            <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]"></i>@{{e.estatus}}-@{{e.total}}
-                                        </span>
+                                        <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
+                                            <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i>@{{e.estatus}}-@{{e.total}}
+                                          </span>
                                     </div>
                                 </div>
                             </div>
@@ -522,9 +522,9 @@
                                         <canvas id="SolicitudesDepartamentoChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
-                                        <span class="mr-2" v-for="(e,index) in Estatus">
-                                            <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]"></i>@{{e.estatus}}-@{{e.total}}
-                                        </span>
+                                        <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
+                                            <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i>@{{e.estatus}}-@{{e.total}}
+                                          </span>
                                     </div>
                                 </div>
                             </div>
@@ -687,9 +687,9 @@
                                         <canvas id="MisSolicitudesChart"></canvas>
                                     </div>
                                     <div class="mt-5 text-center small">
-                                        <span class="mr-2" v-for="(e,index) in Estatus">
-                                            <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]"></i>@{{e.estatus}}-@{{e.total}}
-                                        </span>
+                                        <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
+                                            <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i>@{{e.estatus}}-@{{e.total}}
+                                          </span>
                                     </div>
                                 </div>
                             </div>

@@ -2,17 +2,12 @@
 var comparacionChart=null;
 var solicitudesUsuarioChart=null;
 var ctx = document.getElementById("ComparacionSolicitudesChart");
-comparacionChart = new Chart(ctx, {
-    type: 'line',
-    data: {},
-    options: {}
-});
+comparacionChart = new Chart(ctx,{});
 var ctx = document.getElementById("solicitudesUsuarioChart");
-solicitudesUsuarioChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {},
-    options: {}
-});
+solicitudesUsuarioChart = new Chart(ctx,{});
+// Set new default font family and font color to mimic Bootstrap's default styling
+Chart.defaults.global.defaultFontFamily = 'Montserrat';
+Chart.defaults.global.defaultFontColor = '#858796';
 
 new Vue({
     el: '#reportes',
@@ -138,10 +133,6 @@ new Vue({
         },
         generar_Grafica_ByStatus:function(){
             
-            // Set new default font family and font color to mimic Bootstrap's default styling
-            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-            Chart.defaults.global.defaultFontColor = '#858796';
-            //console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
             solicitudesUsuarioChart.destroy();
             var ctx = document.getElementById("solicitudesUsuarioChart");
@@ -177,9 +168,7 @@ new Vue({
 
         },
         generar_Grafica_ByTime:function(){
-            // Set new default font family and font color to mimic Bootstrap's default styling
-            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-            Chart.defaults.global.defaultFontColor = '#858796';
+            
 
             function number_format(number, decimals, dec_point, thousands_sep) {
             // *     example: number_format(1234.56, 2, ',', ' ');
@@ -220,10 +209,10 @@ new Vue({
                     lineTension: 0.3,
                     //backgroundColor: "#28a745",
                     borderColor: "#28a745",
-                    pointRadius: 3,
-                    pointBackgroundColor: "#28a745",
+                    pointRadius: 5,
+                    pointBackgroundColor: "#fff",
                     pointBorderColor: "#28a745",
-                    pointHoverRadius: 5,
+                    pointHoverRadius: 7,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
                     data: [],
@@ -231,15 +220,15 @@ new Vue({
                     
                 },{
                     label: "Tickets Creados",
-                    yAxesID:"Tickets Creados",
+                    //yAxesID:"Tickets Creados",
                     fill:false,
                     lineTension: 0.3,
                     //backgroundColor: "#E9004C",
                     borderColor: "#E9004C",
-                    pointRadius: 3,
-                    pointBackgroundColor: "#E9004C",
+                    pointRadius: 5,
+                    pointBackgroundColor: "#fff",
                     pointBorderColor: "#E9004C",
-                    pointHoverRadius: 5,
+                    pointHoverRadius: 7,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
                     data: [],
@@ -274,20 +263,6 @@ new Vue({
                         ticks: {
                             maxTicksLimit: 5,
                             padding: 10,
-                        },
-                        gridLines: {
-                            color: "rgb(234, 236, 244)",
-                            zeroLineColor: "rgb(234, 236, 244)",
-                            drawBorder: false,
-                            borderDash: [2],
-                            zeroLineBorderDash: [2]
-                        }
-                    },{
-                        id:"Tickets Creados",
-                        ticks: {
-                            maxTicksLimit: 5,
-                            padding: 10,
-                            
                         },
                         gridLines: {
                             color: "rgb(234, 236, 244)",

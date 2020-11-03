@@ -1,3 +1,5 @@
+Chart.defaults.global.defaultFontFamily = 'Montserrat';
+Chart.defaults.global.defaultFontColor = '#858796';
 new Vue({
     el: '#mis_solicitudes_asignadas',
     data:{

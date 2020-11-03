@@ -47,7 +47,7 @@
                       <div class="card-body">
                         <div class="row no-gutters align-items-center">
                           <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Procentaje Cerrados</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Porcentaje Cerrados</div>
                           <div class="h5 mb-0 font-weight-bold text-gray-800">@{{porcentajeCerrados}}</div>
                           </div>
                           <div class="col-auto">
@@ -119,8 +119,8 @@
                               <div class="mt-5 text-center small">
                             
                                 <span class="mr-2">
-                                  <i  class="fas fa-circle text-danger" ></i>Creadas
-                                  <i  class="fas fa-circle text-success" ></i>Cerradas
+                                  <i  class="fas fa-circle" style="color:#E9004C"></i> - Creadas
+                                  <i  class="fas fa-circle" style="color:#28a745"></i> - Cerradas
                                 </span>
                               </div>
                               <!---->
@@ -167,7 +167,7 @@
                           <div class="mt-5 text-center small">
                             
                             <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
-                              <i :id="index" :class="['fas fa-circle',asignarColor(e.estatus)]" ></i>@{{e.estatus}}-@{{e.total}}
+                              <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i>@{{e.estatus}}-@{{e.total}}
                             </span>
                           </div>
                         </div>
