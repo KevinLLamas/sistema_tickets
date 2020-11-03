@@ -1,11 +1,5 @@
 @extends('app')
 @section('content')
-
-
-<!-- Begin Page Content -->
-
-
-
 <div id="notificaciones_listado" class="container-fluid">
     <div class="row">
         <!-- Tarjeta Listado de solicitudes -->
@@ -23,7 +17,6 @@
                             <button class="dropdown-item" @click="getNotificaciones()">Recargar</button>
                             <button class="dropdown-item" v-show="!ocultarLista" @click="ocultarLista = true">Ocultar</button>
                             <button class="dropdown-item" v-show="ocultarLista" @click="ocultarLista = false">Mostrar</button>
-                        
                         </div>
                     </div>
                 </div>

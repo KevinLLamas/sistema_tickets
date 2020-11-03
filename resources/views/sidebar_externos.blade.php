@@ -6,34 +6,12 @@
       <div class="sidebar-brand-icon rotate-n-10">
         <i class="fas fa-question-circle"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">SAS</div>
+      <div class="sidebar-brand-text mx-3">SASS</div>
     </a>
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
-    <!-- Nav Item - Dashboard
-    <li class="nav-item active">
-      <a class="nav-link" href="/cast">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Dashboard</span></a>
-    </li>-->
-    
-    <!--<li class="nav-item">
-      <a class="nav-link" href="lista_solicitudes">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Lista de tickets admin</span></a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="mis_solicitudes">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Lista de tickets trabajador</span></a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="solicitudes_departamento">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Lista de tickets departamento</span></a>
-    </li> -->
     
 
     <!-- Divider -->
@@ -49,14 +27,6 @@
         <i class="fas fa-envelope-open-text"></i>
         <span>Tickets</span>
       </a>
-      <div id="collapseSolicitud" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Opciones:</h6>
-          <a class="collapse-item" href="/cast/alta_ticket">Crear Ticket</a>
-          a class="collapse-item" href="/cast/alta_solicitud_servicio">Solicitar un Servicio</a
-          <a class="collapse-item" href="/cast/dashboard">Listado</a>
-        </div>
-      </div>
     </li> -->
 
     <!-- Nav Item - Pages Collapse Menu 

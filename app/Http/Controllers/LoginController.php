@@ -24,11 +24,11 @@ class LoginController extends Controller
         $res = json_decode($response);
         if( $res->ok == true ){
             Session::flush();
-            return redirect('http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/cast/');
+            return redirect('http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/sass/');
         }
         else{
             Session::flush();
-            return redirect('http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/cast/');
+            return redirect('http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/sass/');
         }
     }
 }

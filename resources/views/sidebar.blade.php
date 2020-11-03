@@ -6,7 +6,7 @@
       <div class="sidebar-brand-icon rotate-n-10">
         <i class="fas fa-question-circle"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">SAS</div>
+      <div class="sidebar-brand-text mx-3">SASS</div>
     </a>
 
     <!-- Divider -->
@@ -14,7 +14,7 @@
 
     <!-- Nav Item - Dashboard-->
     <li class="nav-item active">
-      <a class="nav-link" href="/cast">
+      <a class="nav-link" href="/sass">
         <i class="fas fa-fw fa-tachometer-alt"></i>
         <span>Dashboard</span></a>
     </li>
@@ -52,9 +52,9 @@
       <div id="collapseSolicitud" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <h6 class="collapse-header">Opciones:</h6>
-          <a class="collapse-item" href="/cast/alta_ticket">Crear Ticket</a>
-          <!--a class="collapse-item" href="/cast/alta_solicitud_servicio">Solicitar un Servicio</a-->
-          <a class="collapse-item" href="/cast/dashboard">Listado</a>
+          <a class="collapse-item" href="/sass/alta_ticket">Crear Ticket</a>
+          <!--a class="collapse-item" href="/sass/alta_solicitud_servicio">Solicitar un Servicio</a-->
+          <a class="collapse-item" href="/sass/dashboard">Listado</a>
         </div>
       </div>
     </li>
@@ -82,7 +82,7 @@
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <h6 class="collapse-header">Reportes:</h6>
-          <a class="collapse-item" href="/cast/reportes">Ver reportes</a>
+          <a class="collapse-item" href="/sass/reportes">Ver reportes</a>
         </div>
       </div>
     </li>

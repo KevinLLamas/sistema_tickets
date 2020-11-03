@@ -3,7 +3,7 @@
 <div id="alta_solicitud" >
     <div class="col-md-12 mt-3">
         <ol class="breadcrumb w-100">
-            <li class="breadcrumb-item"><a href="/cast">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/sass">Inicio</a></li>
             <li class="breadcrumb-item">Alta de Ticket</li>
         </ol>
     </div>

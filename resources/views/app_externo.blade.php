@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SISTEMA DE ATENCION Y SOPORTE</title>
+  <title>SISTEMA DE ATENCION, SOPORTE Y SEGUIMIENTO</title>
   <link rel="icon" type="image/png" href="{{ asset('assets/images/logo_edu.png')}}" /> 
   <!-- Custom fonts for this template-->
   <link href="{{asset('assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
