@@ -69,7 +69,7 @@ new Vue({
                 this.colorEstatus.push(this.asignarColor(e.estatus));
                 this.coloresHex.push(this.asignarColorHex(e.estatus))
             });
-            this.generar_Grafica_ByStatus();
+            await this.generar_Grafica_ByStatus();
         },
         asignarColor:function(tipo){
             if (tipo == 'Sin atender') {

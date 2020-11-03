@@ -685,16 +685,27 @@ class SolicitudController extends Controller
         }
     }
     public function get_num_solicitudes_by_estatus_usuario(Request $request){
-        $idUsuario=$request->input('idUsuario');
+        
         
         try{
             
-            $num_status=Usuario::find($idUsuario)
-            ->solicitudes()
-            ->select('solicitud.estatus',DB::raw('count(*) as total'))
-            ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+            $idUsuario=$request->input('idUsuario');
+            if($idUsuario!=''){
+                $num_status=Usuario::find($idUsuario)
+                ->solicitudes()
+                ->select('solicitud.estatus',DB::raw('count(*) as total'))
+                ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+            }
+            else{
+                return response()->json([
+                    'status' => false,
+                    'data' => ''
+                ]);
+            }
+            
+            
             return $num_status;
-
+            
         }catch(Exception $e){
             return response()->json([
                 'status' => false,

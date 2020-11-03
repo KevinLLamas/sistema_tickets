@@ -17,7 +17,7 @@ solicitudesUsuarioChart = new Chart(ctx, {
 new Vue({
     el: '#reportes',
     data:{
-        usuarioSeleccionado:'1865',
+        usuarioSeleccionado:'',
         listaUsuarios:[],
         numReportes:[],
         tipoEstatus:[],
@@ -102,14 +102,19 @@ new Vue({
             })
         },
         getNumSolicitudesByEstatusUsuario:async function(){
-            url="get_num_solicitudes_by_estatus_usuario";
-            data=await axios.post(url,{
-                idUsuario:this.usuarioSeleccionado,
-            })
-            .then(response=>{
-                //console.log(response.data);
-                this.Estatus=response.data;
-            })
+            try{
+                url="get_num_solicitudes_by_estatus_usuario";
+                data=await axios.post(url,{
+                    idUsuario:this.usuarioSeleccionado,
+                })
+                .then(response=>{
+                    //console.log(response.data);
+                    this.Estatus=response.data;
+                })
+            }catch(e){
+                console.log('usuario invalido');
+            }
+            
         },
         getNumSolicitudesThroughTime:async function(){
             url="get_num_solicitudes_through_time";
@@ -117,7 +122,7 @@ new Vue({
                 rangoTiempo:this.rangoTiempo,
             })
             .then(response=>{
-                console.log(response.data);
+                //(response.data);
                 this.EstatusbyTime=response.data;
             })
         },
@@ -324,21 +329,29 @@ new Vue({
         },
         generar_Grafica_Estados:async function(){   
             await this.getNumSolicitudesByEstatusUsuario();
-            this.Estatus.forEach(e => {
-                this.coloresHex.push(this.asignarColorHex(e.estatus))
-            });
-            this.Estatus.forEach(e => {
-                //console.log(e.estatus);
-                this.addLabelChart(solicitudesUsuarioChart,e.estatus.toString());
-                this.addDataChartsinOrden(solicitudesUsuarioChart,e.total,0);
-                
-            });
+            if(typeof this.Estatus !== 'undefined' && this.Estatus.length > 0){
+                this.coloresHex=[];
+                this.Estatus.forEach(e => {
+                    console.log(`estado: ${e.estatus}  color: ${this.asignarColorHex(e.estatus)}`);
+                    this.coloresHex.push(this.asignarColorHex(e.estatus))
+                });
+                this.generar_Grafica_ByStatus();
+                this.Estatus.forEach(e => {
+                    //console.log(e.estatus);
+                    this.addLabelChart(solicitudesUsuarioChart,e.estatus.toString());
+                    this.addDataChartsinOrden(solicitudesUsuarioChart,e.total,0);
+                    
+                });
+            }
+            
+            
         },
         generar_Grafica_Comparacion:async function(){
             //console.log("Tickets en total");
             await this.getNumSolicitudesThroughTime();
             await this.getNumSolicitudesThroughTimeCerradas();
             //console.log(this.EstatusbyTime);
+            
             switch(this.rangoTiempo){
                 case 'INTERVAL 1 DAY':
                         let horas = this.LastHours(24);
@@ -413,8 +426,8 @@ new Vue({
             chart.data.labels.push(label);
         },
         addDataChart:function(chart, data,label, dataset) {
-            console.log("ingresando dato en:")
-            console.log(label);
+            //console.log("ingresando dato en:")
+            //console.log(label);
             posicion=chart.data.labels.findIndex((f) => f == label);
             chart.data.datasets[dataset].data[posicion]=data;   
             //console.log("posicion: "+ posicion);
@@ -430,7 +443,7 @@ new Vue({
             chart.update();
         },
         fillNullDataChart:function(chart,dataset,total){
-            console.log(`array ${chart.data.datasets[dataset].data}`)
+            //console.log(`array ${chart.data.datasets[dataset].data}`)
             d=chart.data.datasets[dataset].data;
             for (let p = 0; p < total; p++) {
                 if(d[p]==null){
@@ -438,7 +451,7 @@ new Vue({
                 }
                 
             }
-            console.log(`array resulta: ${d}`)
+            //console.log(`array resulta: ${d}`)
             chart.data.datasets[dataset].data=d;
             chart.update();
         },
@@ -464,9 +477,6 @@ new Vue({
                 return `${day}-${month}-${year}`;
             }*/
             
-        },
-        lastWeeks:function(){
-
         },
         LastDays:function(days) {
             var result = [];
