@@ -82,7 +82,8 @@
 				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.nombre}}</b></p>
 				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{item.nombre}}</b></p>
 				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{item.nombre}}</b></p>
-				<p v-if="item.tipo_at == 'Asignacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - El usuario @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Asignacion' && item.nombre != 'Sistema'"><i class="far fa-edit"></i> <b>@{{item.momento}} - El usuario @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Asignacion' && item.nombre == 'Sistema'"><i class="far fa-edit"></i> <b>@{{item.momento}} - El @{{item.nombre}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
@@ -102,7 +103,7 @@
 		</div>	
 		<div class="card alert alert-warning  border-warning mb-3" v-if="item.tipo_respuesta == 'Interna'">
 			<div class="card-body">
-				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Nota agregada por @{{item.correo_usuario}}</b></p>
+				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Nota agregada por @{{item.nombre}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">

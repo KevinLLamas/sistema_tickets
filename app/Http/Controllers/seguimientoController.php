@@ -78,7 +78,7 @@ class seguimientoController extends Controller
 					}
 				}
 				else{
-					if($at->detalle != 'Vencio tiempo. Solicitud cerrada automaticamente por el sistema')
+					if($at->detalle != 'Vencio tiempo. Solicitud cerrada automaticamente por el sistema' && $at->id_usuario != 0)
 					{
 						$at->nombre = 'Usuario';
 						$at->correo_usuario = 'Usuario';
@@ -105,8 +105,7 @@ class seguimientoController extends Controller
 		}
 		$solicitud->categoria = Categoria::find($solicitud->subcategoria->id_categoria);
 		$solicitud->perfil = Perfil::find($solicitud->id_perfil);
-		//return $solicitud;
-		return $this->users;
+		return $solicitud;
 	}
 	public function inserta_atencion(Request $request){
 		$atencion = new Solicitud_atencion;

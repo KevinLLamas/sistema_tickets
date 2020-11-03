@@ -51,7 +51,7 @@ new Vue({
         muestra: function(){
             if(getId>0)
             axios.get(`../getSolicitud/`+getId).then(response=>{
-                //console.log(response.data);
+                console.log(response.data);
                 this.seguimiento = response.data;
                 this.getUserData();
                 this.compruebaCerradoAuto();
@@ -375,7 +375,7 @@ new Vue({
                 .then(response => {
                     if(response.data.status){
                         swal.close();
-                        Swal.fire('Atención','Comentario agregado correctamente.','success');
+                        //Swal.fire('Atención','Comentario agregado correctamente.','success');
                         if(this.id === '')
                             this.muestra();
                         else
