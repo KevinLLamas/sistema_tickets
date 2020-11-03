@@ -97,7 +97,7 @@ new Vue({
             url="get_usuarios_by_departamento";
             data=await axios.get(url)
             .then(response=>{
-                //console.log(response.data);
+                console.log(response.data);
                 this.listaUsuarios=response.data;
             })
         },

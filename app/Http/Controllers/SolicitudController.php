@@ -695,6 +695,8 @@ class SolicitudController extends Controller
                 ->solicitudes()
                 ->select('solicitud.estatus',DB::raw('count(*) as total'))
                 ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+                
+                return $num_status;
             }
             else{
                 return response()->json([
@@ -704,7 +706,7 @@ class SolicitudController extends Controller
             }
             
             
-            return $num_status;
+            
             
         }catch(Exception $e){
             return response()->json([
@@ -717,10 +719,22 @@ class SolicitudController extends Controller
         $idDepartamento=Session::get('id_departamento');
         
         try{
-           $usuarios=Departamentos::find($idDepartamento)
-           ->usuarios()
-           ->get();
-           return $usuarios;
+            $usuarios=Departamentos::find($idDepartamento)
+            ->usuarios()
+            ->get();
+            
+           
+            foreach($usuarios as $u)
+            {
+                if(!is_null($u->id_sgu))
+                {
+                    $u->nombre = mb_strtoupper($this->get_usuario($u->id_sgu)['nombre']);
+                }
+                
+            }
+            
+            
+            return $usuarios;
             
             
         }catch(Exception $e){

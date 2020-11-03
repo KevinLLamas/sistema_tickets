@@ -146,9 +146,9 @@
                         <div class="card-body" >
                           <div class="form-group">
                             <label for="listaUsuarios">Usuarios en mi departamento</label>
-                            <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-model="usuarioSeleccionado" @change="generar_Grafica_ByStatus();generar_Grafica_Estados();">
+                            <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-if="listaUsuarios.length > 0" v-model="usuarioSeleccionado" @change="generar_Grafica_ByStatus();generar_Grafica_Estados();">
                               <option value="" disabled selected>Selecciona a un usuario</option>
-                              <option  v-for="u in listaUsuarios" :value="u.id_sgu" >@{{u.id_sgu+' - '+u.correo}}</option>
+                              <option  v-for="u in listaUsuarios" :value="u.id_sgu" >@{{u.nombre}}</span></option>
                               
                             </select>
                             
