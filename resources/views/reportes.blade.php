@@ -114,8 +114,15 @@
                                   </div>
                                   
                                   
+                                  
                               </div>
-                              
+                              <div class="mt-5 text-center small">
+                            
+                                <span class="mr-2">
+                                  <i  class="fas fa-circle text-danger" ></i>Creadas
+                                  <i  class="fas fa-circle text-success" ></i>Cerradas
+                                </span>
+                              </div>
                               <!---->
                           
                           </div>
