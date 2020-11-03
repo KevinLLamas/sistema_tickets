@@ -6,7 +6,7 @@
       <div class="sidebar-brand-icon rotate-n-10">
         <i class="fas fa-question-circle"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">SAS</div>
+      <div class="sidebar-brand-text mx-3">SASS</div>
     </a>
 
     <!-- Divider -->

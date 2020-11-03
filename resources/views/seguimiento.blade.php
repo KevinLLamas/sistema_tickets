@@ -5,7 +5,7 @@
 <!-- Begin Page Content -->
 <div  class="container" id="app" v-cloak>
         <ol class="breadcrumb w-100">
-            <li class="breadcrumb-item"><a href="/cast">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="/sass">Inicio</a></li>
             <li class="breadcrumb-item">Seguimiento</li>
         </ol>
 	<!-- Page Heading -->
@@ -47,10 +47,14 @@
 			<p>
 				<small>
 					Datos adicionales: 
+					<div v-if="seguimiento.correo_atencion">
+						<i class="far fa-envelope"></i>Correo contacto: <b>@{{seguimiento.correo_atencion}}</b>
+					</div>
 					<div v-for="item in seguimiento.dato_adicional">
 						<div v-if="item.tipo_dato == 'correo_institucional'">
 							<i class="far fa-envelope"></i>Correo institucional: <b>@{{item.valor}}</b>
 						</div>
+						
 						<div v-else-if="item.tipo_dato == 'curp'">
 							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
 						</div>
@@ -59,6 +63,9 @@
 						</div>
 						<div v-else-if="item.tipo_dato == 'matricula'">
 							<i class="fas fa-mobile-alt"></i> Matricula: <b>@{{item.valor}} </b>
+						</div>
+						<div v-else-if="item.tipo_dato == 'n_plaza'">
+							<i class="fas fa-list-ol"></i> Número de plaza: <b>@{{item.valor}} </b>
 						</div>
 					</div>
 				</small>
@@ -89,7 +96,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/cast/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/sass/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>	
@@ -99,7 +106,7 @@
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'/cast/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/sass/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>		
 		</div>

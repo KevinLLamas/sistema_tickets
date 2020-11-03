@@ -268,7 +268,7 @@ class seguimientoController extends Controller
             $mailContent = "
 					<p>Te han contestado en el ticket #$id_solicitud el sistema SAS.</p>
 					<p>Respuesta: $detalle </p>
-                    <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/cast/seguimiento_externo/$direccion'>por favor ingrese a este enlace.</a></p>
+                    <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/sass/seguimiento_externo/$direccion'>por favor ingrese a este enlace.</a></p>
             "; 
             $mail->Body = $mailContent;
 
