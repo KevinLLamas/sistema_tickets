@@ -86,9 +86,8 @@
                               </a>
                               <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                   <div class="dropdown-header">Opciones:</div>
-                                  <button class="dropdown-item" >Recargar</button>
-                                  <button class="dropdown-item" >Ocultar</button>
-                                  <button class="dropdown-item" >Mostrar</button>
+                                  <button class="dropdown-item" @click="generar_Grafica_ByTime();generar_Grafica_Comparacion();">Recargar</button>
+                                  
                               
                               </div>
                           </div>
