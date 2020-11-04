@@ -15,12 +15,42 @@ use App\Models\Solicitud_usuario;
 use App\Models\Atencion_externos;
 use App\Models\Atencion_adjunto;
 use App\Models\Usuario;
+use App\Models\Perfil;
 use App\Models\Departamentos;
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
-
+use App\Models\Solicitud_notificacion;
 class seguimientoController extends Controller 
 {
+	protected $users = array();
+	private function get_usuario($id){
+		//LOCAL
+		if($id == null || $id == 0)
+			return ['ok'=>false,'nombre'=>'Usuario'];
+		foreach ($this->users as $user) {
+			if($user['id_sgu'] == $id)
+				return $user;
+		}
+		//API
+		$url = curl_init("http://10.9.4.152:3000/persona");
+		$llaveApp = "B0342DEF578109AD4C32E158B2702E884645493F84A0AFACA05A017D3E68D3F8";
+		$data = array(
+			"id_persona"=>$id,
+			"llaveApp" => $llaveApp
+		);
+		curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($url, CURLOPT_POSTFIELDS,http_build_query($data));
+		$response = curl_exec($url);
+		curl_close($url);
+		$res = json_decode($response, true);
+		array_push($this->users, ['ok'=>true,'id_sgu'=>$id,'nombre'=>$res['nombre']]);
+		return $res;
+	}
+	public function getUsers()
+	{
+		return $this->users;
+	}
 	public function seguimiento($id){
 		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		if($solicitud->atencion != null)
@@ -44,12 +74,20 @@ class seguimientoController extends Controller
 					$res = $this->get_usuario($at->id_usuario);
 					if($res['ok']){
 						$at->nombre = $res['nombre'];
-						$at->correo_usuario = $res['usuario'];
+						//$at->correo_usuario = $res['usuario'];
 					}
 				}
 				else{
-					$at->nombre = 'Usuario';
-					$at->correo_usuario = 'Usuario';
+					if($at->tipo_at == 'Asignacion' ||$at->tipo_at == 'Estatus')
+					{
+						$at->nombre = 'Sistema';
+						$at->correo_usuario = 'Sistema';
+					}
+					else if($at->tipo_at == 'Atención')
+					{
+						$at->nombre = 'Usuario';
+						$at->correo_usuario = 'Usuario';
+					}
 				}
 				$at->adjuntos = $adjuntos;
 				
@@ -65,27 +103,13 @@ class seguimientoController extends Controller
 				$usuario->nombre = $this->get_usuario($usuario->id_sgu)['nombre'];
 			}
 		}
+		$solicitud->categoria = Categoria::find($solicitud->subcategoria->id_categoria);
+		$solicitud->perfil = Perfil::find($solicitud->id_perfil);
 		return $solicitud;
-	}
-	private function get_usuario($id){
-		$url = curl_init("http://10.9.4.152:3000/persona");
-		$llaveApp = "B0342DEF578109AD4C32E158B2702E884645493F84A0AFACA05A017D3E68D3F8";
-		$data = array(
-			"id_persona"=>$id,
-			"llaveApp" => $llaveApp
-		);
-		curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
-		curl_setopt($url, CURLOPT_POSTFIELDS,http_build_query($data));
-		$response = curl_exec($url);
-		curl_close($url);
-		$res = json_decode($response, true);
-		return $res;
 	}
 	public function inserta_atencion(Request $request){
 		$atencion = new Solicitud_atencion;
 		$Sol_atencion = $request->input('data');	
-			
 		$atencion->detalle = $Sol_atencion['detalle'];
 		$atencion->id_solicitud = $Sol_atencion['id_solicitud'];
 		$atencion->id_usuario = $Sol_atencion['id_usuario'];
@@ -95,14 +119,41 @@ class seguimientoController extends Controller
 			$atencion->tipo_at = 'Atencion';
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
+		$primer = false;
+		if($request->input('estatus') != "Atendiendo" && $Sol_atencion['tipo_respuesta'] == 'Todos' && $atencion->tipo_at == 'Atencion')
+			$primer = $this->ContarAtenciones($atencion->id_solicitud);
+
+		//NOTIFICACION
+		$usuarios = Solicitud_usuario::where('id_solicitud',$atencion->id_solicitud)->get();
+		foreach ($usuarios as $usuario) {
+			if($usuario->id_usuario != Session::get('id_sgu')){
+				$notificacion = new Solicitud_notificacion;
+				$notificacion->id_solicitud = $atencion->id_solicitud;
+				$notificacion->id_atencion = $atencion->id;
+				$notificacion->id_usuario = $usuario->id_usuario;
+				$notificacion->status = 'No leida';
+				$notificacion->save();
+			}
+		}
+
+		//EMAIL
 		if($request->input('rol') != 'USUARIO' && $atencion->tipo_at == 'Atencion' && $Sol_atencion['tipo_respuesta'] == 'Todos')
 		{
-            if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
-                return $atencion->id;
+			if($this->send_mail_nueva($request->input('email'),$Sol_atencion['id_solicitud'],$Sol_atencion['detalle']) == 'Enviado');
+				return response()->json([
+					'ok'=> true,
+					'primer' => $primer, 
+					'id' =>$atencion->id,
+					'message'=>'Se envio el correo.'
+				]);
 		}
-		return $atencion->id;
+		return response()->json([
+			'ok'=> true,
+            'primer' => $primer, 
+			'id' =>$atencion->id,
+			'message'=>'No se pudo enviar el correo.'
+        ]);
 	}
-
 	public function inserta_atencion_externo(Request $request){
 		$atencion = new Solicitud_atencion;
 		$Sol_atencion = $request->input('data');	
@@ -113,9 +164,22 @@ class seguimientoController extends Controller
 			$atencion->tipo_at = $Sol_atencion['tipo_at'];
 		else
 			$atencion->tipo_at = 'Atencion';
+		if($Sol_atencion['fecha_finalizado'] != '')
+			$atencion->momento = $Sol_atencion['fecha_finalizado'];
 		$atencion->tipo_respuesta = $Sol_atencion['tipo_respuesta'];
 		$atencion->save();
 
+		//NOTIFICACION
+		$usuarios = Solicitud_usuario::where('id_solicitud',$atencion->id_solicitud)->get();
+		
+		foreach ($usuarios as $usuario) {
+			$notificacion = new Solicitud_notificacion;
+			$notificacion->id_solicitud = $atencion->id_solicitud;
+			$notificacion->id_atencion = $atencion->id;
+			$notificacion->id_usuario = $usuario->id_usuario;
+			$notificacion->status = 'No leida';
+			$notificacion->save();
+		}
 		return $atencion->id;
 	}
 	
@@ -124,6 +188,10 @@ class seguimientoController extends Controller
 		$id = $request->input('id');
 		$solicitud = Solicitud::find($id);
 		$solicitud->estatus =  $request->input('estatus');
+		if($solicitud->estatus == 'Cerrada')
+			$solicitud->fecha_finalizado = now();
+		else
+		$solicitud->fecha_finalizado = null;
 		$solicitud->save();
 		return $solicitud->estatus;
 	}
@@ -171,54 +239,74 @@ class seguimientoController extends Controller
 
 	public function UpdateSolicitud_usuario(Request $request)
 	{		
+		//$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
+
 		$fuera = array();
 		$dentro = array();
 
 		$integrantes_seleccionados = $request->input('integrantes');
-		$id_solicitud = $request->input('id_solicitud');		
+		$id_solicitud = $request->input('id_solicitud');	
+		$id_departamento = $request->input('id_departamento');		
 		
 		//Desactivar integrantes no seleccionados que existen	
-		$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
+		//$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
+		$integrantes = Solicitud_usuario::with(['usuario'])->where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();
 		if(count($integrantes_seleccionados) != 0)	
 		{			
-			foreach($integrantes as $integ)
+			if(count($integrantes) != 0)
 			{
-				foreach($integrantes_seleccionados as $integ_sel)
+				foreach($integrantes as $integ)
 				{
-					if($integ->id_usuario != $integ_sel)
+					if($integ->usuario->id_departamento == $id_departamento)
 					{
-						$integ->estado = 'Suspendido';
-						$integ->save();
+						foreach($integrantes_seleccionados as $integ_sel)
+						{
+							if($integ->id_usuario != $integ_sel)
+							{
+								$integ->estado = 'Suspendido';
+								$integ->save();
+							}
+						}
 					}
-				}
-			}		
-		}
-		else if($integrantes != null)
-		{
-			foreach($integrantes as $integ)
-			{
-				$integ->estado = 'Suspendido';
-				$integ->save();	
+				}		
 			}
+		}
+		else if(is_numeric($integrantes))
+		{
+            if($integrantes != 0)
+            {
+                foreach($integrantes as $integ)
+                {
+                    if($integ->usuario->id_departamento == $id_departamento)
+                    {
+                        $integ->estado = 'Suspendido';
+                        $integ->save();	
+                    }
+                }
+            }
 		}
 
 		//Reactivar usuario en una solicitud o agregarlo si no existe
 		$integrantes = Solicitud_usuario::where('id_solicitud',$id_solicitud)->whereIn('id_usuario', $integrantes_seleccionados)->get();
 		$ban = false;
-		foreach($integrantes_seleccionados as $integ_sel)
+		if(count($integrantes) != 0)
 		{
-			foreach($integrantes as $integ)
+			foreach($integrantes_seleccionados as $integ_sel)
 			{
-				if($integ->id_usuario == $integ_sel)
+				foreach($integrantes as $integ)
 				{
-					$ban = true;
-					$integ->estado = 'Atendiendo';
-					$integ->save();
-					$clave = array_search($integ_sel, $integrantes_seleccionados);
-					unset($integrantes_seleccionados[$clave]);
-					break;
-				}
-			}	
+					if($integ->id_usuario == $integ_sel)
+					{
+						$ban = true;
+						$integ->estado = 'Atendiendo';
+						$integ->momento = now();
+						$integ->save();
+						$clave = array_search($integ_sel, $integrantes_seleccionados);
+						unset($integrantes_seleccionados[$clave]);
+						break;
+					}
+				}	
+			}
 		}
 
 		foreach($integrantes_seleccionados as $integ_sel)
@@ -258,11 +346,11 @@ class seguimientoController extends Controller
             $mail->Password = 'BG9yGrkHgndFSF0aJcQv1L8fFj9k+jnjHigMmpkkUSMA';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-            $mail->setFrom("noreplay@jaliscoedu.mx", 'SAS');
+            $mail->setFrom("noreplay@jaliscoedu.mx", 'SASS');
             $mail->CharSet = 'UTF-8';
             $mail->addAddress(trim($email));
 
-            $mail->Subject = "Confirmación de ticket creado.";
+            $mail->Subject = "Contestación en Ticket levantado.";
             $mail->isHTML(true);
             $headers = "Content-Type: text/html; charset=UTF-8";
             $mailContent = "
@@ -280,5 +368,15 @@ class seguimientoController extends Controller
         }catch(phpmailerException $e){
             return $e;
         }
-    }
+	}
+	
+	public function ContarAtenciones($id)
+	{
+		$num = Solicitud_atencion::where('id_solicitud', $id)->where('tipo_respuesta', 'Todos')->where('tipo_at', 'Atencion')->count();
+		if($num == 1)
+		{
+			return true;
+		}
+		return false;
+	}
 }

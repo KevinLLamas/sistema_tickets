@@ -19,8 +19,8 @@ class ValidaToken
      */
        public function handle(Request $request, Closure $next)
     {
-        /*//Session::flush();
-         if(Session::get('key')){
+        //Session::flush();
+        /* if(Session::get('key')){
             return $next($request);
         }
         $token = $request->query('ssid');
@@ -31,7 +31,7 @@ class ValidaToken
             'nombre'=> 'Kevin Llamas',
             'curp'=> 'MAHL920209HJCRRS02',
             'usuario'=> 'kevindejesus.llamas@jalisco.gob.mx',
-            'rol'=>'SUPER',
+            'rol'=>'ADMIN',
             'id_departamento'=>1,
             'departamento'=>'DTI',
         ]);

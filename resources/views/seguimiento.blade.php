@@ -9,7 +9,7 @@
             <li class="breadcrumb-item">Seguimiento</li>
         </ol>
 	<!-- Page Heading -->
-	<h1 class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} @{{ seguimiento.descripcion }}</h1>
+	<h1  class="h1 text-gray-800" v-if="seguimiento.id_solicitud">#@{{ seguimiento.id_solicitud }} - @{{ seguimiento.perfil.nombre }} - @{{ seguimiento.categoria.nombre }} - @{{ seguimiento.subcategoria.nombre }}</h1>
 	<div v-if="seguimiento.estatus">
 		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()">
 			<option value="" disabled>Seleccione una opción</option>
@@ -25,16 +25,17 @@
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
-		<select class="col-md-5" v-model="integrantesSeleccionados"   id="agregar_usuarios" @change="updateIntegrantes" multiple>
+		<select class="col-md-5" v-model="integrantesSeleccionados"   id="agregar_usuarios" @change="updateIntegrantes" multiple>">
 			<option  :value="item.id_sgu" v-for="item in departamentoValido.integrantes">@{{item.nombre}}</option>
 		</select>
+		<b><label v-if="integrantesSeleccionadosCompletoSolicitud && item.id_departamento != user.id_departamento" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label></b>
 	</p>
 	<p v-if="user.rol == 'TECNICO'">
 		<i class="far fa-clock"></i> 
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b>
-		<label v-if="departamentoValido && user.rol != 'ADMIN'" v-for="item in integrantesSeleccionadosCompleto">@{{item.nombre}}, <br> </label>
+		<b><label v-if="integrantesSeleccionadosCompletoSolicitud" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label></b>
 	</p>
 	
 	<hr>
@@ -42,7 +43,7 @@
 	<div   class="card bg-white ">
 
 		<div class="card-body">
-			<p v-if="seguimiento.usuario"><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.nombre}}</b></p>
+			<p v-if="seguimiento.usuario" ><i class="far fa-edit"></i> <b>@{{seguimiento.fecha_creacion}} - Ticket creado por @{{seguimiento.usuario.nombre}}</b></p>
 			<p class="card-text">@{{seguimiento.descripcion}}</p>
 			<p>
 				<small>
@@ -82,11 +83,12 @@
 				<p v-if="item.tipo_at == 'Atencion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Comentario agregado por @{{item.nombre}}</b></p>
 				<p v-if="item.tipo_at == 'Estatus'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Estatus cambiado por @{{item.nombre}}</b></p>
 				<p v-if="item.tipo_at == 'Creacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - Ticket creado por @{{item.nombre}}</b></p>
-				<p v-if="item.tipo_at == 'Asignacion'"><i class="far fa-edit"></i> <b>@{{item.momento}} - @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Asignacion' && item.nombre != 'Sistema'"><i class="far fa-edit"></i> <b>@{{item.momento}} - El usuario @{{item.nombre}}</b></p>
+				<p v-if="item.tipo_at == 'Asignacion' && item.nombre == 'Sistema'"><i class="far fa-edit"></i> <b>@{{item.momento}} - El @{{item.nombre}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
-					<a :href="'../get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
+					<a :href="'/sass/get_file/solicitud-' + seguimiento.id_solicitud + '/' + adj.nombre_documento" download=""></i> @{{adj.nombre_documento}} </a>
 				</div>				
 			</div>			
 		</div>	
@@ -102,7 +104,7 @@
 		</div>	
 		<div class="card alert alert-warning  border-warning mb-3" v-if="item.tipo_respuesta == 'Interna'">
 			<div class="card-body">
-				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Nota agregada por @{{item.correo_usuario}}</b></p>
+				<p><i class="far fa-edit"></i> <b>@{{item.momento}} - Nota agregada por @{{item.nombre}}</b></p>
 				<p class="card-text">@{{item.detalle}}</p>
 				<p v-if="item.adjuntos.length != 0" class="card-text">Documentos Adjuntos:</p>
 				<div v-for="adj in item.adjuntos">
@@ -183,7 +185,6 @@
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', '')">Responder</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Abrir')">Responder y abrir</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Suspender')">Responder y suspender</a>
-							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Resolver')">Responder y resolver</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Todos', 'Terminar')">Responder y terminar</a>
 						</div>
 					</div>
@@ -218,7 +219,6 @@
 							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', '')">Responder</a>
 							<a v-if="" class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Abrir')">Responder y abrir</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Suspender')">Responder y suspender</a>
-							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Resolver')">Responder y resolver</a>
 							<a class="dropdown-item" v-on:click="agregarAtencion('Interna', 'Terminar')">Responder y terminar</a>
 						</div>
 					</div>
@@ -260,7 +260,7 @@
 <script>
     slim = new SlimSelect({
                 select: '#agregar_usuarios',
-                placeholder: 'Asignar solicitud ',
+                placeholder: 'Asignar Ticket',
                 limit: 4,
               })                    
 </script>

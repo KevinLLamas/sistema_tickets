@@ -5,7 +5,7 @@
         <h1 class="mb-5">Seguimiento Externo<hr></h1>
         <div class="row h-100 justify-content-center align-items-center mb-5 mt-5" id="verificar">
             <div class="col-10 col-md-10 col-lg-6">
-                <label for=""  class="font-weight-bold ml-3">Para dar seguimiento a su solicitud es necesario que ingrese su código de verificación</label>
+                <label for=""  class="font-weight-bold ml-3">Para dar seguimiento a su ticket es necesario que ingrese su código de verificación</label>
                 <div class="form-row col-md mt-2 ">
                     <div class="col-md-10">
                         <input type="text" class="form-control" name="codigo" id="codigo" aria-describedby="helpId" placeholder="Código" maxlength="6" minlength="6" v-model="codigo" required>
@@ -22,7 +22,7 @@
 
     <div class="container" v-if="banVerif">
         <!-- Page Heading -->
-	<h1 class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} @{{ seguimiento.descripcion }}</h1>
+	<h1  class="h1 text-gray-800">#@{{ seguimiento.id_solicitud }} - @{{ seguimiento.perfil.nombre }} - @{{ seguimiento.categoria.nombre }} - @{{ seguimiento.subcategoria.nombre }}</h1>
 	<div v-if="seguimiento.estatus">
 		<!--select class="selectpicker my-2" data-style="btn-primary" v-model="seguimiento.estatus" @change="cambiarEstatus">
 			<option value="" disabled>Seleccione una opción</option>
@@ -31,7 +31,7 @@
 			<option option="Suspendida">Suspendida</option>
 			<option option="Cerrada">Cerrada</option>
 		</select-->
-		<select  class="form-control col-md-5" v-model="seguimiento.estatus" @change="cambiarEstatus()" disabled="true">
+		<select  class="form-control col-md-5" v-model="seguimiento.estatus" disabled="true">
 			<option value="" disabled>Seleccione una opción</option>
 			<option option="Sin atender">Sin atender</option>
 			<option option="Atendiendo">Atendiendo</option>
@@ -39,24 +39,14 @@
 			<option option="Cerrada (En espera de aprobación)">Cerrada (En espera de aprobación)</option>
 			<option option="Cerrada">Cerrada</option>
 		</select>
-		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Cerrada'; cambiarEstatus()">Confirmar</button>
-		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="seguimiento.estatus = 'Atendiendo'; cambiarEstatus()">Abrir de Nuevo</button>
+		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="cambiarEstatusExterno('Cerrada')">Confirmar</button>
+		<button v-if="seguimiento.estatus === 'Cerrada (En espera de aprobación)'" class="btn btn-primary mt-2" v-on:click="cambiarEstatusExterno('Atendiendo')">Abrir de Nuevo</button>
 	</div>
 	<p v-if="seguimiento.fecha_creacion"><i class="far fa-clock"></i> <b>@{{seguimiento.fecha_creacion}}</b> - 
-		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
-		<b v-if="integrantesSeleccionados.length == 0">Sin personal asignado.</b> 
-		<select v-if="departamentoValido" class="selectpicker" data-live-search="true" v-model="integrantesSeleccionados" @change="updateIntegrantes" multiple>
-			<option  :value="item.id" v-for="item in departamentoValido.integrantes">@{{item.correo}}</option>
-		</select>
-		<label v-if="integrantesSeleccionadosCompleto" v-for="item in integrantesSeleccionadosCompleto">@{{item.nombre}}, <br> </label>
-		
-		<!--select class="selectpicker" data-live-search="true">
-			<option data-tokens="ketchup mustard">Juan López García</option>
-			<option data-tokens="mustard">Armando González Gutierrez</option>
-			<option data-tokens="frosting">Luis Márquez Hernández</option>
-		</select--></p>
-	{{--<p class="alert alert-info"><small>Categoría: Correo institucional - Subcategoría: @{{seguimiento.subcategoria.nombre}}
-			electrónico <i class="fas fa-reply-all"></i> Respuestas: 2</small></p>--}}
+		<b v-if="integrantesSeleccionadosSolicitud.length > 0">Atendiendo: </b>
+		<b v-if="integrantesSeleccionadosSolicitud.length == 0">Sin personal asignado.</b> 
+		<label v-if="integrantesSeleccionadosCompletoSolicitud" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label>	
+	</p>
 	<hr>
 
 	<h3 class="h3 text-gray-800">Resumen</h3>
@@ -219,5 +209,5 @@
 
 
 
-<script src="{{asset('assets/vue/seguimiento.js')}}"></script>
+<script src="{{asset('assets/vue/seguimiento_externo.js')}}"></script>
 @endsection

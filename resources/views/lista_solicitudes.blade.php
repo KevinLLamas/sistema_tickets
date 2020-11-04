@@ -1,11 +1,6 @@
 @extends('app')
 @section('content')
 
-
-<!-- Begin Page Content -->
-
-
-
 <div id="solicitudes" class="container-fluid">
     <div class="row">
         <!-- Tarjeta Listado de solicitudes -->

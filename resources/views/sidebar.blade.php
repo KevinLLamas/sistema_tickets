@@ -53,10 +53,15 @@
         <div class="bg-white py-2 collapse-inner rounded">
           <h6 class="collapse-header">Opciones:</h6>
           <a class="collapse-item" href="/sass/alta_ticket">Crear Ticket</a>
-          <!--a class="collapse-item" href="/cast/alta_solicitud_servicio">Solicitar un Servicio</a-->
+          <!--a class="collapse-item" href="/sass/alta_solicitud_servicio">Solicitar un Servicio</a-->
           <a class="collapse-item" href="/sass/dashboard">Listado</a>
         </div>
       </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/sass/reportes">
+        <i class="fas fa-fw fa-cog"></i>
+        <span>Reportes</span></a>
     </li>
     <!-- Nav Item - Pages Collapse Menu 
     <li class="nav-item">
@@ -77,13 +82,12 @@
     {{-- <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
         <i class="fas fa-fw fa-cog"></i>
-        <span>Components</span>
+        <span>Reportes</span>
       </a>
       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Componentes:</h6>
-          <a class="collapse-item" href="buttons.html">Buttons</a>
-          <a class="collapse-item" href="cards.html">Cards</a>
+          <h6 class="collapse-header">Reportes:</h6>
+          <a class="collapse-item" href="/sass/reportes">Ver reportes</a>
         </div>
       </div>
     </li> --}}
@@ -164,22 +168,4 @@
     <!-- Main Content -->
     <div id="content">
 
-      <!-- Topbar -->
-      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-        <!-- Sidebar Toggle (Topbar) -->
-        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-          <i class="fa fa-bars"></i>
-        </button>
-
-        <!-- Topbar Search -->
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-          <div class="input-group">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar ticket..." aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-              <button class="btn btn-primary" type="button">
-                <i class="fas fa-search fa-sm"></i>
-              </button>
-            </div>
-          </div>
-        </form>
+     

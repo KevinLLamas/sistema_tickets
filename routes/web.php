@@ -9,7 +9,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\seguimientoController;
 use App\Http\Controllers\LoginController;
-
+use App\Http\Controllers\NotificacionController;
 
 Route::group(['middleware' => 'validar', 'web'], function()
 {
@@ -31,6 +31,16 @@ Route::get('get_num_solicitudes_bystatus_mis_solicitudes', [SolicitudController:
 Route::get('get_num_solicitudes_bystatus_departamento', [SolicitudController::class, 'get_num_solicitudes_bystatus_departamento']);
 Route::get('get_num_solicitudes_bystatus_asignadas', [SolicitudController::class, 'get_num_solicitudes_bystatus_asignadas']);
 
+//reportes
+Route::post('get_num_solicitudes_through_time', [SolicitudController::class, 'get_num_solicitudes_through_time']);
+Route::post('get_num_solicitudes_through_time_cerradas', [SolicitudController::class, 'get_num_solicitudes_through_time_cerradas']);
+Route::get('get_usuarios_by_departamento', [SolicitudController::class, 'get_usuarios_by_departamento']);
+Route::post('get_num_solicitudes_by_estatus_usuario', [SolicitudController::class, 'get_num_solicitudes_by_estatus_usuario']);
+Route::post('get_solicitudes_departamento_rep', [SolicitudController::class, 'get_solicitudes_departamento_rep']);
+Route::post('get_porcentaje_cerradas', [SolicitudController::class, 'get_porcentaje_cerradas']);
+
+
+
 //SOLICITAR SERVICIO
 Route::get('/alta_solicitud_servicio', function(){return view('alta_solicitud_servicio');});
 
@@ -50,9 +60,17 @@ Route::get('lista_solicitudes', function () {return view('lista_solicitudes');})
 Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
 Route::get('solicitudes_asignadas', function () {return view('solicitudes_asignadas');});
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
+Route::get('charts', function () {return view('charts');});
+Route::get('reportes', function () {return view('reportes');});
 
 //Seguimiento
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 
+
+//NOTIFICACIONES
+Route::post('get_notificaciones', [NotificacionController::class, 'get_notificaciones']);
+Route::post('set_notificacion_leida', [NotificacionController::class, 'set_notificacion_leida']);
+Route::post('get_listado_notificaciones', [NotificacionController::class, 'get_listado_notificaciones']);
+Route::get('notificaciones', function () {return view('notificaciones');}); 
 
 
 });
@@ -73,3 +91,4 @@ Route::get('/ejemplo', function () {
 });
 
 
+Route::get('getUsers', [seguimientoController::class, 'getUsers']); 

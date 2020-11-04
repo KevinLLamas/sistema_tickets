@@ -1,3 +1,5 @@
+Chart.defaults.global.defaultFontFamily = 'Montserrat';
+Chart.defaults.global.defaultFontColor = '#858796';
 new Vue({
     el: '#mis_solicitudes_asignadas',
     data:{
@@ -6,7 +8,7 @@ new Vue({
         Estatus:[],
         colorEstatus:[],
         coloresHex:[],
-
+        orden:'ASC',
         estado_ticket:'',
         ocultarTabla:false,
         ocultarGrafica:false,
@@ -173,6 +175,7 @@ new Vue({
                 medio: this.medioReporte,
                 estado: this.estadoReporte,
                 id: this.busquedaid,
+                orden: this.orden,
             })
             .then(response => {
                 //console.log(response.data.data);
