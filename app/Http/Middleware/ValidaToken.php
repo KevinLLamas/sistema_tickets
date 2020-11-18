@@ -46,7 +46,7 @@ class ValidaToken
             
             if(is_null(Session::get("key"))){
                 //Redireccionamos
-                $url = "http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/cast/";
+                $url = "http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/sass/";
                 //$url="http://google.com";
                 return Redirect::to($url);
 
@@ -64,7 +64,7 @@ class ValidaToken
 
                     //Matamos sesión local y redireccionamos
                     Session::flush();
-                    $url = "http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/cast/";
+                    $url = "http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/sass/";
                     return Redirect::to($url);
                 }
             }
@@ -99,7 +99,7 @@ class ValidaToken
             else{
                 //Matamos sesión local y redireccionamos
                 Session::flush();
-                $url = "http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/cast/";
+                $url = "http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/sass/";
                 return Redirect::to($url);
             }
         }

@@ -36,8 +36,7 @@ new Vue({
         integrantesSeleccionadosSolicitud: [],
         integrantesSeleccionadosCompletoSolicitud: []
     },
-    created: function(){
-        this.muestra2();        
+    created: function(){      
     },
     methods:{
         muestra2: function(){

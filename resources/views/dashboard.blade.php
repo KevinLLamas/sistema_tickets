@@ -712,9 +712,11 @@
 <script src="{{asset('assets/vendor/chart.js/Chart.min.js')}}"></script>
 <!-- Scripts VUE -->
 <script src="{{asset('assets/vue/dashboard.js')}}"></script>
-<script src="{{asset('assets/vue/solicitudes.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes_asignadas.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes_departamento.js')}}"></script>
 <script src="{{asset('assets/vue/mis_solicitudes.js')}}"></script>
+@if(Session::get('rol')=='SUPER')
+    <script src="{{asset('assets/vue/solicitudes.js')}}"></script>
+@endif 
 
 @endsection
