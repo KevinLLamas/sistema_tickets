@@ -85,6 +85,9 @@ Route::get('getUserData', [seguimientoController::class, 'getUserData']);
 Route::post('UpdateSolicitud_usuario',  [seguimientoController::class, 'UpdateSolicitud_usuario']);
 Route::get('getDepartamentos', [seguimientoController::class, 'getDepartamentos']);
 Route::post('inserta_atencion_externo',  [seguimientoController::class, 'inserta_atencion_externo']);
+Route::post('update_departamentos',  [seguimientoController::class, 'UpdateDepartamentos']);
+
+
 Route::post('save_files', [SolicitudController::class, 'save_files']);
 Route::get('/ejemplo', function () {
     return view('ejemplo');

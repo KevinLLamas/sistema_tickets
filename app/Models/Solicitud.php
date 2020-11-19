@@ -19,6 +19,9 @@ class Solicitud extends Model
     public function subcategoria(){
     	return $this->hasOne('App\Models\Subcategoria', 'id', 'id_subcategoria');
     }
+    public function subcategoria_departamento(){
+    	return $this->hasMany('App\Models\Subcategoria_departamento', 'id_subcategoria', 'id_subcategoria');
+    }
     public function atencion(){
     	return $this->hasMany('App\Models\Solicitud_atencion', 'id_solicitud');
     }

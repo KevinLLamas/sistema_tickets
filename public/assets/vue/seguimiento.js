@@ -41,8 +41,10 @@ new Vue({
         integrantesSeleccionadoAntesUpdate: [],
         integrantesDesasignados: [],
         integrantesAsignados: [],
-        departamentos: [],
+        departamentos: [],        
+        departamentoAntesUpdate: '',
         banCambio: false,
+        banCambioDpto: false,
     },
     created: function(){
         this.muestra();        
@@ -51,8 +53,10 @@ new Vue({
         muestra: function(){
             if(getId>0)
             axios.get(`../getSolicitud/`+getId).then(response=>{
-                console.log(response.data);
-                this.seguimiento = response.data;
+                //console.log(response.data);
+                this.seguimiento = response.data;    
+                if(!this.banCambioDpto)
+                    this.departamentoAntesUpdate = this.seguimiento.departamento[0];            
                 this.getUserData();
                 this.compruebaCerradoAuto();
             }).catch(function (error) {
@@ -82,7 +86,7 @@ new Vue({
                     rol: this.user.rol,
                     estatus: this.seguimiento.estatus
                 }).then(response=>{
-                    console.log(response);
+                    //console.log(response);
                     this.id_atencion = response.data.id;
                     if(response.data.primer)
                     {
@@ -420,6 +424,8 @@ new Vue({
                 this.user = response.data;   
                 this.validatePermission();       
                 this.eventosCambiosAsignacion();
+                this.eventoCambioDpto();
+                
                 if(this.user.rol == 'TECNICO')
                 {
                     slim.destroy();
@@ -431,9 +437,12 @@ new Vue({
         validatePermission: function()
         {
             this.integrantesSeleccionadosCompleto = [];
+            this.integrantesSeleccionados = [];
+            this.departamentoValido = '';
             var c = 0;
             for(var i = 0; i < this.seguimiento.departamento.length; i++)
-            {                
+            {       
+                    
                 if(this.seguimiento.departamento[i].id == this.user.id_departamento)
                     this.departamentoValido = this.seguimiento.departamento[i];
                 for(var z = 0; z < this.seguimiento.departamento[i].integrantes.length; z++)
@@ -450,20 +459,23 @@ new Vue({
                 }  
             }
             c = 0;
-            for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
+            if(this.departamentoValido != '')
             {
-                //console.log(this.seguimiento.departamentoValido);
-                for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
+                for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
                 {
-                    //console.log(this.departamentoValido.integrantes[i].id);
-                    if(this.departamentoValido.integrantes[i].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
-                    { 
-                        this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id_sgu;
-                        this.integrantesSeleccionadosCompleto[c] = this.departamentoValido.integrantes[i];
-                        c++;
-                    }
-                }                    
-            }  
+                    //console.log(this.seguimiento.departamentoValido);
+                    for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
+                    {
+                        //console.log(this.departamentoValido.integrantes[i].id);
+                        if(this.departamentoValido.integrantes[i].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                        { 
+                            this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id_sgu;
+                            this.integrantesSeleccionadosCompleto[c] = this.departamentoValido.integrantes[i];
+                            c++;
+                        }
+                    }                    
+                }  
+            }
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)' && this.user === '')
             {
                 Swal.fire('Espera de aprobación','El ticket se ha marcado como cerrado, reviselo y apruebe este estado, o cancele para volver a abrirla','info');
@@ -510,6 +522,33 @@ new Vue({
             }).catch(function (error) {
                 //console.log(error);
             });
+        },
+        updateDepartamento: function()
+        {
+            this.banCambioDpto= true;
+            axios.post('../update_departamentos',{
+                id_solicitud: this.seguimiento.id_solicitud,
+                id_departamento: this.seguimiento.departamento_seleccionado_id,
+            }).then(response=>{
+                console.log(response);
+                this.muestra();                
+                var c = 0;  
+                Swal.fire('Correcto','Se actualizo la asignación de departamento','success');                
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        eventoCambioDpto: function()
+        {
+            if(this.banCambioDpto)
+            {
+                this.nueva_atencion.detalle= 'asignó a el departamento ' + this.seguimiento.departamento[0].nombre + ' a este ticket y se desasignó el departamento ' + this.departamentoAntesUpdate.nombre;
+                this.nueva_atencion.id_usuario= this.user.id_sgu;
+                this.nueva_atencion.tipo_at= 'Asignacion';
+                this.agregarAtencion('Todos', 'Asignacion');
+                this.nueva_atencion.estatus = "";
+                this.banCambioDpto = false;
+            }
         },
         eventosCambiosAsignacion: function()
         {
