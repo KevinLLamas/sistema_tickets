@@ -55,7 +55,6 @@
 						<div v-if="item.tipo_dato == 'correo_institucional'">
 							<i class="far fa-envelope"></i>Correo institucional: <b>@{{item.valor}}</b>
 						</div>
-						
 						<div v-else-if="item.tipo_dato == 'curp'">
 							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
 						</div>
@@ -67,7 +66,34 @@
 						</div>
 						<div v-else-if="item.tipo_dato == 'n_plaza'">
 							<i class="fas fa-list-ol"></i> Número de plaza: <b>@{{item.valor}} </b>
-						</div>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'cct'">
+							<i class="fas fa-list-ol"></i>Clave de centro de trabajo: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'alumno'">
+							<i class="fas fa-list-ol"></i>Nombre del alumno: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'grado'">
+							<i class="fas fa-list-ol"></i> Grado: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'grupo'">
+							<i class="fas fa-list-ol"></i> grupo: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'turno'">
+							<i class="fas fa-list-ol"></i> Turno: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'director'">
+							<i class="fas fa-list-ol"></i> Nombre del director: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'dato incorrecto'">
+							<i class="fas fa-list-ol"></i> Dato incorrecto: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'dato correcto'">
+							<i class="fas fa-list-ol"></i> Dato correcto: <b>@{{item.valor}} </b>
+                        </div>
+                        <div v-else-if="item.tipo_dato == 'fecha de alta'">
+							<i class="fas fa-list-ol"></i>Fecha de alta: <b>@{{item.valor}} </b>
+                        </div>
 					</div>
 				</small>
 			</p>

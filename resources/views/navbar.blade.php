@@ -11,7 +11,10 @@
       <!-- Topbar Search -->
       <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
         <div class="input-group">
-          <input type="text" class="form-control bg-light border-0 small" placeholder="Buscar ticket..." aria-label="Search" aria-describedby="basic-addon2">
+          <input list="myUL" type="text" id="tickets" name="tickets"class="form-control bg-light border-0 small" placeholder="Buscar ticket..."  v-model="id_ticket" @input="buscarTiket">
+          <datalist id="myUL" class="rounded" v-on:change="ir_solicitud(ticket.id_solicitud)">
+            <option v-for="(ticket,index) in tickets" :value="'#' + ticket.id_solicitud" v-if="index < 4" v-on:click="ir_solicitud(ticket.id_solicitud)">@{{ticket.medio_reporte}} - @{{ticket.fecha_creacion}} - @{{ticket.descripcion}}</option>
+          </datalist>
           <div class="input-group-append">
             <button class="btn btn-primary" type="button">
               <i class="fas fa-search fa-sm"></i>

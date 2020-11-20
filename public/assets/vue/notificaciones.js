@@ -3,6 +3,8 @@ new Vue({
     data:{
         notificaciones: [],
         cont: 0,
+        id_ticket: '',
+        tickets: [],
     },
     created: function(){
        this.getNotificaciones();
@@ -28,6 +30,22 @@ new Vue({
                 console.log(response.data);
                 window.location = '/sass/seguimiento/'+id_solicitud;
             });
+        },
+        ir_solicitud: function(id)
+        {
+            window.location = '/sass/seguimiento/'+id;
+        },
+        buscarTiket: function()
+        {
+            if(this.id_ticket.length > 2)
+            {
+                axios.post('/get_ticket',
+                {id: this.id_ticket})
+                .then(response => {
+                    console.log(response.data);
+                    this.tickets = response.data;
+                });
+            }
         }
     }
 });
