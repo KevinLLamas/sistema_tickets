@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Models\Categoria;
 use App\Models\Solicitud;
 use App\Models\Solicitud_atencion;
+use App\Models\Solicitud_departamento;
 use App\Models\Solicitud_usuario;
 use App\Models\Atencion_externos;
 use App\Models\Atencion_adjunto;
@@ -52,7 +53,7 @@ class seguimientoController extends Controller
 		return $this->users;
 	}
 	public function seguimiento($id){
-		$solicitud = Solicitud::with(['subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
+		$solicitud = Solicitud::with(['subcategoria_departamento','subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		if($solicitud->atencion != null)
 		{
 			if(!is_null($solicitud->usuario))
@@ -93,6 +94,7 @@ class seguimientoController extends Controller
 				
 			}
 		}
+		$departamento_seleccionado_id = '';
 		$departamentos = $solicitud->departamento;
 		foreach($departamentos as $dtp)
 		{
@@ -102,9 +104,17 @@ class seguimientoController extends Controller
 			{
 				$usuario->nombre = $this->get_usuario($usuario->id_sgu)['nombre'];
 			}
+			$departamento_seleccionado_id=$dtp->id;
 		}
+		$solicitud->departamento_seleccionado_id = $departamento_seleccionado_id;
 		$solicitud->categoria = Categoria::find($solicitud->subcategoria->id_categoria);
 		$solicitud->perfil = Perfil::find($solicitud->id_perfil);
+		$subcategoria_departamento = $solicitud->subcategoria_departamento;
+		foreach($subcategoria_departamento as $sub_dpto)
+		{
+			$dep = Departamentos::find($sub_dpto->id_departamento);
+			$sub_dpto->nombre_departamento = $dep->nombre;
+		}
 		return $solicitud;
 	}
 	public function inserta_atencion(Request $request){
@@ -378,5 +388,77 @@ class seguimientoController extends Controller
 			return true;
 		}
 		return false;
+	}
+
+	public function UpdateDepartamentos(Request $request)
+	{
+		$ban = false;
+		$id_solicitud = $request->input('id_solicitud');	
+		$id_departamento = $request->input('id_departamento');	
+
+		Solicitud_departamento::where('id_solicitud', $id_solicitud)->delete();
+		
+		$solicitud_departamento = new Solicitud_departamento;
+        $solicitud_departamento->id_solicitud = $id_solicitud;
+        $solicitud_departamento->id_departamento = $id_departamento;
+        $solicitud_departamento->aceptada = 'true';
+        $solicitud_departamento->razon = '';
+		$solicitud_departamento->save();
+		
+		$integrantes = Solicitud_usuario::with(['usuario'])->where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();			
+		if(count($integrantes) != 0)
+		{
+			foreach($integrantes as $integ)
+			{
+				if($integ->usuario->id_departamento == $id_departamento)
+				{
+					$ban = true;
+				}
+			}		
+		}
+
+		if(!$ban)
+		{
+			//TRAEMOS TECNICOS DE EL DEPARTAMENTO ACTUAL
+			$usuarios_depa = Usuario::with('ultima_asignada')
+			->where('id_departamento', $id_departamento)
+			->where('id_sgu','!=','1')
+			->where('rol','TECNICO')
+			->get();
+			//BUSCAMOS A EL USUARIO EL CUAL TENGA MAS TIEMPO SIN QUE SE LE ASIGNE UNA SOLICITUD
+			$usuario_asignar = $usuarios_depa[0];
+			foreach ($usuarios_depa as $usuario) {
+				if(is_null($usuario->ultima_asignada)){
+					$usuario_asignar = $usuario;
+					break;
+				}
+				if(new \DateTime($usuario->ultima_asignada->momento) < new \DateTime($usuario_asignar->ultima_asignada->momento))
+					$usuario_asignar = $usuario;
+			}
+			//ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
+			$solicitud_usuario = new Solicitud_usuario;
+			$solicitud_usuario->id_solicitud = $id_solicitud;
+			$solicitud_usuario->id_usuario = $usuario_asignar->id_sgu;
+			$solicitud_usuario->momento = now();
+			$solicitud_usuario->estado = 'Atendiendo';
+			$solicitud_usuario->save();
+
+			$atencion = new Solicitud_atencion;
+
+			$nombre = '';
+			$res = $this->get_usuario($usuario_asignar->id_sgu);
+			if($res['ok'])
+				$nombre = $res['nombre'];
+			else
+				$nombre = 'Usuario';
+			$atencion->detalle = 'asignó a ' . $nombre . ' a este ticket.';
+			$atencion->id_solicitud = $id_solicitud;
+			$atencion->tipo_at = 'Asignacion';
+			$atencion->momento = now();
+			$atencion->tipo_respuesta = 'Todos';
+			$atencion->save();
+			return $atencion;
+		}
+		return true;
 	}
 }

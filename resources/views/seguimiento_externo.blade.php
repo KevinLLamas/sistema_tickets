@@ -167,12 +167,9 @@
 			</div>
 			<div class="form-group row">
 				<div class="col">
-					<div class="dropdown">
-						<button class="btn btn-primary" type="button" id="dropdownMenuButton"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="agregarAtencionExterno('Externa', '')" >
+						<button class="btn btn-primary" type="button" v-on:click="agregarAtencionExterno('Externa', '')" >
 							Responder
 						</button>
-					</div>
 				</div>
 			</div>
 		</div>

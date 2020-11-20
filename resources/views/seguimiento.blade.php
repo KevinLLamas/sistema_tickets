@@ -25,7 +25,10 @@
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
-		<select class="col-md-5" v-model="integrantesSeleccionados"   id="agregar_usuarios" @change="updateIntegrantes" multiple>">
+		<select class="col-md-5" v-model="seguimiento.departamento_seleccionado_id" id="asignar_departamento" @change="updateDepartamento">">
+			<option  :value="item.id_departamento" v-for="item in seguimiento.subcategoria_departamento">@{{item.nombre_departamento}}</option>
+		</select>
+		<select class="col-md-5" v-model="integrantesSeleccionados" id="agregar_usuarios" @change="updateIntegrantes" multiple>">
 			<option  :value="item.id_sgu" v-for="item in departamentoValido.integrantes">@{{item.nombre}}</option>
 		</select>
 		<b><label v-if="integrantesSeleccionadosCompletoSolicitud && item.id_departamento != user.id_departamento" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label></b>
@@ -283,10 +286,17 @@
 </div>
 
 <script type="text/javascript" src="{{asset('assets/vue/seguimiento.js')}}"></script>
-<script>
+<script >
     slim = new SlimSelect({
                 select: '#agregar_usuarios',
                 placeholder: 'Asignar Ticket',
+                limit: 4,
+              })                    
+</script>
+<script>
+    slim = new SlimSelect({
+                select: '#asignar_departamento',
+                placeholder: 'Asignar a Departamento',
                 limit: 4,
               })                    
 </script>
