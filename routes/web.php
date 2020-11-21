@@ -86,6 +86,8 @@ Route::post('UpdateSolicitud_usuario',  [seguimientoController::class, 'UpdateSo
 Route::get('getDepartamentos', [seguimientoController::class, 'getDepartamentos']);
 Route::post('inserta_atencion_externo',  [seguimientoController::class, 'inserta_atencion_externo']);
 Route::post('update_departamentos',  [seguimientoController::class, 'UpdateDepartamentos']);
+Route::post('sub_dptos',  [seguimientoController::class, 'Subcategorias_Dptos']);
+Route::post('update_subcategoria',  [seguimientoController::class, 'UpdateSubcategoria']);
 
 
 Route::post('save_files', [SolicitudController::class, 'save_files']);

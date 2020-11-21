@@ -7,4 +7,8 @@ class Subcategoria_departamento extends Model
     protected $table = 'subcategoria_departamento';
     protected $primaryKey = 'id';
     public $timestamps = false;
+
+    public function departamentos(){
+        return $this->hasMany('App\Models\Departamentos','id', 'id_departamento');
+    }
 }

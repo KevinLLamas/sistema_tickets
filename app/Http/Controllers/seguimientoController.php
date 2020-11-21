@@ -18,6 +18,7 @@ use App\Models\Atencion_adjunto;
 use App\Models\Usuario;
 use App\Models\Perfil;
 use App\Models\Departamentos;
+use App\Models\Subcategoria_departamento;
 use \PHPMailer\PHPMailer\PHPMailer;
 use \PHPMailer\PHPMailer\Exception;
 use App\Models\Solicitud_notificacion;
@@ -459,6 +460,27 @@ class seguimientoController extends Controller
 			$atencion->save();
 			return $atencion;
 		}
+		return true;
+	}
+
+	function Subcategorias_Dptos(Request $request)
+	{
+		$subcategoria_departamento = Subcategoria_departamento::where('id_subcategoria', $request->input('id_subcategoria'))->get();
+		foreach($subcategoria_departamento as $sub_dpto)
+		{
+			$dep = Departamentos::find($sub_dpto->id_departamento);
+			$sub_dpto->nombre_departamento = $dep->nombre;
+		}
+		return $subcategoria_departamento;
+	}
+
+	public function UpdateSubcategoria(Request $request)
+	{
+		$id_solicitud = $request->input('id_solicitud');	
+		$id_subcategoria = $request->input('id_subcategoria');	
+		$solicitud = Solicitud::find($id_solicitud);
+		$solicitud->id_subcategoria = $id_subcategoria;
+		$solicitud->save();
 		return true;
 	}
 }

@@ -23,15 +23,33 @@
 	<p v-if="user.rol != 'TECNICO'" class="mt-3" v-cloak>
 		<i class="far fa-clock"></i> 
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
+		<div class="row">
+            <div class="form-group col-6" v-if="seguimiento.perfil != ''">
+                <label for="">Categoria del problema</label>
+                <select class="form-control" name="categoria" id="categoria" v-model="seguimiento.categoria.id" @change="getSubcategorias()" required>
+                    <option value="" selected="selected" disabled>Selecciona</option>
+                    <option :value="categoria.id" v-for="categoria in Categorias">@{{categoria.nombre}}</option>
+                </select>
+            </div>
+            <div class="form-group col-6" v-if="seguimiento.categoria != ''">
+                <label for="">Subcategoria del problema</label>
+                <select class="form-control" name="subcategoria" id="subcategoria" v-model="seguimiento.subcategoria.id" @change="UpdateSubcategoria()" required>
+                    <option value="" selected="selected" disabled>Selecciona</option>
+                    <option :value="subcategoria.id" v-for="subcategoria in Subcategorias">@{{subcategoria.nombre}}</option>
+                </select>
+			</div>
+		</div>
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
-		<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
-		<select class="col-md-5" v-model="seguimiento.departamento_seleccionado_id" id="asignar_departamento" @change="updateDepartamento">">
-			<option  :value="item.id_departamento" v-for="item in seguimiento.subcategoria_departamento">@{{item.nombre_departamento}}</option>
-		</select>
-		<select class="col-md-5" v-model="integrantesSeleccionados" id="agregar_usuarios" @change="updateIntegrantes" multiple>">
-			<option  :value="item.id_sgu" v-for="item in departamentoValido.integrantes">@{{item.nombre}}</option>
-		</select>
-		<b><label v-if="integrantesSeleccionadosCompletoSolicitud && item.id_departamento != user.id_departamento" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label></b>
+		<div class="row">
+			<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
+			<select class="form-group col-6" v-model="seguimiento.departamento_seleccionado_id" id="asignar_departamento" @change="updateDepartamento">">
+				<option  :value="item.id_departamento" v-for="item in seguimiento.subcategoria_departamento">@{{item.nombre_departamento}}</option>
+			</select>
+			<select class="form-group col-6" v-model="integrantesSeleccionados" id="agregar_usuarios" @change="updateIntegrantes" multiple>">
+				<option  :value="item.id_sgu" v-for="item in departamentoValido.integrantes">@{{item.nombre}}</option>
+			</select>
+			<b><label v-if="integrantesSeleccionadosCompletoSolicitud && item.id_departamento != user.id_departamento" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}}, </label></b>
+		</div>
 	</p>
 	<p v-if="user.rol == 'TECNICO'">
 		<i class="far fa-clock"></i> 
@@ -295,7 +313,7 @@
               })                    
 </script>
 <script>
-    slim = new SlimSelect({
+    slim2 = new SlimSelect({
                 select: '#asignar_departamento',
                 placeholder: 'Asignar a Departamento',
                 limit: 4,

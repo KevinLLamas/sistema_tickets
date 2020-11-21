@@ -43,22 +43,30 @@ new Vue({
         integrantesAsignados: [],
         departamentos: [],        
         departamentoAntesUpdate: '',
+        subcategoriaAntesUpdate: '',
         banCambio: false,
         banCambioDpto: false,
+        banCambioSubcategoria: false,
+        banSlimDest: false,
+        Categorias: '',
+        Subcategorias: ''
     },
     created: function(){
         this.muestra();        
     },
     methods:{
-        muestra: function(){
+        muestra: function(){                     
             if(getId>0)
             axios.get(`../getSolicitud/`+getId).then(response=>{
-                //console.log(response.data);
                 this.seguimiento = response.data;    
                 if(!this.banCambioDpto)
-                    this.departamentoAntesUpdate = this.seguimiento.departamento[0];            
+                    this.departamentoAntesUpdate = this.seguimiento.departamento[0];  
+                if(!this.banCambioSubcategoria)
+                    this.subcategoriaAntesUpdate = this.seguimiento.subcategoria.nombre;          
                 this.getUserData();
                 this.compruebaCerradoAuto();
+                this.getCategorias();
+                this.getSubcategorias();
             }).catch(function (error) {
                 console.log(error);
             });            
@@ -419,20 +427,22 @@ new Vue({
             }).catch(function (error) {
             });
         },
-        getUserData: function(){
+        getUserData: function(){            
             axios.get('../getUserData').then(response=>{
                 this.user = response.data;   
                 this.validatePermission();       
                 this.eventosCambiosAsignacion();
                 this.eventoCambioDpto();
-                
+                this.eventoCambioSubcategoria();
                 if(this.user.rol == 'TECNICO')
                 {
                     slim.destroy();
+                    slim2.destroy();
                 } 
             }).catch(function (error) {
                 console.log(error);
             });
+            //this.styleObject.display = 'none';
         },
         validatePermission: function()
         {
@@ -461,6 +471,12 @@ new Vue({
             c = 0;
             if(this.departamentoValido != '')
             {
+                if(this.banSlimDest)
+                {
+                    slim.enable();
+                }
+                this.isSection1 = true;
+                //this.styleObject.display = 'run-in';
                 for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
                 {
                     //console.log(this.seguimiento.departamentoValido);
@@ -475,6 +491,14 @@ new Vue({
                         }
                     }                    
                 }  
+            }
+            else
+            {
+                if(!this.banSlimDest)
+                {
+                    slim.disable();
+                } 
+                this.banSlimDest = true;
             }
             if(this.seguimiento.estatus === 'Cerrada (En espera de aprobación)' && this.user === '')
             {
@@ -621,6 +645,68 @@ new Vue({
                 }
 
             }
+        },
+
+        getCategorias: function(){
+            this.categoria = '';
+            this.subcategoria = '';
+            this.Campos = [];
+            axios.get('../categorias?id_perfil='+this.seguimiento.perfil.id)
+            .then(result =>{
+                console.log(result.data);
+                this.Categorias = result.data;
+            }).catch(error=>{
+                console.log(error);
+            })
+        },
+
+        getSubcategorias: function(){
+            this.subcategoria = '';
+            this.Campos = [];
+            axios.get('../subcategorias?id_categoria='+this.seguimiento.categoria.id).then(result =>{
+                console.log(result.data);
+                this.Subcategorias = result.data;
+            }).catch(error=>{
+                console.log(error);
+            });
+        },
+
+        UpdateSubcategoria: function()
+        {
+            this.banCambioSubcategoria = true;
+            axios.post('../update_subcategoria',{
+                id_solicitud: this.seguimiento.id_solicitud,
+                id_subcategoria: this.seguimiento.subcategoria.id
+            }).then(response=>{
+                console.log(response);                
+                this.muestra();
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+
+        eventoCambioSubcategoria: function()
+        {
+            if(this.banCambioSubcategoria)
+            {
+                this.nueva_atencion.detalle= 'cambio subcategoria de ' + this.subcategoriaAntesUpdate + ' a ' + this.seguimiento.subcategoria.nombre;
+                this.nueva_atencion.id_usuario= this.user.id_sgu;
+                this.nueva_atencion.tipo_at= 'Asignacion';
+                this.agregarAtencion('Todos', 'Asignacion');
+                this.nueva_atencion.estatus = "";
+                this.banCambioSubcategoria = false;
+            }
+        },
+
+        getDptos: function(){
+            axios.post('../sub_dptos',{
+                id_subcategoria: this.seguimiento.subcategoria.id
+            }).then(response=>{
+                console.log(response);
+                this.seguimiento.subcategoria_departamento = response.data;         
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     }
 });
