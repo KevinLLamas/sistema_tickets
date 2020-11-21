@@ -717,6 +717,5 @@
 <script src="{{asset('assets/vue/mis_solicitudes.js')}}"></script>
 @if(Session::get('rol')=='SUPER')
     <script src="{{asset('assets/vue/solicitudes.js')}}"></script>
-@endif 
-
+@endif
 @endsection

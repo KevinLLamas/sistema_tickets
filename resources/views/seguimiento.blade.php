@@ -76,7 +76,6 @@
 						<div v-if="item.tipo_dato == 'correo_institucional'">
 							<i class="far fa-envelope"></i>Correo institucional: <b>@{{item.valor}}</b>
 						</div>
-						
 						<div v-else-if="item.tipo_dato == 'curp'">
 							<i class="far fa-id-badge"></i> CURP: <b>@{{item.valor}} </b>
 						</div>

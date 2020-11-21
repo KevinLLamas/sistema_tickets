@@ -76,7 +76,7 @@ class SolicitudController extends Controller
             $solicitud_atencion->save();
 
             //BUSCAMOS Y ASIGNAMOS A LOS DEPARTAMENTOS A LOS QUE PERTENECE LA SOLICITUD
-            $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->get();
+            $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->where('primario', 'true')->get();
             foreach ($departamentos as $departamento)
             {
                 $solicitud_departamento = new Solicitud_departamento;
@@ -162,6 +162,12 @@ class SolicitudController extends Controller
                 'message' => 'Correo invalido.'
             ]);
         }
+    }
+    public function get_ticket(Request $request)
+    {
+        $id_ticket = $request->input('id');
+        $tickets = Solicitud::where('id_solicitud','like',"%$id_ticket%")->get();
+        return $tickets;
     }
     private function get_usuario($id){
 		$url = curl_init("http://10.9.4.152:3000/persona");

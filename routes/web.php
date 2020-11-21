@@ -25,6 +25,8 @@ Route::post('get_solicitudes_admin', [SolicitudController::class, 'get_solicitud
 Route::post('get_solicitudes_departamento', [SolicitudController::class, 'get_solicitudes_departamento']);
 Route::post('get_mis_solicitudes', [SolicitudController::class, 'get_mis_solicitudes']);
 Route::post('get_solicitudes_asignadas', [SolicitudController::class, 'get_solicitudes_asignadas']);
+Route::post('get_ticket', [SolicitudController::class, 'get_ticket']);
+
 //datos para graficas
 Route::get('get_num_solicitudes_bystatus_admin', [SolicitudController::class, 'get_num_solicitudes_bystatus_admin']);
 Route::get('get_num_solicitudes_bystatus_mis_solicitudes', [SolicitudController::class, 'get_num_solicitudes_bystatus_mis_solicitudes']);
