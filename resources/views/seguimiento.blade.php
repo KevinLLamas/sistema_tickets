@@ -23,7 +23,7 @@
 	<p v-if="user.rol != 'TECNICO'" class="mt-3" v-cloak>
 		<i class="far fa-clock"></i> 
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
-		<div class="row">
+		<div v-if="user.rol != 'TECNICO'" class="row">
             <div class="form-group col-6" v-if="seguimiento.perfil != ''">
                 <label for="">Categoria del problema</label>
                 <select class="form-control" name="categoria" id="categoria" v-model="seguimiento.categoria.id" @change="getSubcategorias()" required>
@@ -40,7 +40,7 @@
 			</div>
 		</div>
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
-		<div class="row">
+		<div v-if="user.rol != 'TECNICO'" class="row">
 			<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
 			<select class="form-group col-6" v-model="seguimiento.departamento_seleccionado_id" id="asignar_departamento" @change="updateDepartamento">">
 				<option  :value="item.id_departamento" v-for="item in seguimiento.subcategoria_departamento">@{{item.nombre_departamento}}</option>
