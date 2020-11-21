@@ -680,6 +680,7 @@ new Vue({
             }).then(response=>{
                 console.log(response);                
                 this.muestra();
+                Swal.fire('Correcto','Se actualizo la subcategoria','success');  
             }).catch(function (error) {
                 console.log(error);
             });
