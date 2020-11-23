@@ -44,6 +44,7 @@ new Vue({
         departamentos: [],        
         departamentoAntesUpdate: '',
         subcategoriaAntesUpdate: '',
+        categoriaAntesUpdateId: '',
         banCambio: false,
         banCambioDpto: false,
         banCambioSubcategoria: false,
@@ -62,11 +63,14 @@ new Vue({
                 if(!this.banCambioDpto)
                     this.departamentoAntesUpdate = this.seguimiento.departamento[0];  
                 if(!this.banCambioSubcategoria)
-                    this.subcategoriaAntesUpdate = this.seguimiento.subcategoria.nombre;          
+                {
+                    this.subcategoriaAntesUpdate = this.seguimiento.subcategoria.nombre; 
+                    this.categoriaAntesUpdateId = this.seguimiento.categoria.id;
+                }         
                 this.getUserData();
                 this.compruebaCerradoAuto();
                 this.getCategorias();
-                this.getSubcategorias();
+                this.getSubcategorias('back');
             }).catch(function (error) {
                 console.log(error);
             });            
@@ -660,7 +664,9 @@ new Vue({
             })
         },
 
-        getSubcategorias: function(){
+        getSubcategorias: function(tipo){
+            if(tipo != 'back' && this.seguimiento.categoria.id != this.categoriaAntesUpdateId)
+                this.seguimiento.subcategoria.id = '';
             this.subcategoria = '';
             this.Campos = [];
             axios.get('../subcategorias?id_categoria='+this.seguimiento.categoria.id).then(result =>{
@@ -672,29 +678,46 @@ new Vue({
         },
 
         UpdateSubcategoria: function()
-        {
-            this.banCambioSubcategoria = true;
-            axios.post('../update_subcategoria',{
-                id_solicitud: this.seguimiento.id_solicitud,
-                id_subcategoria: this.seguimiento.subcategoria.id
-            }).then(response=>{
-                console.log(response);                
-                this.muestra();
-                Swal.fire('Correcto','Se actualizo la subcategoria','success');  
-            }).catch(function (error) {
-                console.log(error);
-            });
+        {            
+            if(this.seguimiento.subcategoria.id != '')
+            {
+                this.banCambioSubcategoria = true;
+                axios.post('../update_subcategoria',{
+                    id_solicitud: this.seguimiento.id_solicitud,
+                    id_subcategoria: this.seguimiento.subcategoria.id,
+                    id_categoria: this.seguimiento.categoria.id
+                }).then(response=>{
+                    console.log(response);                
+                    this.muestra();
+                    Swal.fire('Correcto','Cambio la categoria y/o subcategoria','success');  
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
         },
 
         eventoCambioSubcategoria: function()
         {
             if(this.banCambioSubcategoria)
             {
-                this.nueva_atencion.detalle= 'cambio subcategoria de ' + this.subcategoriaAntesUpdate + ' a ' + this.seguimiento.subcategoria.nombre;
-                this.nueva_atencion.id_usuario= this.user.id_sgu;
-                this.nueva_atencion.tipo_at= 'Asignacion';
-                this.agregarAtencion('Todos', 'Asignacion');
-                this.nueva_atencion.estatus = "";
+                if(this.seguimiento.categoria.id != this.categoriaAntesUpdateId)
+                {
+                    const nombre = this.Categorias.find( categoria => categoria.id == this.categoriaAntesUpdateId ).nombre;
+                    this.nueva_atencion.detalle= 'cambio categoria de ' + nombre + ' a ' + this.seguimiento.categoria.nombre + ' y cambio subcategoria de ' + this.subcategoriaAntesUpdate + ' a ' + this.seguimiento.subcategoria.nombre;;
+                    this.nueva_atencion.id_usuario= this.user.id_sgu;
+                    this.nueva_atencion.tipo_at= 'Asignacion';
+                    this.agregarAtencion('Todos', 'Asignacion');
+                    this.nueva_atencion.estatus = "";
+                }
+                else
+                {
+                    this.nueva_atencion.detalle= 'cambio subcategoria de ' + this.subcategoriaAntesUpdate + ' a ' + this.seguimiento.subcategoria.nombre;
+                    this.nueva_atencion.id_usuario= this.user.id_sgu;
+                    this.nueva_atencion.tipo_at= 'Asignacion';
+                    this.agregarAtencion('Todos', 'Asignacion');
+                    this.nueva_atencion.estatus = "";
+                }
+
                 this.banCambioSubcategoria = false;
             }
         },

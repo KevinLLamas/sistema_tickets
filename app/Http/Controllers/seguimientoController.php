@@ -108,7 +108,7 @@ class seguimientoController extends Controller
 			$departamento_seleccionado_id=$dtp->id;
 		}
 		$solicitud->departamento_seleccionado_id = $departamento_seleccionado_id;
-		$solicitud->categoria = Categoria::find($solicitud->subcategoria->id_categoria);
+		$solicitud->categoria = Categoria::find($solicitud->id_categoria);
 		$solicitud->perfil = Perfil::find($solicitud->id_perfil);
 		$subcategoria_departamento = $solicitud->subcategoria_departamento;
 		foreach($subcategoria_departamento as $sub_dpto)
@@ -347,6 +347,7 @@ class seguimientoController extends Controller
         return $decrypted = $newEncrypter->decrypt($texto);
     }
 	public function send_mail_nueva($email,$id_solicitud, $detalle){
+		$at = Atencion_externos::where('id_solicitud', 'id_solicitud');//->Esta linea se agrega
 		$direccion = $this->encriptar($id_solicitud);
         $mail = new PHPMailer(true);
         try{
@@ -367,7 +368,7 @@ class seguimientoController extends Controller
             $mailContent = "
 					<p>Te han contestado en el ticket #$id_solicitud el sistema SAS.</p>
 					<p>Respuesta: $detalle </p>
-                    <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/sass/seguimiento_externo/$direccion'>por favor ingrese a este enlace.</a></p>
+                    <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/sass/seguimiento_externo/$at->solicitud'>por favor ingrese a este enlace.</a></p>
             "; 
             $mail->Body = $mailContent;
 
@@ -478,8 +479,11 @@ class seguimientoController extends Controller
 	{
 		$id_solicitud = $request->input('id_solicitud');	
 		$id_subcategoria = $request->input('id_subcategoria');	
+		$id_categoria = $request->input('id_categoria');
 		$solicitud = Solicitud::find($id_solicitud);
 		$solicitud->id_subcategoria = $id_subcategoria;
+		if($solicitud->id_categoria != $id_categoria)
+			$solicitud->id_categoria = $id_categoria;			
 		$solicitud->save();
 		return true;
 	}

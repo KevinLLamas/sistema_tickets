@@ -48,6 +48,7 @@ class SolicitudController extends Controller
             $solicitud->medio_reporte = "Internet"; 
             $solicitud->id_perfil = $request->input('solicitud.perfil');     
             $solicitud->id_subcategoria = $request->input('solicitud.subcategoria');
+            $solicitud->id_categoria = $request->input('solicitud.categoria');
             $solicitud->descripcion = $request->input('solicitud.descripcion');
             $solicitud->correo_atencion = $request->input('solicitud.correo_contacto');
             $solicitud->necesita_respuesta = $request->input('solicitud.necesita');
@@ -140,6 +141,7 @@ class SolicitudController extends Controller
             //GUARDAMOS INFORMACION PARA EL USUARIO EXTERNO
             $atencion_externos = new Atencion_externos;
             $atencion_externos->solicitud =  $this->encriptar($id_solicitud);
+            $atencion_externos->id_solicitud = $id_solicitud; //->Esta es la linea funciona al agregar el campo a la tabla
             $atencion_externos->codigo =  $this->generarCodigo();
             $atencion_externos->save();
 

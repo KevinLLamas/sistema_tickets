@@ -26,7 +26,7 @@
 		<div v-if="user.rol != 'TECNICO'" class="row">
             <div class="form-group col-6" v-if="seguimiento.perfil != ''">
                 <label for="">Categoria del problema</label>
-                <select class="form-control" name="categoria" id="categoria" v-model="seguimiento.categoria.id" @change="getSubcategorias()" required>
+                <select class="form-control" name="categoria" id="categoria" v-model="seguimiento.categoria.id" @change="getSubcategorias('front')" required>
                     <option value="" selected="selected" disabled>Selecciona</option>
                     <option :value="categoria.id" v-for="categoria in Categorias">@{{categoria.nombre}}</option>
                 </select>
