@@ -42,7 +42,7 @@
 		<b v-if="integrantesSeleccionados.length > 0">Atendiendo: </b>
 		<div v-if="user.rol != 'TECNICO'" class="row">
 			<b v-if="integrantesSeleccionados.length == 0 && user.rol=='TECNICO'">Sin usuarios asignados.</b><br>
-			<select class="form-group col-6" v-model="seguimiento.departamento_seleccionado_id" id="asignar_departamento" @change="updateDepartamento">">
+			<select class="form-group col-6" v-model="seguimiento.departamentos_seleccionados_id" id="asignar_departamento" @change="updateDepartamento" multiple>">
 				<option  :value="item.id_departamento" v-for="item in seguimiento.subcategoria_departamento">@{{item.nombre_departamento}}</option>
 			</select>
 			<select class="form-group col-6" v-model="integrantesSeleccionados" id="agregar_usuarios" @change="updateIntegrantes" multiple>">

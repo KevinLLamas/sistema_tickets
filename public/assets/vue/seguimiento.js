@@ -42,7 +42,7 @@ new Vue({
         integrantesDesasignados: [],
         integrantesAsignados: [],
         departamentos: [],        
-        departamentoAntesUpdate: '',
+        departamentosAntesUpdate: [],
         subcategoriaAntesUpdate: '',
         categoriaAntesUpdateId: '',
         banCambio: false,
@@ -61,7 +61,7 @@ new Vue({
             axios.get(`../getSolicitud/`+getId).then(response=>{
                 this.seguimiento = response.data;    
                 if(!this.banCambioDpto)
-                    this.departamentoAntesUpdate = this.seguimiento.departamento[0];  
+                    this.departamentosAntesUpdate = this.seguimiento.departamento;  
                 if(!this.banCambioSubcategoria)
                 {
                     this.subcategoriaAntesUpdate = this.seguimiento.subcategoria.nombre; 
@@ -556,7 +556,7 @@ new Vue({
             this.banCambioDpto= true;
             axios.post('../update_departamentos',{
                 id_solicitud: this.seguimiento.id_solicitud,
-                id_departamento: this.seguimiento.departamento_seleccionado_id,
+                id_departamentos: this.seguimiento.departamentos_seleccionados_id,
             }).then(response=>{
                 console.log(response);
                 this.muestra();                
@@ -570,7 +570,33 @@ new Vue({
         {
             if(this.banCambioDpto)
             {
-                this.nueva_atencion.detalle= 'asignó a el departamento ' + this.seguimiento.departamento[0].nombre + ' a este ticket y se desasignó el departamento ' + this.departamentoAntesUpdate.nombre;
+                if(this.departamentosAntesUpdate.length < this.seguimiento.departamento.length)//Se asigno otro
+                {
+                    for(var x = 0; x < this.seguimiento.departamento.length; x++)
+                    {
+                        const busq = this.departamentosAntesUpdate.find( departamento => departamento.id == this.seguimiento.departamento[x].id);
+                        if(busq === undefined)
+                        {
+                            this.nueva_atencion.detalle= 'asignó a el departamento ' + this.seguimiento.departamento[x].nombre + ' a este ticket';
+                        }
+                        //console.log(busq);
+                        //const busq = this.seguimiento.departamento.find( departamento => departamento.id == this.departamentosAntesUpdate);
+                    } 
+                } 
+                else if(this.departamentosAntesUpdate.length > this.seguimiento.departamento.length)
+                {                
+                    for(var x = 0; x < this.departamentosAntesUpdate.length; x++)
+                    {
+                        const busq = this.seguimiento.departamento.find( departamento => departamento.id == this.departamentosAntesUpdate[x].id);
+                        if(busq === undefined)
+                        {
+                            this.nueva_atencion.detalle= 'desasignó a el departamento ' + this.departamentosAntesUpdate[x].nombre + ' de este ticket';
+                        }
+                        //console.log(busq);
+                        //const busq = this.seguimiento.departamento.find( departamento => departamento.id == this.departamentosAntesUpdate);
+                    }
+                }                
+                
                 this.nueva_atencion.id_usuario= this.user.id_sgu;
                 this.nueva_atencion.tipo_at= 'Asignacion';
                 this.agregarAtencion('Todos', 'Asignacion');
