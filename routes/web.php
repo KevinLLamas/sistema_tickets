@@ -93,9 +93,9 @@ Route::post('update_subcategoria',  [seguimientoController::class, 'UpdateSubcat
 
 
 Route::post('save_files', [SolicitudController::class, 'save_files']);
-Route::get('/ejemplo', function () {
+/*Route::get('/ejemplo', function () {
     return view('ejemplo');
-});
-
+});*/
+Route::get('ejemplo', [seguimientoController::class, 'ejemplo']);
 
 Route::get('getUsers', [seguimientoController::class, 'getUsers']); 

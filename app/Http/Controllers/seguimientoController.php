@@ -348,7 +348,7 @@ class seguimientoController extends Controller
         return $decrypted = $newEncrypter->decrypt($texto);
     }
 	public function send_mail_nueva($email,$id_solicitud, $detalle){
-		$at = Atencion_externos::where('id_solicitud', 'id_solicitud');//->Esta linea se agrega
+		$at = Atencion_externos::where('id_solicitud', $id_solicitud)->first();//->Esta linea se agrega
 		$direccion = $this->encriptar($id_solicitud);
         $mail = new PHPMailer(true);
         try{
@@ -370,6 +370,7 @@ class seguimientoController extends Controller
 					<p>Te han contestado en el ticket #$id_solicitud el sistema SAS.</p>
 					<p>Respuesta: $detalle </p>
                     <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/sass/seguimiento_externo/$at->solicitud'>por favor ingrese a este enlace.</a></p>
+                    <p>Código: $at->codigo</p>
             "; 
             $mail->Body = $mailContent;
 
