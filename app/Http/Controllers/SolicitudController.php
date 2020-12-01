@@ -463,13 +463,16 @@ class SolicitudController extends Controller
         try{
             $solicitud_usuario = Usuario::find($idUsuario);
             if(!is_null($solicitud_usuario))
-                return $solicitud_usuario->solicitudes()
+            {
+                $solicitudes = $solicitud_usuario->solicitudes()
                 ->where('solicitud.id_solicitud','like',"%$id%")
                 ->where('solicitud.descripcion','like',"%$busqueda%")
                 ->where('solicitud.medio_reporte','like',"%$medio%")
                 ->where('solicitud.estatus','like',"%$estado%")
                 ->orderBy('solicitud.id_solicitud',$orden)
                 ->paginate($num);
+                return $solicitudes;
+            }
             else
                 return response()->json([
                     'status' => false,
