@@ -18,6 +18,7 @@ new Vue({
             {
                 nombre: '',
             },
+            departamentos_seleccionados_id: [],
         },
         nueva_atencion:{
             detalle: '',
@@ -171,7 +172,10 @@ new Vue({
             }
             else
             {
-                Swal.fire('Error','Llene el campo de texto','warning');
+                if(accion == '')
+                {
+                    Swal.fire('Error','Llene el campo de texto','warning');
+                }
             }
         },
         agregarAtencionExterno: function(tipo, accion){
@@ -450,13 +454,13 @@ new Vue({
         },
         validatePermission: function()
         {
+            this.integrantesSeleccionadosCompletoSolicitud = [];
             this.integrantesSeleccionadosCompleto = [];
             this.integrantesSeleccionados = [];
             this.departamentoValido = '';
             var c = 0;
             for(var i = 0; i < this.seguimiento.departamento.length; i++)
-            {       
-                    
+            {            
                 if(this.seguimiento.departamento[i].id == this.user.id_departamento)
                     this.departamentoValido = this.seguimiento.departamento[i];
                 for(var z = 0; z < this.seguimiento.departamento[i].integrantes.length; z++)
@@ -745,6 +749,25 @@ new Vue({
                 }
 
                 this.banCambioSubcategoria = false;
+
+                var banDpto = false;
+                var arr = [];
+                for(var x = 0; x < this.seguimiento.departamentos_seleccionados_id.length; x++)
+                {
+                    const ban = this.seguimiento.subcategoria_departamento.find( departamento => departamento.id_departamento == this.seguimiento.departamentos_seleccionados_id[x]);
+                    if(ban === undefined)
+                    {
+                        banDpto = true;
+                    }   
+                    else
+                        arr.push(this.seguimiento.departamentos_seleccionados_id[x]);                 
+                }
+                if(banDpto == true)
+                {
+                    this.seguimiento.departamentos_seleccionados_id = arr;
+                    this.updateDepartamento();
+                }
+
             }
         },
 

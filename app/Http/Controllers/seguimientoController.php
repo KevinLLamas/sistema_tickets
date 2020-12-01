@@ -399,75 +399,115 @@ class seguimientoController extends Controller
 		$ban = false;
 		$id_solicitud = $request->input('id_solicitud');	
 		$id_departamentos = $request->input('id_departamentos');	
-
-		Solicitud_departamento::where('id_solicitud', $id_solicitud)->delete();
 		
-		foreach($id_departamentos as $id_departamento)
+		//Revisar que departamentos estaban y ya no, para desactivar a sus integrantes y al departamento
+		$departamentos_actuales = Solicitud_departamento::where('id_solicitud', $id_solicitud)->get();
+		if(count($departamentos_actuales) > count($id_departamentos))
 		{
-			$solicitud_departamento = new Solicitud_departamento;
-			$solicitud_departamento->id_solicitud = $id_solicitud;
-			$solicitud_departamento->id_departamento = $id_departamento;
-			$solicitud_departamento->aceptada = 'true';
-			$solicitud_departamento->razon = '';
-			$solicitud_departamento->save();
-		
-		
-			$integrantes = Solicitud_usuario::with(['usuario'])->where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();			
-			if(count($integrantes) != 0)
+			foreach($departamentos_actuales as $dept_actual)
 			{
-				foreach($integrantes as $integ)
+				$busqueda = array_search($dept_actual->id_departamento, $id_departamentos);
+				$nums[] = $busqueda. ' '.$dept_actual;
+				if(false !== $busqueda)
 				{
-					if($integ->usuario->id_departamento == $id_departamento)
-					{
-						$ban = true;
-					}
-				}		
-			}
-
-			if(!$ban)
-			{
-				//TRAEMOS TECNICOS DE EL DEPARTAMENTO ACTUAL
-				$usuarios_depa = Usuario::with('ultima_asignada')
-				->where('id_departamento', $id_departamento)
-				->where('id_sgu','!=','1')
-				->where('rol','TECNICO')
-				->get();
-				//BUSCAMOS A EL USUARIO EL CUAL TENGA MAS TIEMPO SIN QUE SE LE ASIGNE UNA SOLICITUD
-				$usuario_asignar = $usuarios_depa[0];
-				foreach ($usuarios_depa as $usuario) {
-					if(is_null($usuario->ultima_asignada)){
-						$usuario_asignar = $usuario;
-						break;
-					}
-					if(new \DateTime($usuario->ultima_asignada->momento) < new \DateTime($usuario_asignar->ultima_asignada->momento))
-						$usuario_asignar = $usuario;
-				}
-				//ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
-				$solicitud_usuario = new Solicitud_usuario;
-				$solicitud_usuario->id_solicitud = $id_solicitud;
-				$solicitud_usuario->id_usuario = $usuario_asignar->id_sgu;
-				$solicitud_usuario->momento = now();
-				$solicitud_usuario->estado = 'Atendiendo';
-				$solicitud_usuario->save();
-
-				$atencion = new Solicitud_atencion;
-
-				$nombre = '';
-				$res = $this->get_usuario($usuario_asignar->id_sgu);
-				if($res['ok'])
-					$nombre = $res['nombre'];
+									
+				}	
 				else
-					$nombre = 'Usuario';
-				$atencion->detalle = 'asignó a ' . $nombre . ' a este ticket.';
-				$atencion->id_solicitud = $id_solicitud;
-				$atencion->tipo_at = 'Asignacion';
-				$atencion->momento = now();
-				$atencion->tipo_respuesta = 'Todos';
-				$atencion->save();
-				return $atencion;
+				{
+
+					//$nums[] = $busqueda;
+					//return $dept_actual;
+					$integrantes = Solicitud_usuario::with(['usuario'])->where('id_solicitud',$id_solicitud)->where('estado', 'Atendiendo')->get();			
+					if(count($integrantes) != 0)
+					{
+						foreach($integrantes as $integ)
+						{
+							if($integ->usuario->id_departamento == $dept_actual->id_departamento)
+							{
+								$integ->estado = 'Suspendido';
+								$integ->save();	
+							}
+						}		
+					}
+					Solicitud_departamento::where('id_solicitud', $id_solicitud)->where('id_departamento', $dept_actual->id_departamento)->delete();
+				}			
+			}			
+			
+		}
+		else
+		{
+			Solicitud_departamento::where('id_solicitud', $id_solicitud)->delete();
+			foreach($id_departamentos as $id_departamento)
+			{
+				$ban = false;				
+				$solicitud_departamento = new Solicitud_departamento;
+				$solicitud_departamento->id_solicitud = $id_solicitud;
+				$solicitud_departamento->id_departamento = $id_departamento;
+				$solicitud_departamento->aceptada = 'true';
+				$solicitud_departamento->razon = '';
+				$solicitud_departamento->save();
+
+				$integrantes = Solicitud_usuario::with(['usuario'])->where('id_solicitud',$id_solicitud)->get();			
+				if(count($integrantes) != 0)
+				{
+					foreach($integrantes as $integ)
+					{
+						if($integ->usuario->id_departamento == $id_departamento)
+						{
+							$ban = true;
+							$integ->estado = 'Atendiendo';
+							$integ->momento = now();
+							$integ->save();
+						}
+					}		
+				}
+
+				if(!$ban)
+				{
+					//TRAEMOS TECNICOS DE EL DEPARTAMENTO ACTUAL
+					$usuarios_depa = Usuario::with('ultima_asignada')
+					->where('id_departamento', $id_departamento)
+					->where('id_sgu','!=','1')
+					->where('rol','TECNICO')
+					->get();
+					//BUSCAMOS A EL USUARIO EL CUAL TENGA MAS TIEMPO SIN QUE SE LE ASIGNE UNA SOLICITUD
+					$usuario_asignar = $usuarios_depa[0];
+					foreach ($usuarios_depa as $usuario) {
+						if(is_null($usuario->ultima_asignada)){
+							$usuario_asignar = $usuario;
+							break;
+						}
+						if(new \DateTime($usuario->ultima_asignada->momento) < new \DateTime($usuario_asignar->ultima_asignada->momento))
+							$usuario_asignar = $usuario;
+					}
+					//ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
+					$solicitud_usuario = new Solicitud_usuario;
+					$solicitud_usuario->id_solicitud = $id_solicitud;
+					$solicitud_usuario->id_usuario = $usuario_asignar->id_sgu;
+					$solicitud_usuario->momento = now();
+					$solicitud_usuario->estado = 'Atendiendo';
+					$solicitud_usuario->save();
+
+					$atencion = new Solicitud_atencion;
+
+					$nombre = '';
+					$res = $this->get_usuario($usuario_asignar->id_sgu);
+					if($res['ok'])
+						$nombre = $res['nombre'];
+					else
+						$nombre = 'Usuario';
+					$atencion->detalle = 'asignó a ' . $nombre . ' a este ticket.';
+					$atencion->id_solicitud = $id_solicitud;
+					$atencion->tipo_at = 'Asignacion';
+					$atencion->momento = now();
+					$atencion->tipo_respuesta = 'Todos';
+					$atencion->save();
+					return $atencion;
+				}
 			}
 		}
 		return true;
+		//return $nums;
 	}
 
 	function Subcategorias_Dptos(Request $request)
@@ -491,6 +531,8 @@ class seguimientoController extends Controller
 		if($solicitud->id_categoria != $id_categoria)
 			$solicitud->id_categoria = $id_categoria;			
 		$solicitud->save();
+
+
 		return true;
 	}
 }
