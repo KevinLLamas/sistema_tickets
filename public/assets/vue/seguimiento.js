@@ -444,8 +444,8 @@ new Vue({
                 this.eventoCambioSubcategoria();
                 if(this.user.rol == 'TECNICO')
                 {
-                    slim.destroy();
-                    slim2.destroy();
+                    //slim.destroy();
+                    //slim2.destroy();
                 } 
             }).catch(function (error) {
                 console.log(error);
