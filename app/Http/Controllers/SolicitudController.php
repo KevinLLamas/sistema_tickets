@@ -464,7 +464,7 @@ class SolicitudController extends Controller
             $solicitud_usuario = Usuario::find($idUsuario);
             if(!is_null($solicitud_usuario))
             {
-                $solicitudes = $solicitud_usuario->solicitudes()
+                $solicitudes = $solicitud_usuario->solicitudes_atendiendo()
                 ->where('solicitud.id_solicitud','like',"%$id%")
                 ->where('solicitud.descripcion','like',"%$busqueda%")
                 ->where('solicitud.medio_reporte','like',"%$medio%")

@@ -11,7 +11,7 @@ class Solicitud extends Model
         return $this->fecha_creacion->format('Y.m.d');
     }
     public function usuario_many(){
-        return $this->belongsToMany('App\Models\Usuario','solicitud_usuario','id_solicitud','id_usuario');
+        return $this->belongsToMany('App\Models\Usuario','solicitud_usuario','id_solicitud','id_usuario')->withPivot('estado')->wherePivotIn('estado',['Atendiendo']);
     }
     public function departamento(){
         return $this->belongsToMany('App\Models\Departamentos','solicitud_departamento','id_solicitud','id_departamento');
