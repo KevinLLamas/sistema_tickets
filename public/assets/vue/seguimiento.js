@@ -687,7 +687,7 @@ new Vue({
             this.Campos = [];
             axios.get('../categorias?id_perfil='+this.seguimiento.perfil.id)
             .then(result =>{
-                console.log(result.data);
+                //console.log(result.data);
                 this.Categorias = result.data;
             }).catch(error=>{
                 console.log(error);
@@ -700,7 +700,7 @@ new Vue({
             this.subcategoria = '';
             this.Campos = [];
             axios.get('../subcategorias?id_categoria='+this.seguimiento.categoria.id).then(result =>{
-                console.log(result.data);
+                //console.log(result.data);
                 this.Subcategorias = result.data;
             }).catch(error=>{
                 console.log(error);
