@@ -20,7 +20,7 @@
 			<option v-if="seguimiento.estatus === 'Cerrada'" option="Cerrada">Cerrada</option>
 		</select>
 	</div>
-	<p v-if="user.rol != 'TECNICO'" class="mt-3" v-cloak>
+	<p  v-if="user.rol != 'TECNICO'" class="mt-3" v-cloak>
 		<i class="far fa-clock"></i> 
 		<b>@{{seguimiento.fecha_creacion}}</b> - 
 		<div class="row">
@@ -50,8 +50,9 @@
 			</select>
 		</div>
 		<div>
-			<i class="fas fa-user">Asignando a:
-			<b><label v-if="integrantesSeleccionadosCompletoSolicitud && item.id_departamento != user.id_departamento" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}} de otro departamendo,  </label></b>
+			<b><label>Personal de otro departamento</label></b><br>
+			<i class="fas fa-user"> Asignando a:
+			<b><label v-if="integrantesSeleccionadosCompletoSolicitud && item.id_departamento != user.id_departamento" v-for="item in integrantesSeleccionadosCompletoSolicitud">@{{item.nombre}},  </label></b>
 			</i>
 		</div>
 	</p>

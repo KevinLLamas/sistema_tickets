@@ -205,6 +205,29 @@ class seguimientoController extends Controller
 		else
 		$solicitud->fecha_finalizado = null;
 		$solicitud->save();
+
+		if($solicitud->estatus == 'Cerrada')
+		{
+			$solicitud_usuario = Solicitud_usuario::where('id_solicitud', $id)->get();
+			foreach($solicitud_usuario as $sol_us)
+			{
+				$sol_us->estado = 'Terminado';
+				$sol_us->save();
+			}			
+		}
+		if($solicitud->estatus == 'Atendiendo')
+		{
+			$solicitud_usuario = Solicitud_usuario::where('id_solicitud', $id)->get();
+			foreach($solicitud_usuario as $sol_us)
+			{
+				if($sol_us->estado == 'Terminado')
+				{
+					$sol_us->estado = 'Atendiendo';
+					$sol_us->save();
+				}				
+			}			
+		}
+
 		return $solicitud->estatus;
 	}
 
@@ -214,6 +237,10 @@ class seguimientoController extends Controller
 
 	public function verifica_codigo(Request $request)
 	{
+		/*return response()->json([
+			'status' => true, 
+			'id_solicitud' =>16661,
+		]);*/
 		//return $request->all();
 		$id = $request->input('id');
 		$codigo = $request->input('codigo');

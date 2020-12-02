@@ -491,7 +491,7 @@ new Vue({
                     for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
                     {
                         //console.log(this.departamentoValido.integrantes[i].id);
-                        if(this.departamentoValido.integrantes[i].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && this.seguimiento.solicitud_usuario[x].estado === "Atendiendo")
+                        if(this.departamentoValido.integrantes[i].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && (this.seguimiento.solicitud_usuario[x].estado === "Atendiendo" || this.seguimiento.solicitud_usuario[x].estado === "Terminado"))
                         { 
                             this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id_sgu;
                             this.integrantesSeleccionadosCompleto[c] = this.departamentoValido.integrantes[i];
