@@ -211,8 +211,11 @@ class seguimientoController extends Controller
 			$solicitud_usuario = Solicitud_usuario::where('id_solicitud', $id)->get();
 			foreach($solicitud_usuario as $sol_us)
 			{
-				$sol_us->estado = 'Terminado';
-				$sol_us->save();
+				if($sol_us->estado == 'Atendiendo')
+				{
+					$sol_us->estado = 'Terminado';
+					$sol_us->save();
+				}
 			}			
 		}
 		if($solicitud->estatus == 'Atendiendo')
