@@ -552,7 +552,7 @@ new Vue({
                 var c = 0;  
                 Swal.fire('Correcto','Se han actualizado los usuarios','success');                
             }).catch(function (error) {
-                //console.log(error);
+                console.log(error);
             });
         },
         updateDepartamento: function()

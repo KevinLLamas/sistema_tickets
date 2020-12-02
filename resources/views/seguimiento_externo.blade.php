@@ -74,6 +74,9 @@
 						<div v-else-if="item.tipo_dato == 'n_plaza'">
 							<i class="fas fa-list-ol"></i> Número de plaza: *****<b>@{{item.valor.slice(5)}} </b>
 						</div>
+						<div v-else-if="item.tipo_dato == 'rfc'">
+							<i class="fas fa-list-ol"></i>RFC: *****<b>@{{item.valor.slice(5)}} </b>
+                        </div>
 					</div>
 				</small>
 			</p>
