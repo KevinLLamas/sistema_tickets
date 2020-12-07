@@ -20,6 +20,8 @@ Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
 
 Route::get('getCampos', [SolicitudController::class, 'getCampos']);
 Route::post('buscar_usuario', [SolicitudController::class, 'buscar_usuario']);
+
+Route::post('asignar_solicitudes', [SolicitudController::class, 'asignar_solicitudes']);
 //obtener solicitudes
 Route::post('get_solicitudes_admin', [SolicitudController::class, 'get_solicitudes_admin']);
 Route::post('get_solicitudes_departamento', [SolicitudController::class, 'get_solicitudes_departamento']);
@@ -64,6 +66,7 @@ Route::get('solicitudes_asignadas', function () {return view('solicitudes_asigna
 Route::get('solicitudes_departamento', function () {return view('solicitudes_departamento');});
 Route::get('charts', function () {return view('charts');});
 Route::get('reportes', function () {return view('reportes');});
+
 
 //Seguimiento
 Route::get('seguimiento/{id}', function () {return view('seguimiento');}); 

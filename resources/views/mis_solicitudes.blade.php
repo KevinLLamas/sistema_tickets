@@ -5,6 +5,7 @@
 <!-- Begin Page Content -->
 
 
+<div class="container">
 
 <div id="mis_solicitudes" class="container-fluid">
     <div class="row">
@@ -166,6 +167,8 @@
             </div>
         </div>
     </div>
+</div>
+
 </div>
 
 <!-- /.container-fluid -->

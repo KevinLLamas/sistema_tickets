@@ -29,7 +29,7 @@ new Vue({
         EstatusbyTimeCerradas:[],
     },
     created: function(){      
-        this.getUsuariosbyDepartamento()
+        this.getUsuariosbyDepartamento();
         this.getInfoOfTickets();
         this.generar_Grafica_Comparacion();
         this.generar_Grafica_Estados();

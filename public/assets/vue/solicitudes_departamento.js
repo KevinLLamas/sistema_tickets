@@ -1,6 +1,10 @@
 new Vue({
     el: '#solicitudes_departamento',
     data:{
+        tickets_seleccionados:[],
+        asignacion_multiple:false,
+        listaUsuarios:[],
+        usuarioSeleccionado:'',
         numReportes:[],
         tipoEstatus:[],
         Estatus:[],
@@ -28,8 +32,9 @@ new Vue({
         offset: 3
     },
     created: function(){
-       this.getSolicitudesDepartamento();
-       //this.getNumSolicitudesByStatusDepartamento();
+        this.getUsuariosbyDepartamento();
+        this.getSolicitudesDepartamento();
+        //this.getNumSolicitudesByStatusDepartamento();
     },
     mounted: async function(){
         this.generarGraficaDepartamento();
@@ -189,5 +194,71 @@ new Vue({
             this.pagination.current_page = page;
             this.getSolicitudesDepartamento(page);
         },
+        getUsuariosbyDepartamento:async function(){
+            url="get_usuarios_by_departamento";
+            data=await axios.get(url)
+            .then(response=>{
+                //console.log(response.data);
+                this.listaUsuarios=response.data;
+                this.usuarioSeleccionado = this.listaUsuarios[0].id_sgu;
+                
+            })
+        },
+        asignarSolicitudes:function(){
+            if(this.tickets_seleccionados.length>0){
+                Swal.fire({
+                    title: 'Quieres continuar?',
+                    text: `Se asignaran ${this.tickets_seleccionados.length} tickets`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                        url="asignar_solicitudes";
+                        axios.post(url,{
+                            tickets_seleccionados:this.tickets_seleccionados,
+                            usuarioSeleccionado:this.usuarioSeleccionado,
+                        })
+                        .then(response => {
+                            //console.log(response);
+                            
+                            this.asignacion_multiple=false;
+                            this.tickets_seleccionados=[];
+                            if(response.data.status){
+                                this.getSolicitudesDepartamento();
+                                Swal.fire(
+                                    'Tickets Asignados',
+                                    'Solicitudes asignadas con exito',
+                                    'success'
+                                )
+                                
+                            }
+                            else{
+                                Swal.fire(
+                                    'Error al asignar',
+                                    'intentelo mas tarde',
+                                    'error'
+                                )
+                            }
+                            //console.log(response.data);
+                            
+                        });
+
+                    }
+                  })
+                
+            }
+            else{
+                Swal.fire(
+                    'No hay tickets seleccionados',
+                    'Seleccione almenos un ticket y vuelva a intentarlo',
+                    'warning'
+                  )
+            }
+            
+
+        }
     }
 });

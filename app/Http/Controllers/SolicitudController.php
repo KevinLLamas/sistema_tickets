@@ -419,7 +419,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes en general'
             ]);
         }
     }
@@ -447,7 +447,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes por departamento'
             ]);
         }
     }
@@ -481,7 +481,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes asignadas'
             ]);
         }
         
@@ -511,7 +511,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes creadas'
             ]);
         }
         
@@ -732,7 +732,7 @@ class SolicitudController extends Controller
         try{
             $usuarios=Departamentos::find($idDepartamento)
             ->usuarios()
-            ->where('usuario.id_sgu','!=','1') 
+            ->where('usuario.id_sgu','!=',$idDepartamento) 
             ->get();
             
            
@@ -744,10 +744,7 @@ class SolicitudController extends Controller
                 }
                 
             }
-            
-            
             return $usuarios;
-            
             
         }catch(Exception $e){
             return response()->json([
@@ -756,6 +753,7 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    
     public function insert(Request $request){
 
         //Insert a tabla Solicitud
@@ -884,6 +882,103 @@ class SolicitudController extends Controller
         ->get();
         return $porcentaje = ($solicitudes_close->count() / $solicitudes->count()) * 100;
         
+    }
+    public function asignar_solicitudes(Request $request){
+        $id_sgu=$request->input('usuarioSeleccionado');
+        $id_solicitudes=$request->input('tickets_seleccionados');
+        $id_asignante=$idUsuario=Session::get('id_sgu');
+        try{
+            foreach ($id_solicitudes as $id_solicitud) {
+
+                    $sol_user=Solicitud_usuario::where('id_solicitud',$id_solicitud)
+                    ->where('id_usuario',$id_sgu)->first();
+
+                    $solicitud=Solicitud::where('id_solicitud',"$id_solicitud")->first();
+                    if($sol_user){
+                        if($sol_user->estatus=="Suspendido"){
+                            $sol_user->estatus="Atendiendo";
+                            $sol_user->save();
+
+                            //CREAMOS EL MENSAJE DE ATENCION Y ASIGNACION
+                            $atencion = new Solicitud_atencion;
+                            $atencion->id_solicitud = $id_solicitud;
+                            $atencion->id_usuario = $id_asignante;
+                            $atencion->detalle = 'asignó a '.$this->get_usuario($id_sgu)['nombre'].' a este ticket.';
+                            $atencion->tipo_respuesta = 'Todos';
+                            $atencion->tipo_at = 'Asignacion';
+                            $atencion->momento = now();
+                            $atencion->save();
+
+                            //CREAMOS LA NOTIFICACION PARA EL ASIGNADO
+                            $notificacion = new Solicitud_notificacion;
+                            $notificacion->id_solicitud = $id_solicitud;
+                            $notificacion->id_atencion = $atencion->id;
+                            $notificacion->id_usuario = $id_sgu;
+                            $notificacion->status = 'No leida';
+                            $notificacion->save();
+
+                            //ACTUALIZAMOS EL ESTATUS DE LA SOLICITUD
+                            if($solicitud->estatus == 'Sin atender'){
+                                $solicitud->estatus = 'Atendiendo';
+                                $solicitud->save();
+                            }
+                        }
+                        
+                    }
+                    else{
+                        
+                    
+
+                        //ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
+                        $solicitud_usuario = new Solicitud_usuario;
+                        $solicitud_usuario->id_solicitud = $id_solicitud;
+                        $solicitud_usuario->id_usuario = $id_sgu;
+                        $solicitud_usuario->momento = now();
+                        $solicitud_usuario->estado = 'Atendiendo';
+                        $solicitud_usuario->save();
+
+                        //CREAMOS EL MENSAJE DE ATENCION Y ASIGNACION
+                        $atencion = new Solicitud_atencion;
+                        $atencion->id_solicitud = $id_solicitud;
+                        $atencion->id_usuario = $id_asignante;
+                        $atencion->detalle = 'asignó a '.$this->get_usuario($id_sgu)['nombre'].' a este ticket.';
+                        $atencion->tipo_respuesta = 'Todos';
+                        $atencion->tipo_at = 'Asignacion';
+                        $atencion->momento = now();
+                        $atencion->save();
+
+                        //CREAMOS LA NOTIFICACION PARA EL ASIGNADO
+                        $notificacion = new Solicitud_notificacion;
+                        $notificacion->id_solicitud = $id_solicitud;
+                        $notificacion->id_atencion = $atencion->id;
+                        $notificacion->id_usuario = $id_sgu;
+                        $notificacion->status = 'No leida';
+                        $notificacion->save();
+                        
+                        //ACTUALIZAMOS EL ESTATUS DE LA SOLICITUD
+                        if($solicitud->estatus == 'Sin atender'){
+                            $solicitud->estatus = 'Atendiendo';
+                            $solicitud->save();
+                        }
+                    }
+                    
+                    
+                    
+            }
+            return response()->json([
+                'status' => true,
+                'data' =>'Solicitudes asignadas con exito'
+            ]);
+            
+        }
+        catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>'Imposible asignar la solicitud'
+            ]);
+        }
+        
+
     }
 }
 
