@@ -97,5 +97,5 @@ Route::post('save_files', [SolicitudController::class, 'save_files']);
     return view('ejemplo');
 });*/
 Route::get('ejemplo', [seguimientoController::class, 'ejemplo']);
-
+//Route::get('setIdTicket', [SolicitudController::class, 'setIdTicket']);
 Route::get('getUsers', [seguimientoController::class, 'getUsers']); 
