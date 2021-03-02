@@ -36,6 +36,8 @@ new Vue({
         EstatusbyTimeCerradas:[],
     },
     created: function(){   
+        
+
         this.getDepartamentos();   
         this.getMyDepartamento();
         
@@ -103,6 +105,11 @@ new Vue({
             return color;
         },
         getUsuariosbyIdDepartamento:async function(){
+            swal.fire({
+                title: "Cargando...",
+                showConfirmButton: false,
+                
+            });
             url="get_usuarios_by_id_departamento";
             data=await axios.post(url,{
                 idDepartamento:this.departamentoSeleccionado,
@@ -129,6 +136,7 @@ new Vue({
             }
         },
         getMyDepartamento:async function(){
+            
             url="get_my_departamento";
             data=await axios.get(url)
             .then(response=>{
@@ -140,6 +148,7 @@ new Vue({
                 this.getUsuariosbyIdDepartamento();
                 this.getInfoOfTickets();
                 //console.log(response.data);
+                
             })
         },
         getDepartamentos:async function(){
@@ -858,6 +867,7 @@ new Vue({
                 id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
+                swal.close();
                 this.porcentajeCerrados = response.data.toFixed(2);
             });
         },
