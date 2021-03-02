@@ -19,7 +19,7 @@ class ValidaToken
      */
     public function handle(Request $request, Closure $next)
     {
-        /*//Session::flush();
+        //Session::flush();
         if(Session::get('key')){
             return $next($request);
         }
@@ -38,8 +38,8 @@ class ValidaToken
         Session::save();
         return $next($request);
         
-    }*/
-     $token = $request->query('ssid');
+    }
+     /* $token = $request->query('ssid');
         
         //Se esta ingresando a cualquier url sin el token
         if(is_null($token)){
@@ -149,5 +149,5 @@ class ValidaToken
 
         $res = json_decode($response);
         return $res;
-    }
+    } */
 }

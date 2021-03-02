@@ -36,8 +36,13 @@ Route::get('get_num_solicitudes_bystatus_departamento', [SolicitudController::cl
 Route::get('get_num_solicitudes_bystatus_asignadas', [SolicitudController::class, 'get_num_solicitudes_bystatus_asignadas']);
 
 //reportes
+Route::post('get_usuarios_by_id_departamento', [SolicitudController::class, 'get_usuarios_by_id_departamento']);
+Route::get('get_my_departamento', [SolicitudController::class, 'get_my_departamento']);
+Route::get('get_departamentos', [SolicitudController::class, 'get_departamentos']);
 Route::post('get_num_solicitudes_through_time', [SolicitudController::class, 'get_num_solicitudes_through_time']);
 Route::post('get_num_solicitudes_through_time_cerradas', [SolicitudController::class, 'get_num_solicitudes_through_time_cerradas']);
+Route::post('get_num_solicitudes_through_time_dep', [SolicitudController::class, 'get_num_solicitudes_through_time_dep']);
+Route::post('get_num_solicitudes_through_time_cerradas_dep', [SolicitudController::class, 'get_num_solicitudes_through_time_cerradas_dep']);
 Route::get('get_usuarios_by_departamento', [SolicitudController::class, 'get_usuarios_by_departamento']);
 Route::post('get_num_solicitudes_by_estatus_usuario', [SolicitudController::class, 'get_num_solicitudes_by_estatus_usuario']);
 Route::post('get_solicitudes_departamento_rep', [SolicitudController::class, 'get_solicitudes_departamento_rep']);

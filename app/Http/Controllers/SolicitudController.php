@@ -582,6 +582,25 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    
+    public function get_departamentos(){
+
+        try{
+            $deps=Departamentos::all();
+            return $deps;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $e
+            ]);
+        }
+        
+    }
+    public function get_my_departamento(){
+
+        return Session::get('id_departamento');
+        
+    }
     public function get_num_solicitudes_through_time(Request $request){
         $idUsuario=Session::get('id_sgu');
         $rangoTiempo=$request->input('rangoTiempo');
@@ -695,6 +714,120 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    public function get_num_solicitudes_through_time_dep(Request $request){
+        $idUsuario=Session::get('id_sgu');
+        $rangoTiempo=$request->input('rangoTiempo');
+        $idDepartamento=$request->input('idDepartamento');
+        
+        try{
+            switch($rangoTiempo){
+                case 'INTERVAL 1 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(solicitud.fecha_creacion,'%k Horas') as hora"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('hora')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 7 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 1 MONTH':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 3 MONTH':
+                    DB::statement("SET lc_time_names = 'es_ES'");
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy("mes")
+                    ->get();
+                    return $num_status;
+                break;
+            }
+           
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $rangoTiempo
+            ]);
+        }
+    }
+    public function get_num_solicitudes_through_time_cerradas_dep(Request $request){
+        $idUsuario=Session::get('id_sgu');
+
+        $rangoTiempo=$request->input('rangoTiempo');
+        $idDepartamento=$request->input('idDepartamento');
+        
+        try{
+            switch($rangoTiempo){
+                case 'INTERVAL 1 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(solicitud.fecha_creacion,'%k Horas') as hora"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('hora')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 7 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 1 MONTH':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 3 MONTH':
+                    DB::statement("SET lc_time_names = 'es_ES'");
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy("mes")
+                    ->get();
+                    return $num_status;
+                break;
+            }
+            
+            
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $rangoTiempo
+            ]);
+        }
+    }
     public function get_num_solicitudes_by_estatus_usuario(Request $request){
         
         
@@ -728,6 +861,33 @@ class SolicitudController extends Controller
     }
     public function get_usuarios_by_departamento(){
         $idDepartamento=Session::get('id_departamento');
+        
+        try{
+            $usuarios=Departamentos::find($idDepartamento)
+            ->usuarios()
+            ->where('usuario.id_sgu','!=',$idDepartamento) 
+            ->get();
+            
+           
+            foreach($usuarios as $u)
+            {
+                if(!is_null($u->id_sgu))
+                {
+                    $u->nombre = mb_strtoupper($this->get_usuario($u->id_sgu)['nombre']);
+                }
+                
+            }
+            return $usuarios;
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $idDepartamento
+            ]);
+        }
+    }
+    public function get_usuarios_by_id_departamento(Request $request){
+        $idDepartamento=$request->input('idDepartamento');
         
         try{
             $usuarios=Departamentos::find($idDepartamento)

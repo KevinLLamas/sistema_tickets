@@ -94,7 +94,7 @@
                   <div class="card shadow mb-4">
                       <!-- Card Header - Dropdown -->
                       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                          <h6 class="m-0 font-weight-bold text-primary">Reporte de Tickets Creados vs Tickets Cerrados : {{Session::get('rol')}}</h6>
+                          <h6 class="m-0 font-weight-bold text-primary">Reporte de Solicitudes Creadas vs Solicitudes Cerrados en mi Departamento : {{Session::get('rol')}}</h6>
                           <div class="dropdown no-arrow">
                               <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -147,12 +147,80 @@
                 
             </div>  
             <div class="row">
+              <!-- Tarjeta Listado de solicitudes -->
+              <div class="col-xl-12 col-lg-5">
+                  <div class="card shadow mb-4">
+                      <!-- Card Header - Dropdown -->
+                      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                          <h6 class="m-0 font-weight-bold text-primary">Reporte de Solicitudes Creadas vs Solicitudes Cerradas por Departamento</h6>
+                          <div class="dropdown no-arrow">
+                              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                  <div class="dropdown-header">Opciones:</div>
+                                  <button class="dropdown-item" @click="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento()">Recargar</button>
+                                  
+                              
+                              </div>
+                          </div>
+                      </div>
+                      <!-- Card Body -->
+                      <div class="card-body">
+                          <div class=" mt-1 mb-2  container-fluid border-bottom">
+                              <div class="form-row">
+                                  <div class="form-group col-lg-12">
+                                      <div class="form-group">
+                                        <label for="">Departamento</label>
+                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento()">
+                                          
+                                          <option  v-for="d in listaDepartamentos" :value="d.id" ><span>@{{d.nombre}}</span></option>
+                                          
+                                        </select>
+                                      </div>
+                                  </div>
+                                  <div class="form-group col-lg-12">
+                                      <div class="form-group">
+                                        <label for="">Periodo de tiempo</label>
+                                        <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();">
+                                          
+                                          <option value="INTERVAL 1 DAY">Hoy</option>
+                                          <option value="INTERVAL 7 DAY">7 Dias</option>
+                                          <option value="INTERVAL 1 MONTH">1 Mes</option>
+                                          <option value="INTERVAL 3 MONTH">3 Meses</option>
+                                        </select>
+                                      </div>
+                                  </div>
+                                  <div class="chart-area">
+                                      <canvas id="ComparacionSolicitudesChartDep"></canvas>
+                                      
+                                  </div>
+                                  
+                                  
+                                  
+                              </div>
+                              <div class="mt-5 text-center small">
+                            
+                                <span class="mr-2">
+                                  <i  class="fas fa-circle" style="color:#E9004C"></i> - Creadas
+                                  <i  class="fas fa-circle" style="color:#28a745"></i> - Cerradas
+                                </span>
+                              </div>
+                              <!---->
+                          
+                          </div>
+                      </div>
+                  </div>
+              </div>
+                
+            </div> 
+            <div class="row">
                 <!-- Grafica Dona numero De Solicitudes por tipo -->
                 <div class="col-xl-12 col-lg-5" id="graficas">
                     <div class="card shadow mb-4">
                         <!-- Card Header - Dropdown -->
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Grafica de Tickets por Usuario</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes por Usuario</h6>
                             <div class="dropdown no-arrow">
                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
