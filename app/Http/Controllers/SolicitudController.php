@@ -1009,9 +1009,8 @@ class SolicitudController extends Controller
         $medio=$request->input('medio');
         $estado=$request->input('estado');
         $id_solicitud=$request->input('id_solicitud');
-        $idDep=Session::get('id_departamento');
+        $idDep=$request->input('id_departamento');
         $orden=$request->input('orden');
-        
         
         try{
             $solicitudes_dep=Departamentos::find($idDep)->solicitudes()
@@ -1030,9 +1029,9 @@ class SolicitudController extends Controller
             ]);
         }
     }
-    public function get_porcentaje_cerradas()
+    public function get_porcentaje_cerradas(Request $request)
     {
-        $idDep=Session::get('id_departamento');
+        $idDep=$request->input('id_departamento');
         $solicitudes=Departamentos::find($idDep)
         ->solicitudes()
         ->get();

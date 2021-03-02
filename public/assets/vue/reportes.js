@@ -40,7 +40,7 @@ new Vue({
         this.getMyDepartamento();
         
         
-        this.getInfoOfTickets();
+        
         this.generar_Grafica_Comparacion();
         //this.generar_Grafica_Comparacion_Dep();
         this.generar_Grafica_Estados();
@@ -138,6 +138,7 @@ new Vue({
                 this.generar_Grafica_ByTime_Dep();
                 this.generar_Grafica_Comparacion_Dep();
                 this.getUsuariosbyIdDepartamento();
+                this.getInfoOfTickets();
                 //console.log(response.data);
             })
         },
@@ -802,7 +803,8 @@ new Vue({
             var url = 'get_solicitudes_departamento_rep';
             axios.post(url,{
                 estado: 'Cerrada',
-                orden: 'ASC'
+                orden: 'ASC',
+                id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
                 //console.log(response.data);
@@ -814,7 +816,8 @@ new Vue({
             var url = 'get_solicitudes_departamento_rep';
             axios.post(url,{
                 estado: 'Cerrada (En espera de aprobación)',
-                orden: 'ASC'
+                orden: 'ASC',
+                id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
                 //console.log(response.data);
@@ -826,7 +829,8 @@ new Vue({
             var url = 'get_solicitudes_departamento_rep';
             axios.post(url,{
                 estado: 'Atendiendo',
-                orden: 'ASC'
+                orden: 'ASC',
+                id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
                 //console.log(response.data);
@@ -839,6 +843,7 @@ new Vue({
             axios.post(url,{
                 estado: 'Sin atender',
                 orden: 'ASC',
+                id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
                 //console.log(response.data);
@@ -849,7 +854,9 @@ new Vue({
         },
         getPorcentajeCerradas: function(){
             var url = 'get_porcentaje_cerradas';
-            axios.post(url)
+            axios.post(url,{
+                id_departamento: this.departamentoSeleccionado
+            })
             .then(response => {
                 this.porcentajeCerrados = response.data.toFixed(2);
             });

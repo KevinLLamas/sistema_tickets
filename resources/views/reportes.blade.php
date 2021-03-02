@@ -11,7 +11,7 @@
     </div>
     
         <div id="reportes" class="container">
-            <div class="row mt-2">
+            <div class="row mt-2" v-if="departamentoSeleccionado != ''">
                   <div class="mx-auto mb-3">
                     <div class="border-left-primary shadow rounded bg-white">
                       <div class="card-body">
@@ -172,7 +172,7 @@
                                   <div class="form-group col-lg-12">
                                       <div class="form-group">
                                         <label for="">Departamento</label>
-                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento()">
+                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento();getInfoOfTickets()">
                                           
                                           <option  v-for="d in listaDepartamentos" :value="d.id" ><span>@{{d.nombre}}</span></option>
                                           
