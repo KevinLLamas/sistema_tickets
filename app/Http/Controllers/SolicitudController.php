@@ -1003,24 +1003,17 @@ class SolicitudController extends Controller
         }
     }
     public function get_solicitudes_departamento_rep(Request $request){
-        $busqueda=$request->input('busqueda');
-        $page=$request->input('page');
-        $num=$request->input('num');
-        $medio=$request->input('medio');
+        
         $estado=$request->input('estado');
-        $id_solicitud=$request->input('id_solicitud');
         $idDep=$request->input('id_departamento');
         $orden=$request->input('orden');
         
         try{
             $solicitudes_dep=Departamentos::find($idDep)->solicitudes()
-                ->where('solicitud.id_solicitud','like',"%$id_solicitud%")
-                ->where('solicitud.descripcion','like',"%$busqueda%")
-                ->where('solicitud.medio_reporte','like',"%$medio%")
                 ->where('solicitud.estatus','like',"$estado")
                 ->with('usuario_many')
                 ->orderBy('solicitud.id_solicitud',$orden)
-            ->get();
+                ->count();
             return $solicitudes_dep;
         }catch(Exception $e){
             return response()->json([
@@ -1034,12 +1027,12 @@ class SolicitudController extends Controller
         $idDep=$request->input('id_departamento');
         $solicitudes=Departamentos::find($idDep)
         ->solicitudes()
-        ->get();
+        ->count();
         $solicitudes_close=Departamentos::find($idDep)
         ->solicitudes()
         ->where('solicitud.estatus',"Cerrada")
-        ->get();
-        return $porcentaje = ($solicitudes_close->count() / $solicitudes->count()) * 100;
+        ->count();
+        return $porcentaje = ($solicitudes_close / $solicitudes) * 100;
         
     }
     public function asignar_solicitudes(Request $request){

@@ -11,6 +11,8 @@
     </div>
     
         <div id="reportes" class="container">
+          <input type="hidden" value="{{Session::get('rol')}}" id="rol" name="rol">
+          <input type="hidden" value="{{Session::get('id_departamento')}}" id="departamento" name="departamento">
             <div class="row mt-2" v-if="departamentoSeleccionado != ''">
                   <div class="mx-auto mb-3">
                     <div class="border-left-primary shadow rounded bg-white">
@@ -88,13 +90,13 @@
                 </div>
              </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="rolUsuario!='SUPER'">
               <!-- Tarjeta Listado de solicitudes -->
               <div class="col-xl-12 col-lg-5">
                   <div class="card shadow mb-4">
                       <!-- Card Header - Dropdown -->
                       <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                          <h6 class="m-0 font-weight-bold text-primary">Reporte de Solicitudes Creadas vs Solicitudes Cerrados en mi Departamento : {{Session::get('rol')}}</h6>
+                          <h6 class="m-0 font-weight-bold text-primary">Reporte de Solicitudes Creadas vs Solicitudes Cerrados en mi Departamento </h6>
                           <div class="dropdown no-arrow">
                               <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -146,7 +148,7 @@
               </div>
                 
             </div>  
-            <div class="row">
+            <div class="row" v-if="rolUsuario=='SUPER'">
               <!-- Tarjeta Listado de solicitudes -->
               <div class="col-xl-12 col-lg-5">
                   <div class="card shadow mb-4">
@@ -272,7 +274,7 @@
 <!-- Chart.js -->
 <script src="{{asset('assets/vendor/chart.js/Chart.min.js')}}"></script>
 <!-- Scripts VUE -->
-<script src="{{asset('assets/vue/dashboard.js')}}"></script>
+{{-- <script src="{{asset('assets/vue/dashboard.js')}}"></script> --}}
 <script src="{{asset('assets/vue/reportes.js')}}"></script>
 
 @endsection

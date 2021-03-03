@@ -18,6 +18,7 @@ new Vue({
         listaDepartamentos:[],
         departamentoSeleccionado:'',
         myDepartamento:'',
+        rolUsuario:'',
 
         usuarioSeleccionado:'',
         listaUsuarios:[],
@@ -35,24 +36,42 @@ new Vue({
         EstatusbyTime:[],
         EstatusbyTimeCerradas:[],
     },
-    created: function(){   
+    created: async function(){   
+        swal.fire({
+            title: "Cargando...",
+            //imageUrl: "images/loading-79.gif",
+            //imageWidth: 250,
+            //imageHeight: 250,
+            showConfirmButton: false,
+            
+        });
+        this.rolUsuario=$("#rol").val();
+        await this.getMyDepartamento();
+        this.getUsuariosbyIdDepartamento();
+        if(this.rolUsuario=="SUPER"){
+            await this.getDepartamentos();   
+            await this.generar_Grafica_Comparacion_Dep();
+        }
+        else{
+            await this.generar_Grafica_Comparacion();
+        }
+        await this.generar_Grafica_Estados();
+        await this.getInfoOfTickets();
+        swal.close();
         
-
-        this.getDepartamentos();   
-        this.getMyDepartamento();
         
-        
-        
-        this.generar_Grafica_Comparacion();
-        //this.generar_Grafica_Comparacion_Dep();
-        this.generar_Grafica_Estados();
     },
     mounted: async function(){
-        //this.generar_Grafica_ByTime_Dep();
-        this.generar_Grafica_ByTime();
-        
+        if(this.rolUsuario=="SUPER"){
+            this.generar_Grafica_ByTime_Dep();
+            
+        }
+        else{
+            
+            this.generar_Grafica_ByTime();
+            
+        }
         this.generar_Grafica_ByStatus();
-        
     },
     methods:{
         asignarColor:function(tipo){
@@ -105,11 +124,7 @@ new Vue({
             return color;
         },
         getUsuariosbyIdDepartamento:async function(){
-            swal.fire({
-                title: "Cargando...",
-                showConfirmButton: false,
-                
-            });
+            
             url="get_usuarios_by_id_departamento";
             data=await axios.post(url,{
                 idDepartamento:this.departamentoSeleccionado,
@@ -118,7 +133,7 @@ new Vue({
                 //console.log(response.data);
                 this.listaUsuarios=response.data;
                 this.usuarioSeleccionado = this.listaUsuarios[0].id_sgu;
-                this.generar_Grafica_Estados();
+                
             })
         },
         getNumSolicitudesByEstatusUsuario:async function(){
@@ -143,10 +158,7 @@ new Vue({
                 //(response.data);
                 //this.myDepartamento=response.data;
                 this.departamentoSeleccionado=response.data;
-                this.generar_Grafica_ByTime_Dep();
-                this.generar_Grafica_Comparacion_Dep();
-                this.getUsuariosbyIdDepartamento();
-                this.getInfoOfTickets();
+                
                 //console.log(response.data);
                 
             })
@@ -818,7 +830,7 @@ new Vue({
             .then(response => {
                 //console.log(response.data);
                 //this.solicitudesDepto = response.data;
-                this.numCerradas = response.data.length;
+                this.numCerradas = response.data;
             });
         },
         getSolicitudesDeptoEspera: function(){
@@ -831,7 +843,7 @@ new Vue({
             .then(response => {
                 //console.log(response.data);
                 //this.solicitudesDepto = response.data;
-                this.numEspera = response.data.length;
+                this.numEspera = response.data;
             });
         },
         getSolicitudesDeptoAtendiendo: function(){
@@ -844,7 +856,7 @@ new Vue({
             .then(response => {
                 //console.log(response.data);
                 //this.solicitudesDepto = response.data;
-                this.numAtendiendo = response.data.length;
+                this.numAtendiendo = response.data;
             });
         },
         getSolicitudesDeptoSinAtender: function(){
@@ -857,7 +869,7 @@ new Vue({
             .then(response => {
                 //console.log(response.data);
                 //this.solicitudesDepto = response.data;
-                this.numSinAtender = response.data.length;
+                this.numSinAtender = response.data;
                 //this.porcentajeCerrados = ((this.numCerradas/(this.numAtendiendo + this.numSinAtender + this.numCerradas + this.numEspera)) * 100).toFixed(2);
             });
         },
@@ -867,7 +879,7 @@ new Vue({
                 id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
-                swal.close();
+                
                 this.porcentajeCerrados = response.data.toFixed(2);
             });
         },
