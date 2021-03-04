@@ -2,12 +2,15 @@
 var comparacionChart=null;
 var comparacionChartDep=null;
 var solicitudesUsuarioChart=null;
+var solicitudesSubcategoriaChart=null;
 var ctx = document.getElementById("ComparacionSolicitudesChart");
 var ctxdep = document.getElementById("ComparacionSolicitudesChartDep");
 comparacionChart = new Chart(ctx,{});
 comparacionChartDep = new Chart(ctxdep,{});
-var ctx = document.getElementById("solicitudesUsuarioChart");
-solicitudesUsuarioChart = new Chart(ctx,{});
+var pastelUser = document.getElementById("solicitudesUsuarioChart");
+var pastelSubc = document.getElementById("solicitudesSubcategoriaChart");
+solicitudesUsuarioChart = new Chart(pastelUser,{});
+solicitudesSubcategoriaChart = new Chart(pastelSubc,{});
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Montserrat';
 Chart.defaults.global.defaultFontColor = '#858796';
@@ -19,6 +22,14 @@ new Vue({
         departamentoSeleccionado:'',
         myDepartamento:'',
         rolUsuario:'',
+
+        listaSubcategorias:[],
+        subcategoriaSeleccionada:'',
+        numReportesSubc:[],
+        tipoEstatusSubc:[],
+        EstatusSubc:[],
+        colorEstatusSubc:[],
+        coloresHexSubc:[],
 
         usuarioSeleccionado:'',
         listaUsuarios:[],
@@ -37,6 +48,12 @@ new Vue({
         EstatusbyTimeCerradas:[],
     },
     created: async function(){   
+
+
+        
+        //this.getNumSolicitudesByEstatusSubcategoria();
+
+
         swal.fire({
             title: "Cargando...",
             //imageUrl: "images/loading-79.gif",
@@ -53,10 +70,14 @@ new Vue({
             await this.generar_Grafica_Comparacion_Dep();
         }
         else{
+            
             await this.generar_Grafica_Comparacion();
         }
         await this.generar_Grafica_Estados();
+        await this.generar_Grafica_Estados_Subc();
         await this.getInfoOfTickets();
+        await this.getSubcategoriasDepartamento();
+        
         swal.close();
         
         
@@ -150,6 +171,34 @@ new Vue({
                 //console.log('usuario invalido');
             }
         },
+        getNumSolicitudesByEstatusSubcategoria:async function(){
+            try{
+                url="get_num_solicitudes_by_estatus_subcategoria";
+                data=await axios.post(url,{
+                    idSubcategoria:this.subcategoriaSeleccionada,
+                })
+                .then(response=>{
+                    //console.log(response.data);
+                    this.EstatusSubc=response.data;
+                })
+            }catch(e){
+                //console.log('usuario invalido');
+            }
+        },
+        getSubcategoriasDepartamento:async function(){
+            try{
+                url="get_subcategorias_departamento";
+                data=await axios.post(url,{
+                    idDepartamento:this.departamentoSeleccionado,
+                })
+                .then(response=>{
+                    //console.log(response.data);
+                    this.listaSubcategorias=response.data;
+                })
+            }catch(e){
+                //console.log('usuario invalido');
+            }
+        },
         getMyDepartamento:async function(){
             
             url="get_my_departamento";
@@ -228,6 +277,42 @@ new Vue({
                 datasets: [{
                     data: [],
                     backgroundColor: this.coloresHex,
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 80,
+            },
+            });
+
+        },
+        generar_Grafica_ByStatus_Subc:function(){
+            
+            // Pie Chart Example
+            solicitudesSubcategoriaChart.destroy();
+            var ctx = document.getElementById("solicitudesSubcategoriaChart");
+            solicitudesSubcategoriaChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: this.coloresHexSubc,
                     hoverBorderColor: "rgba(234, 236, 244, 1)",
                 }],
             },
@@ -534,6 +619,25 @@ new Vue({
                     //console.log(e.estatus);
                     this.addLabelChart(solicitudesUsuarioChart,e.estatus.toString());
                     this.addDataChartsinOrden(solicitudesUsuarioChart,e.total,0);
+                    
+                });
+            }
+            
+            
+        },
+        generar_Grafica_Estados_Subc:async function(){   
+            await this.getNumSolicitudesByEstatusSubcategoria();
+            if(typeof this.EstatusSubc !== 'undefined' && this.EstatusSubc.length > 0){
+                this.coloresHexSubc=[];
+                this.EstatusSubc.forEach(e => {
+                    //console.log(`estado: ${e.estatus}  color: ${this.asignarColorHex(e.estatus)}`);
+                    this.coloresHexSubc.push(this.asignarColorHex(e.estatus))
+                });
+                this.generar_Grafica_ByStatus_Subc();
+                this.EstatusSubc.forEach(e => {
+                    //console.log(e.estatus);
+                    this.addLabelChart(solicitudesSubcategoriaChart,e.estatus.toString());
+                    this.addDataChartsinOrden(solicitudesSubcategoriaChart,e.total,0);
                     
                 });
             }

@@ -583,6 +583,49 @@ class SolicitudController extends Controller
         }
     }
     
+    public function get_subcategorias_departamento(Request $request){
+        $idDepartamento = $request->input('idDepartamento');
+        try{
+            $subcategorias=Departamentos::find($idDepartamento)
+            ->subcategorias()
+            ->get();
+            return $subcategorias;
+        }
+        catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $e
+            ]);
+        }
+    }
+    public function get_num_solicitudes_by_estatus_subcategoria(Request $request){
+        
+        
+        try{
+            
+            $idSubcategoria=$request->input('idSubcategoria');
+            if($idSubcategoria!=''){
+                $num_status=Subcategoria::find($idSubcategoria)
+                ->solicitudes()
+                ->select('solicitud.estatus',DB::raw('count(*) as total'))
+                ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+                
+                return $num_status;
+            }
+            else{
+                return response()->json([
+                    'status' => false,
+                    'data' => ''
+                ]);
+            }
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $idUsuario
+            ]);
+        }
+    }
     public function get_departamentos(){
 
         try{
@@ -848,9 +891,6 @@ class SolicitudController extends Controller
                     'data' => ''
                 ]);
             }
-            
-            
-            
             
         }catch(Exception $e){
             return response()->json([

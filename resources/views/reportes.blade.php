@@ -174,7 +174,7 @@
                                   <div class="form-group col-lg-12">
                                       <div class="form-group">
                                         <label for="">Departamento</label>
-                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento();getInfoOfTickets()">
+                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento();getInfoOfTickets();getSubcategoriasDepartamento()">
                                           
                                           <option  v-for="d in listaDepartamentos" :value="d.id" ><span>@{{d.nombre}}</span></option>
                                           
@@ -259,6 +259,49 @@
                     </div>
                 </div>
             </div>
+            <div class="row" >
+              <!-- Grafica Dona numero De Solicitudes por Subcategoria -->
+              <div class="col-xl-12 col-lg-5" id="graficas">
+                  <div class="card shadow mb-4">
+                      <!-- Card Header - Dropdown -->
+                      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                          <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes por Subcategoria</h6>
+                          <div class="dropdown no-arrow">
+                              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                  <div class="dropdown-header">Opciones:</div>
+                                  <button class="dropdown-item" @click="generar_Grafica_ByStatus_Subc();generar_Grafica_Estados_Subc();">Recargar Grafica</button>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- Card Body -->
+                      <div class="card-body" >
+                        <div class="form-group">
+                          <label for="listaUsuarios">Subcategorias en el departamento</label>
+                          <select class="form-control" name="listaSubcategorias" id="listaSubcategorias"  v-if="listaSubcategorias.length > 0"  v-model="subcategoriaSeleccionada"  @change="generar_Grafica_ByStatus_Subc();generar_Grafica_Estados_Subc();">
+                            <option value='' disabled>Selecciona una subcategoria</option>
+                            <option v-for="(s,index) in listaSubcategorias" :value="s.id" :selected="index == 0" ><span>@{{s.nombre}}</span></option>
+                            
+                          </select>
+                          
+                        </div>
+                        <div class="chart-pie pt-4 pb-3">
+                          <canvas id="solicitudesSubcategoriaChart"></canvas>
+                          <label v-if="usuarioSeleccionado=='' || Estatus.length == 0">Nada que mostrar</label>
+                        </div>
+                        
+                        <div class="mt-5 text-center small">
+                          
+                          <span class="mr-2" v-if="EstatusSubc.length > 0" v-for="(e,index) in EstatusSubc">
+                            <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i> @{{e.estatus}}-@{{e.total}}
+                          </span>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
             
         </div>
     

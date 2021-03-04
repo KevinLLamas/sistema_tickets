@@ -7,4 +7,8 @@ class Subcategoria extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
 
+    public function solicitudes(){
+        return $this->hasMany('App\Models\Solicitud', 'id_subcategoria', 'id');
+    }
+
 }

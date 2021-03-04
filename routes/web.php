@@ -36,6 +36,8 @@ Route::get('get_num_solicitudes_bystatus_departamento', [SolicitudController::cl
 Route::get('get_num_solicitudes_bystatus_asignadas', [SolicitudController::class, 'get_num_solicitudes_bystatus_asignadas']);
 
 //reportes
+Route::post('get_num_solicitudes_by_estatus_subcategoria', [SolicitudController::class, 'get_num_solicitudes_by_estatus_subcategoria']);
+Route::post('get_subcategorias_departamento', [SolicitudController::class, 'get_subcategorias_departamento']);
 Route::post('get_usuarios_by_id_departamento', [SolicitudController::class, 'get_usuarios_by_id_departamento']);
 Route::get('get_my_departamento', [SolicitudController::class, 'get_my_departamento']);
 Route::get('get_departamentos', [SolicitudController::class, 'get_departamentos']);
