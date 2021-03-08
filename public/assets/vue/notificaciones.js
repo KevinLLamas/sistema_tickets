@@ -5,6 +5,7 @@ new Vue({
         cont: 0,
         id_ticket: '',
         tickets: [],
+        banIr: false
     },
     created: function(){
        this.getNotificaciones();
@@ -31,9 +32,9 @@ new Vue({
                 window.location = '/sass/seguimiento/'+id_solicitud;
             });
         },
-        ir_solicitud: function(id)
+        ir_solicitud: function()
         {
-            window.location = '/sass/seguimiento/'+id;
+            window.location = '/sass/seguimiento/'+this.id_ticket;
         },
         buscarTiket: function()
         {
@@ -44,6 +45,17 @@ new Vue({
                 .then(response => {
                     console.log(response.data);
                     this.tickets = response.data;
+                    if(this.tickets.length > 0){
+                        const busq = this.tickets.find( ticket => ticket.id_solicitud == parseInt(this.id_ticket));
+                        if(busq === undefined){
+                            this.banIr = false;
+                        }else
+                        {
+                            this.banIr = true;
+                        }
+                    }else{
+                        this.banIr = false;
+                    }
                 });
             }
         }
