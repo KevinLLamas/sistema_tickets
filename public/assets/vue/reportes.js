@@ -175,6 +175,7 @@ new Vue({
             try{
                 url="get_num_solicitudes_by_estatus_subcategoria";
                 data=await axios.post(url,{
+                    idDepartamento:this.departamentoSeleccionado,
                     idSubcategoria:this.subcategoriaSeleccionada,
                 })
                 .then(response=>{

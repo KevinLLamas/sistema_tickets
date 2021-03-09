@@ -289,7 +289,7 @@
                         </div>
                         <div class="chart-pie pt-4 pb-3">
                           <canvas id="solicitudesSubcategoriaChart"></canvas>
-                          <label v-if="usuarioSeleccionado=='' || Estatus.length == 0">Nada que mostrar</label>
+                          <label v-if="usuarioSeleccionado=='' || EstatusSubc.length == 0">Nada que mostrar</label>
                         </div>
                         
                         <div class="mt-5 text-center small">

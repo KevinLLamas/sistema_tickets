@@ -602,14 +602,23 @@ class SolicitudController extends Controller
         
         
         try{
-            
+            $idDepartamento=$request->input('idDepartamento');
             $idSubcategoria=$request->input('idSubcategoria');
             if($idSubcategoria!=''){
-                $num_status=Subcategoria::find($idSubcategoria)
+                /* $num_status=Subcategoria::find($idSubcategoria)
                 ->solicitudes()
                 ->select('solicitud.estatus',DB::raw('count(*) as total'))
                 ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
                 
+                return $num_status; */
+                $num_status=Departamentos::find($idDepartamento)
+                ->solicitudes()
+                ->select('solicitud.estatus','solicitud.id_subcategoria',DB::raw('count(*) as total'))
+                ->where('solicitud.id_subcategoria',$idSubcategoria)
+                
+                ->groupBy('solicitud.estatus')->orderBy('total','DESC')
+                ->get();
+
                 return $num_status;
             }
             else{
