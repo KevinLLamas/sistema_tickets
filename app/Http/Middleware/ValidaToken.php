@@ -31,8 +31,8 @@ class ValidaToken
             'nombre'=> 'Kevin Llamas',
             'curp'=> 'MAHL920209HJCRRS02',
             'usuario'=> 'kevindejesus.llamas@jalisco.gob.mx',
-            'rol'=>'ADMIN',
-            'id_departamento'=>1,
+            'rol'=>'SUPER',
+            'id_departamento'=>2,
             'departamento'=>'DTI',
         ]);
         Session::save();

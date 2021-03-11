@@ -211,8 +211,11 @@ class seguimientoController extends Controller
 			$solicitud_usuario = Solicitud_usuario::where('id_solicitud', $id)->get();
 			foreach($solicitud_usuario as $sol_us)
 			{
-				$sol_us->estado = 'Terminado';
-				$sol_us->save();
+				if($sol_us->estado == 'Atendiendo')
+				{
+					$sol_us->estado = 'Terminado';
+					$sol_us->save();
+				}
 			}			
 		}
 		if($solicitud->estatus == 'Atendiendo')
@@ -237,10 +240,10 @@ class seguimientoController extends Controller
 
 	public function verifica_codigo(Request $request)
 	{
-		/*return response()->json([
+		return response()->json([
 			'status' => true, 
-			'id_solicitud' =>16661,
-		]);*/
+			'id_solicitud' =>16684,
+		]);
 		//return $request->all();
 		$id = $request->input('id');
 		$codigo = $request->input('codigo');
@@ -310,17 +313,14 @@ class seguimientoController extends Controller
 				}		
 			}
 		}
-		else if(is_numeric($integrantes))
+		else if(count($integrantes) != 0)
 		{
-            if($integrantes != 0)
+            foreach($integrantes as $integ)
             {
-                foreach($integrantes as $integ)
+                if($integ->usuario->id_departamento == $id_departamento)
                 {
-                    if($integ->usuario->id_departamento == $id_departamento)
-                    {
-                        $integ->estado = 'Suspendido';
-                        $integ->save();	
-                    }
+                    $integ->estado = 'Suspendido';
+                    $integ->save();	
                 }
             }
 		}

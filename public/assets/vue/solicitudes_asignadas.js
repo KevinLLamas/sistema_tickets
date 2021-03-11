@@ -11,6 +11,7 @@ new Vue({
         orden:'ASC',
         estado_ticket:'',
         ocultarTabla:false,
+        ocultarListaSolicitudes:false,
         ocultarGrafica:false,
         MisSolicitudes:[],
         medioReporte:'',
@@ -178,7 +179,7 @@ new Vue({
                 orden: this.orden,
             })
             .then(response => {
-                console.log(response.data.data);
+                //console.log(response.data.data);
                 this.pagination=response.data;
                 this.MisSolicitudes=response.data.data;
             });

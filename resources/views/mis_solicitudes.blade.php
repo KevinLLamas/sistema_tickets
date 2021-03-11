@@ -5,6 +5,7 @@
 <!-- Begin Page Content -->
 
 
+<div class="container">
 
 <div id="mis_solicitudes" class="container-fluid">
     <div class="row">
@@ -19,15 +20,15 @@
                             <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                            <div class="dropdown-header">Opciones:</div>
+                            <!--<div class="dropdown-header">Opciones:</div>
                             <button class="dropdown-item" v-show="!ocultarTabla" @click="ocultarTabla = true">Ocultar</button>
-                            <button class="dropdown-item" v-show="ocultarTabla" @click="ocultarTabla = false">Mostrar</button>
+                            <button class="dropdown-item" v-show="ocultarTabla" @click="ocultarTabla = false">Mostrar</button>-->
                         
                         </div>
                     </div>
                 </div>
                 <!-- Card Body -->
-                <div class="card-body" v-show="!ocultarTabla">
+                <div class="card-body">
                     <div class=" mt-4 mb-2  container-fluid border-bottom">
                         <h1>Mis Solicitudes</h1>
                         <div class="form-row">
@@ -166,6 +167,8 @@
             </div>
         </div>
     </div>
+</div>
+
 </div>
 
 <!-- /.container-fluid -->

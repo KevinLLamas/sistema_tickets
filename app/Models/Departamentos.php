@@ -13,4 +13,8 @@ class Departamentos extends Model
     public function usuarios(){
         return $this->hasMany('App\Models\Usuario', 'id_departamento', 'id');
     }
+    public function subcategorias(){
+        return $this->belongsToMany('App\Models\Subcategoria','subcategoria_departamento','id_departamento','id_subcategoria');
+    }
+
 } 

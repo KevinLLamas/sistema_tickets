@@ -179,7 +179,7 @@ new Vue({
                 orden: this.orden,
             })
             .then(response => {
-                console.log(response.data);
+                //console.log(response.data);
                 this.pagination=response.data;
                 this.Solicitudes=response.data.data;
             });

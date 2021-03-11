@@ -429,7 +429,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes en general'
             ]);
         }
     }
@@ -457,7 +457,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes por departamento'
             ]);
         }
     }
@@ -474,7 +474,7 @@ class SolicitudController extends Controller
             $solicitud_usuario = Usuario::find($idUsuario);
             if(!is_null($solicitud_usuario))
             {
-                $solicitudes = $solicitud_usuario->solicitudes()
+                $solicitudes = $solicitud_usuario->solicitudes_atendiendo()
                 ->where('solicitud.id_solicitud','like',"%$id%")
                 ->where('solicitud.descripcion','like',"%$busqueda%")
                 ->where('solicitud.medio_reporte','like',"%$medio%")
@@ -491,7 +491,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes asignadas'
             ]);
         }
         
@@ -521,7 +521,7 @@ class SolicitudController extends Controller
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
-                'data' =>''
+                'data' =>'Imposible obtener las solicitudes creadas'
             ]);
         }
         
@@ -591,6 +591,77 @@ class SolicitudController extends Controller
                 'data' =>''
             ]);
         }
+    }
+    
+    public function get_subcategorias_departamento(Request $request){
+        $idDepartamento = $request->input('idDepartamento');
+        try{
+            $subcategorias=Departamentos::find($idDepartamento)
+            ->subcategorias()
+            ->get();
+            return $subcategorias;
+        }
+        catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $e
+            ]);
+        }
+    }
+    public function get_num_solicitudes_by_estatus_subcategoria(Request $request){
+        
+        
+        try{
+            $idDepartamento=$request->input('idDepartamento');
+            $idSubcategoria=$request->input('idSubcategoria');
+            if($idSubcategoria!=''){
+                /* $num_status=Subcategoria::find($idSubcategoria)
+                ->solicitudes()
+                ->select('solicitud.estatus',DB::raw('count(*) as total'))
+                ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+                
+                return $num_status; */
+                $num_status=Departamentos::find($idDepartamento)
+                ->solicitudes()
+                ->select('solicitud.estatus','solicitud.id_subcategoria',DB::raw('count(*) as total'))
+                ->where('solicitud.id_subcategoria',$idSubcategoria)
+                
+                ->groupBy('solicitud.estatus')->orderBy('total','DESC')
+                ->get();
+
+                return $num_status;
+            }
+            else{
+                return response()->json([
+                    'status' => false,
+                    'data' => ''
+                ]);
+            }
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $idUsuario
+            ]);
+        }
+    }
+    public function get_departamentos(){
+
+        try{
+            $deps=Departamentos::all();
+            return $deps;
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $e
+            ]);
+        }
+        
+    }
+    public function get_my_departamento(){
+
+        return Session::get('id_departamento');
+        
     }
     public function get_num_solicitudes_through_time(Request $request){
         $idUsuario=Session::get('id_sgu');
@@ -705,6 +776,120 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    public function get_num_solicitudes_through_time_dep(Request $request){
+        $idUsuario=Session::get('id_sgu');
+        $rangoTiempo=$request->input('rangoTiempo');
+        $idDepartamento=$request->input('idDepartamento');
+        
+        try{
+            switch($rangoTiempo){
+                case 'INTERVAL 1 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(solicitud.fecha_creacion,'%k Horas') as hora"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('hora')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 7 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 1 MONTH':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 3 MONTH':
+                    DB::statement("SET lc_time_names = 'es_ES'");
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes"))
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy("mes")
+                    ->get();
+                    return $num_status;
+                break;
+            }
+           
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $rangoTiempo
+            ]);
+        }
+    }
+    public function get_num_solicitudes_through_time_cerradas_dep(Request $request){
+        $idUsuario=Session::get('id_sgu');
+
+        $rangoTiempo=$request->input('rangoTiempo');
+        $idDepartamento=$request->input('idDepartamento');
+        
+        try{
+            switch($rangoTiempo){
+                case 'INTERVAL 1 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(solicitud.fecha_creacion,'%k Horas') as hora"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('hora')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 7 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 1 MONTH':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 3 MONTH':
+                    DB::statement("SET lc_time_names = 'es_ES'");
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes"))
+                    ->where('estatus','Cerrada')
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy("mes")
+                    ->get();
+                    return $num_status;
+                break;
+            }
+            
+            
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $rangoTiempo
+            ]);
+        }
+    }
     public function get_num_solicitudes_by_estatus_usuario(Request $request){
         
         
@@ -726,9 +911,6 @@ class SolicitudController extends Controller
                 ]);
             }
             
-            
-            
-            
         }catch(Exception $e){
             return response()->json([
                 'status' => false,
@@ -742,7 +924,7 @@ class SolicitudController extends Controller
         try{
             $usuarios=Departamentos::find($idDepartamento)
             ->usuarios()
-            ->where('usuario.id_sgu','!=','1') 
+            ->where('usuario.id_sgu','!=',$idDepartamento) 
             ->get();
             
            
@@ -754,10 +936,7 @@ class SolicitudController extends Controller
                 }
                 
             }
-            
-            
             return $usuarios;
-            
             
         }catch(Exception $e){
             return response()->json([
@@ -766,6 +945,34 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    public function get_usuarios_by_id_departamento(Request $request){
+        $idDepartamento=$request->input('idDepartamento');
+        
+        try{
+            $usuarios=Departamentos::find($idDepartamento)
+            ->usuarios()
+            ->where('usuario.id_sgu','!=',$idDepartamento) 
+            ->get();
+            
+           
+            foreach($usuarios as $u)
+            {
+                if(!is_null($u->id_sgu))
+                {
+                    $u->nombre = mb_strtoupper($this->get_usuario($u->id_sgu)['nombre']);
+                }
+                
+            }
+            return $usuarios;
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $idDepartamento
+            ]);
+        }
+    }
+    
     public function insert(Request $request){
 
         //Insert a tabla Solicitud
@@ -855,25 +1062,17 @@ class SolicitudController extends Controller
         }
     }
     public function get_solicitudes_departamento_rep(Request $request){
-        $busqueda=$request->input('busqueda');
-        $page=$request->input('page');
-        $num=$request->input('num');
-        $medio=$request->input('medio');
-        $estado=$request->input('estado');
-        $id_solicitud=$request->input('id_solicitud');
-        $idDep=Session::get('id_departamento');
-        $orden=$request->input('orden');
         
+        $estado=$request->input('estado');
+        $idDep=$request->input('id_departamento');
+        $orden=$request->input('orden');
         
         try{
             $solicitudes_dep=Departamentos::find($idDep)->solicitudes()
-                ->where('solicitud.id_solicitud','like',"%$id_solicitud%")
-                ->where('solicitud.descripcion','like',"%$busqueda%")
-                ->where('solicitud.medio_reporte','like',"%$medio%")
                 ->where('solicitud.estatus','like',"$estado")
                 ->with('usuario_many')
                 ->orderBy('solicitud.id_solicitud',$orden)
-            ->get();
+                ->count();
             return $solicitudes_dep;
         }catch(Exception $e){
             return response()->json([
@@ -882,18 +1081,115 @@ class SolicitudController extends Controller
             ]);
         }
     }
-    public function get_porcentaje_cerradas()
+    public function get_porcentaje_cerradas(Request $request)
     {
-        $idDep=Session::get('id_departamento');
+        $idDep=$request->input('id_departamento');
         $solicitudes=Departamentos::find($idDep)
         ->solicitudes()
-        ->get();
+        ->count();
         $solicitudes_close=Departamentos::find($idDep)
         ->solicitudes()
         ->where('solicitud.estatus',"Cerrada")
-        ->get();
-        return $porcentaje = ($solicitudes_close->count() / $solicitudes->count()) * 100;
+        ->count();
+        return $porcentaje = ($solicitudes_close / $solicitudes) * 100;
         
+    }
+    public function asignar_solicitudes(Request $request){
+        $id_sgu=$request->input('usuarioSeleccionado');
+        $id_solicitudes=$request->input('tickets_seleccionados');
+        $id_asignante=$idUsuario=Session::get('id_sgu');
+        try{
+            foreach ($id_solicitudes as $id_solicitud) {
+
+                    $sol_user=Solicitud_usuario::where('id_solicitud',$id_solicitud)
+                    ->where('id_usuario',$id_sgu)->first();
+
+                    $solicitud=Solicitud::where('id_solicitud',"$id_solicitud")->first();
+                    if($sol_user){
+                        if($sol_user->estatus=="Suspendido"){
+                            $sol_user->estatus="Atendiendo";
+                            $sol_user->save();
+
+                            //CREAMOS EL MENSAJE DE ATENCION Y ASIGNACION
+                            $atencion = new Solicitud_atencion;
+                            $atencion->id_solicitud = $id_solicitud;
+                            $atencion->id_usuario = $id_asignante;
+                            $atencion->detalle = 'asignó a '.$this->get_usuario($id_sgu)['nombre'].' a este ticket.';
+                            $atencion->tipo_respuesta = 'Todos';
+                            $atencion->tipo_at = 'Asignacion';
+                            $atencion->momento = now();
+                            $atencion->save();
+
+                            //CREAMOS LA NOTIFICACION PARA EL ASIGNADO
+                            $notificacion = new Solicitud_notificacion;
+                            $notificacion->id_solicitud = $id_solicitud;
+                            $notificacion->id_atencion = $atencion->id;
+                            $notificacion->id_usuario = $id_sgu;
+                            $notificacion->status = 'No leida';
+                            $notificacion->save();
+
+                            //ACTUALIZAMOS EL ESTATUS DE LA SOLICITUD
+                            if($solicitud->estatus == 'Sin atender'){
+                                $solicitud->estatus = 'Atendiendo';
+                                $solicitud->save();
+                            }
+                        }
+                        
+                    }
+                    else{
+                        
+                    
+
+                        //ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
+                        $solicitud_usuario = new Solicitud_usuario;
+                        $solicitud_usuario->id_solicitud = $id_solicitud;
+                        $solicitud_usuario->id_usuario = $id_sgu;
+                        $solicitud_usuario->momento = now();
+                        $solicitud_usuario->estado = 'Atendiendo';
+                        $solicitud_usuario->save();
+
+                        //CREAMOS EL MENSAJE DE ATENCION Y ASIGNACION
+                        $atencion = new Solicitud_atencion;
+                        $atencion->id_solicitud = $id_solicitud;
+                        $atencion->id_usuario = $id_asignante;
+                        $atencion->detalle = 'asignó a '.$this->get_usuario($id_sgu)['nombre'].' a este ticket.';
+                        $atencion->tipo_respuesta = 'Todos';
+                        $atencion->tipo_at = 'Asignacion';
+                        $atencion->momento = now();
+                        $atencion->save();
+
+                        //CREAMOS LA NOTIFICACION PARA EL ASIGNADO
+                        $notificacion = new Solicitud_notificacion;
+                        $notificacion->id_solicitud = $id_solicitud;
+                        $notificacion->id_atencion = $atencion->id;
+                        $notificacion->id_usuario = $id_sgu;
+                        $notificacion->status = 'No leida';
+                        $notificacion->save();
+                        
+                        //ACTUALIZAMOS EL ESTATUS DE LA SOLICITUD
+                        if($solicitud->estatus == 'Sin atender'){
+                            $solicitud->estatus = 'Atendiendo';
+                            $solicitud->save();
+                        }
+                    }
+                    
+                    
+                    
+            }
+            return response()->json([
+                'status' => true,
+                'data' =>'Solicitudes asignadas con exito'
+            ]);
+            
+        }
+        catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' =>'Imposible asignar la solicitud'
+            ]);
+        }
+        
+
     }
 }
 
