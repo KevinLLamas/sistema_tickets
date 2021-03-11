@@ -40,7 +40,7 @@ new Vue({
         {
             if(this.id_ticket.length > 2)
             {
-                axios.post('/get_ticket',
+                axios.post('/sass/get_ticket',
                 {id: this.id_ticket})
                 .then(response => {
                     console.log(response.data);
