@@ -240,10 +240,10 @@ class seguimientoController extends Controller
 
 	public function verifica_codigo(Request $request)
 	{
-		return response()->json([
+		/*return response()->json([
 			'status' => true, 
 			'id_solicitud' =>16684,
-		]);
+		]);*/
 		//return $request->all();
 		$id = $request->input('id');
 		$codigo = $request->input('codigo');
