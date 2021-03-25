@@ -565,7 +565,7 @@ class SolicitudController extends Controller
         $idUsuario=Session::get('id_sgu');
         try{
             $num_status=Usuario::find($idUsuario)
-            ->solicitudes()
+            ->solicitudes_atendiendo()
             ->select('solicitud.estatus',DB::raw('count(*) as total'))
             ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
             return $num_status;
@@ -898,7 +898,7 @@ class SolicitudController extends Controller
             $idUsuario=$request->input('idUsuario');
             if($idUsuario!=''){
                 $num_status=Usuario::find($idUsuario)
-                ->solicitudes()
+                ->solicitudes_atendiendo()
                 ->select('solicitud.estatus',DB::raw('count(*) as total'))
                 ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
                 

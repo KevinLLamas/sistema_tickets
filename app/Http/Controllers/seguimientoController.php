@@ -81,10 +81,26 @@ class seguimientoController extends Controller
 					}
 				}
 				else{
-					if($at->tipo_at == 'Asignacion' ||$at->tipo_at == 'Estatus')
-					{
+					if($at->tipo_at == 'Asignacion')
+					{						
 						$at->nombre = 'Sistema';
 						$at->correo_usuario = 'Sistema';
+					}
+					else if($at->tipo_at == 'Estatus')
+					{
+						if($at->id_usuario == null)
+						{
+							if(strcmp($at->detalle, 'Cambio de estatus a Cerrada') == 0)
+							{
+								$at->nombre = 'Usuario';
+								$at->correo_usuario = 'Usuario';
+							}
+							else
+							{
+								$at->nombre = 'Sistema';
+								$at->correo_usuario = 'Sistema';
+							}
+						}
 					}
 					else if($at->tipo_at == 'Atención')
 					{
@@ -240,10 +256,10 @@ class seguimientoController extends Controller
 
 	public function verifica_codigo(Request $request)
 	{
-		return response()->json([
+		/*return response()->json([
 			'status' => true, 
 			'id_solicitud' =>16684,
-		]);
+		]);*/
 		//return $request->all();
 		$id = $request->input('id');
 		$codigo = $request->input('codigo');

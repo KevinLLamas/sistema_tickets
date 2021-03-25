@@ -71,7 +71,7 @@
                                                 <div class="form-group">
                                                     <label for="">Medio de Reporte</label>
                                                     <select class="form-control" name="medioReporte1" id="medioReporte1" v-model="medioReporte" @change="getSolicitudesAdmin">
-                                                        <option value="" disabled>Selecciona</option>
+                                                        <option value="" >Todos</option>
                                                         <option value='Internet'>Internet</option>
                                                         <option value='Personal'>Personal</option>
                                                         <option value='Llamada'>Llamada</option>
@@ -83,7 +83,7 @@
                                                 <div class="form-group">
                                                     <label for="estadoReporte1">Estado</label>
                                                     <select class="form-control" name="estadoReporte1" id="estadoReporte1" v-model="estadoReporte" @change="getSolicitudesAdmin">
-                                                        <option value="" disabled>Selecciona</option>
+                                                        <option value="">Todos</option>
                                                         <option value='Sin atender'>Sin atender</option>
                                                         <option value='Atendiendo'>Atendiendo</option>
                                                         <option value='Suspendida'>Suspendida</option>
@@ -247,7 +247,7 @@
                                                 <div class="form-group">
                                                 <label for="">Medio de Reporte</label>
                                                 <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesAsignadas">
-                                                    <option value="" disabled>Selecciona</option>
+                                                    <option value="" >Todos</option>
                                                     <option value='Internet'>Internet</option>
                                                     <option value='Personal'>Personal</option>
                                                     <option value='Llamada'>Llamada</option>
@@ -259,7 +259,7 @@
                                                 <div class="form-group">
                                                 <label for="">Estado</label>
                                                 <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesAsignadas">
-                                                    <option value="" disabled>Selecciona</option>
+                                                    <option value="">Todos</option>
                                                     <option value='Sin atender'>Sin atender</option>
                                                     <option value='Atendiendo'>Atendiendo</option>
                                                     <option value='Suspendida'>Suspendida</option>
@@ -416,7 +416,7 @@
                                             <div class="form-group col-lg-3">
                                                 <label for="">Medio de Reporte</label>
                                                 <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesDepartamento">
-                                                    <option value="" disabled>Selecciona</option>
+                                                    <option value="">Todos</option>
                                                     <option value='Internet'>Internet</option>
                                                     <option value='Personal'>Personal</option>
                                                     <option value='Llamada'>Llamada</option>
@@ -426,7 +426,7 @@
                                             <div class="form-group col-lg-2">
                                                 <label for="">Estado</label>
                                                 <select class="form-control" name="" id="" v-model="estadoReporte" @change="getSolicitudesDepartamento">
-                                                    <option value="" disabled>Selecciona</option>
+                                                    <option value="">Todos</option>
                                                     <option value='Sin atender'>Sin atender</option>
                                                     <option value='Atendiendo'>Atendiendo</option>
                                                     <option value='Suspendida'>Suspendida</option>
@@ -614,7 +614,7 @@
                                             <div class="form-group col-lg-3">
                                                 <label for="">Medio de Reporte</label>
                                                 <select class="form-control" name="" id="" v-model="medioReporte" @change="getMisSolicitudes">
-                                                    <option value="" disabled>Selecciona</option>
+                                                    <option value="">Todos</option>
                                                     <option value='Internet'>Internet</option>
                                                     <option value='Personal'>Personal</option>
                                                     <option value='Llamada'>Llamada</option>
@@ -624,7 +624,7 @@
                                             <div class="form-group col-lg-2">
                                                 <label for="">Estado</label>
                                                 <select class="form-control" name="" id="" v-model="estadoReporte" @change="getMisSolicitudes">
-                                                    <option value="" disabled>Selecciona</option>
+                                                    <option value="">Todos</option>
                                                     <option value='Sin atender'>Sin atender</option>
                                                     <option value='Atendiendo'>Atendiendo</option>
                                                     <option value='Suspendida'>Suspendida</option>

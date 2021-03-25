@@ -52,13 +52,11 @@ new Vue({
 
         
         //this.getNumSolicitudesByEstatusSubcategoria();
-
-
         swal.fire({
             title: "Cargando...",
-            //imageUrl: "images/loading-79.gif",
-            //imageWidth: 250,
-            //imageHeight: 250,
+            imageUrl: "assets/images/loading-79.gif",
+            imageWidth: 250,
+            imageHeight: 250,
             showConfirmButton: false,
             
         });
