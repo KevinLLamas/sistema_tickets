@@ -191,6 +191,16 @@ class SolicitudController extends Controller
         $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );
         return $encrypted = $newEncrypter->encrypt($texto);
     }
+    public function setIdTicket()
+    {
+        $atencion_externos = Atencion_externos::where('id_solicitud', '0')->orderBy('id','DESC')->get();
+        foreach($atencion_externos as $at){
+            if($at->id_solicitud == 0){
+                $at->id_solicitud = $this->desecriptar($at->solicitud);
+                $at->save();
+            }
+        }
+    }
     private function desecriptar($texto)
     {
         $newEncrypter = new \Illuminate\Encryption\Encrypter(base64_decode('CcUAOtSqoNvtEfMKG3FmhsOQIBiiDYL7ZQxppYG82WI='), "AES-256-CBC" );
@@ -888,7 +898,7 @@ class SolicitudController extends Controller
             $idUsuario=$request->input('idUsuario');
             if($idUsuario!=''){
                 $num_status=Usuario::find($idUsuario)
-                ->solicitudes()
+                ->solicitudes_atendiendo()
                 ->select('solicitud.estatus',DB::raw('count(*) as total'))
                 ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
                 

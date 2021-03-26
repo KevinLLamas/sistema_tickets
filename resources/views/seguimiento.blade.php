@@ -123,6 +123,9 @@
 						<div v-else-if="item.tipo_dato == 'rfc'">
 							<i class="fas fa-list-ol"></i>RFC: <b>@{{item.valor}} </b>
                         </div>
+                        <div v-else-if="item.tipo_dato == 'rfc'">
+							<i class="fas fa-list-ol"></i>RFC <b>@{{item.valor}} </b>
+                        </div>
 					</div>
 				</small>
 			</p>

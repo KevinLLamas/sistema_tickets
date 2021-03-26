@@ -81,10 +81,26 @@ class seguimientoController extends Controller
 					}
 				}
 				else{
-					if($at->tipo_at == 'Asignacion' ||$at->tipo_at == 'Estatus')
-					{
+					if($at->tipo_at == 'Asignacion')
+					{						
 						$at->nombre = 'Sistema';
 						$at->correo_usuario = 'Sistema';
+					}
+					else if($at->tipo_at == 'Estatus')
+					{
+						if($at->id_usuario == null)
+						{
+							if(strcmp($at->detalle, 'Cambio de estatus a Cerrada') == 0)
+							{
+								$at->nombre = 'Usuario';
+								$at->correo_usuario = 'Usuario';
+							}
+							else
+							{
+								$at->nombre = 'Sistema';
+								$at->correo_usuario = 'Sistema';
+							}
+						}
 					}
 					else if($at->tipo_at == 'Atención')
 					{
@@ -375,7 +391,8 @@ class seguimientoController extends Controller
         return $decrypted = $newEncrypter->decrypt($texto);
     }
 	public function send_mail_nueva($email,$id_solicitud, $detalle){
-		$at = Atencion_externos::where('id_solicitud', $id_solicitud)->first();//->Esta linea se agrega
+        $at = Atencion_externos::where('id_solicitud', $id_solicitud)->first();//->Esta linea se agrega
+        //dd($at);
 		$direccion = $this->encriptar($id_solicitud);
         $mail = new PHPMailer(true);
         try{
