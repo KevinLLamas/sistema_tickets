@@ -10,7 +10,7 @@ new Vue({
         Estatus:[],
         colorEstatus:[],
         coloresHex:[],
-        orden:'ASC',
+        orden:'DESC',
         estado_ticket:'',
         ocultarListaSolicitudes:false,
         ocultarGrafica:false,

@@ -174,7 +174,7 @@
                                   <div class="form-group col-lg-12">
                                       <div class="form-group">
                                         <label for="">Departamento</label>
-                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento();getInfoOfTickets();getSubcategoriasDepartamento()">
+                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento();getNumSolicitudesByEstatusTodos();getInfoOfTickets();getSubcategoriasDepartamento();">
                                           
                                           <option  v-for="d in listaDepartamentos" :value="d.id" ><span>@{{d.nombre}}</span></option>
                                           
@@ -272,7 +272,7 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-header">Opciones:</div>
-                                    <button class="dropdown-item" @click="">Recargar Table</button>
+                                    <button class="dropdown-item" @click="getNumSolicitudesByEstatusTodos()">Recargar Tabla</button>
                                 </div>
                             </div>
                         </div>

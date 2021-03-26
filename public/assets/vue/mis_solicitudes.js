@@ -8,7 +8,7 @@ new Vue({
         Estatus:[],
         colorEstatus:[],
         coloresHex:[],
-        orden:'ASC',
+        orden:'DESC',
         estado_ticket:'',
         ocultarTabla:false,
         ocultarGrafica:false,
