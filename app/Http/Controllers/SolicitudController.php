@@ -890,6 +890,68 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    public function get_num_solicitudes_through_time_bystatus_dep(Request $request){
+        $idUsuario=Session::get('id_sgu');
+
+        $rangoTiempo=$request->input('rangoTiempo');
+        $idDepartamento=$request->input('idDepartamento');
+        $estado=$request->input('estado');
+        
+        try{
+            switch($rangoTiempo){
+                case 'INTERVAL 1 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(solicitud.fecha_creacion,'%k Horas') as hora"))
+                    ->where('estatus',$estado)
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('hora')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 7 DAY':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->where('estatus',$estado)
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 1 MONTH':
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%e-%m-%Y') as fecha"))
+                    ->where('estatus',$estado)
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy('fecha')
+                    ->get();
+                    return $num_status;
+                break;
+                case 'INTERVAL 3 MONTH':
+                    DB::statement("SET lc_time_names = 'es_ES'");
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes"))
+                    ->where('estatus',$estado)
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy("mes")
+                    ->get();
+                    return $num_status;
+                break;
+            }
+            
+            
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $rangoTiempo
+            ]);
+        }
+    }
+    
     public function get_num_solicitudes_by_estatus_usuario(Request $request){
         
         
@@ -932,12 +994,9 @@ class SolicitudController extends Controller
                 $idUsuario=$u['id_sgu'];
                 
                 if($idUsuario!=''){
-                    
-
                     $user=Usuario::find($idUsuario);
-
                     if(!is_null($user)){
-                        $num_status=$user->solicitudes()
+                        $num_status=Usuario::find($idUsuario)->solicitudes_atendiendo()
                         ->select('solicitud.estatus',DB::raw('count(*) as total'))
                         ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
 

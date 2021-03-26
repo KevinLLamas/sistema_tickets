@@ -204,8 +204,10 @@
                               <div class="mt-5 text-center small">
                             
                                 <span class="mr-2">
-                                  <i  class="fas fa-circle" style="color:#E9004C"></i> - Creadas
+                                  <i  class="fas fa-circle" style="color:#E9004C"></i> - Sin Atender
                                   <i  class="fas fa-circle" style="color:#28a745"></i> - Cerradas
+                                  <i  class="fas fa-circle" style="color:#CDCDCD"></i> - Cerradas(En Espera)
+                                  <i  class="fas fa-circle" style="color:#007bff"></i> - Atendiendo
                                 </span>
                               </div>
                               <!---->

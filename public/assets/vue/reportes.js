@@ -24,6 +24,7 @@ new Vue({
         rolUsuario:'',
 
         EstatusTodos:[],
+        EstatusTime:[],
 
         listaSubcategorias:[],
         subcategoriaSeleccionada:'',
@@ -146,13 +147,13 @@ new Vue({
             return color;
         },
         getUsuariosbyIdDepartamento:async function(){
-            
+            this.listaUsuarios=[];
             url="get_usuarios_by_id_departamento";
             data=await axios.post(url,{
                 idDepartamento:this.departamentoSeleccionado,
             })
             .then(response=>{
-                console.log(response.data);
+                //console.log(response.data);
                 this.listaUsuarios=response.data;
                 this.usuarioSeleccionado = this.listaUsuarios[0].id_sgu;
                 
@@ -179,7 +180,7 @@ new Vue({
                     listaUsuarios:this.listaUsuarios,
                 })
                 .then(response=>{
-                    console.log(response.data);
+                    //console.log(response.data);
                     this.EstatusTodos=response.data;
                 })
             }catch(e){
@@ -278,6 +279,18 @@ new Vue({
             .then(response=>{
                 //console.log(response.data);
                 this.EstatusbyTimeCerradas=response.data;
+            })
+        },
+        getNumSolicitudesThroughTimeByStatusDep:async function(estado){
+            url="get_num_solicitudes_through_time_bystatus_dep";
+            data=await axios.post(url,{
+                rangoTiempo:this.rangoTiempo,
+                idDepartamento:this.departamentoSeleccionado,
+                estado:estado
+            })
+            .then(response=>{
+                console.log(response.data);
+                this.EstatusTime=response.data;
             })
         },
         generar_Grafica_ByStatus:function(){
@@ -404,7 +417,7 @@ new Vue({
                     spanGaps:true
                     
                 },{
-                    label: "Tickets Creados",
+                    label: "Sin Atender",
                     //yAxesID:"Tickets Creados",
                     fill:false,
                     lineTension: 0.3,
@@ -413,6 +426,36 @@ new Vue({
                     pointRadius: 5,
                     pointBackgroundColor: "#fff",
                     pointBorderColor: "#E9004C",
+                    pointHoverRadius: 7,
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: [],
+                    spanGaps:true
+                },{
+                    label: "Cerrado en Espera",
+                    //yAxesID:"Tickets Creados",
+                    fill:false,
+                    lineTension: 0.3,
+                    //backgroundColor: "#E9004C",
+                    borderColor: "#CDCDCD",
+                    pointRadius: 5,
+                    pointBackgroundColor: "#fff",
+                    pointBorderColor: "#CDCDCD",
+                    pointHoverRadius: 7,
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: [],
+                    spanGaps:true
+                },{
+                    label: "Atendiendo",
+                    //yAxesID:"Tickets Creados",
+                    fill:false,
+                    lineTension: 0.3,
+                    //backgroundColor: "#E9004C",
+                    borderColor: "#007bff",
+                    pointRadius: 5,
+                    pointBackgroundColor: "#fff",
+                    pointBorderColor: "#007bff",
                     pointHoverRadius: 7,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
@@ -523,8 +566,8 @@ new Vue({
             data: {
                 labels: [],
                 datasets: [{
-                    label: "Tickets Resueltos",
-                    yAxesID:"Tickets Resueltos",
+                    label: "Cerrados",
+                    yAxesID:"Cerrados",
                     fill:false,
                     lineTension: 0.3,
                     //backgroundColor: "#28a745",
@@ -539,7 +582,7 @@ new Vue({
                     spanGaps:true
                     
                 },{
-                    label: "Tickets Creados",
+                    label: "Sin Atender",
                     //yAxesID:"Tickets Creados",
                     fill:false,
                     lineTension: 0.3,
@@ -548,6 +591,36 @@ new Vue({
                     pointRadius: 5,
                     pointBackgroundColor: "#fff",
                     pointBorderColor: "#E9004C",
+                    pointHoverRadius: 7,
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: [],
+                    spanGaps:true
+                },{
+                    label: "Cerrado en Espera",
+                    //yAxesID:"Tickets Creados",
+                    fill:false,
+                    lineTension: 0.3,
+                    //backgroundColor: "#E9004C",
+                    borderColor: "#CDCDCD",
+                    pointRadius: 5,
+                    pointBackgroundColor: "#fff",
+                    pointBorderColor: "#CDCDCD",
+                    pointHoverRadius: 7,
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    data: [],
+                    spanGaps:true
+                },{
+                    label: "Atendiendo",
+                    //yAxesID:"Tickets Creados",
+                    fill:false,
+                    lineTension: 0.3,
+                    //backgroundColor: "#E9004C",
+                    borderColor: "#007bff",
+                    pointRadius: 5,
+                    pointBackgroundColor: "#fff",
+                    pointBorderColor: "#007bff",
                     pointHoverRadius: 7,
                     pointHitRadius: 10,
                     pointBorderWidth: 2,
@@ -739,8 +812,26 @@ new Vue({
         generar_Grafica_Comparacion_Dep:async function(){
             //console.log("Tickets en total");
             await this.getNumSolicitudesThroughTimeDep();
-            await this.getNumSolicitudesThroughTimeCerradasDep();
+            let ListCreadas=this.EstatusbyTime;
+            console.log("Creadas:"+ListCreadas);
+            //await this.getNumSolicitudesThroughTimeCerradasDep();
             //console.log(this.EstatusbyTime);
+            await this.getNumSolicitudesThroughTimeByStatusDep('Sin Atender');
+            let ListSinAtender=this.EstatusTime;
+            console.log("Sin Atender:"+ListSinAtender);
+
+            await this.getNumSolicitudesThroughTimeByStatusDep('Atendiendo');
+            let ListAtendiendo=this.EstatusTime;
+            console.log("Atendiendo:"+ListAtendiendo);
+
+            await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada (En espera de aprobación)');
+            let ListCerradaEnEspera=this.EstatusTime;
+            console.log("Cerrada (En espera de aprobación):"+ListCerradaEnEspera);
+
+            await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada');
+            let ListCerradas=this.EstatusTime;
+            console.log("Cerrada:"+ListCerradas);
+            
             
             switch(this.rangoTiempo){
                 case 'INTERVAL 1 DAY':
@@ -749,28 +840,53 @@ new Vue({
                             this.addLabelChart(comparacionChartDep,h.toString());
                         });
                         
-                        this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChartDep,s.total,s.hora,1);
-                        });
-                        this.EstatusbyTimeCerradas.forEach(c => {
+                        
+                        ListCerradas.forEach(c => {
                             this.addDataChart(comparacionChartDep,c.total,c.hora,0);
                         });
+                        ListSinAtender.forEach(sa => {
+                            this.addDataChart(comparacionChartDep,sa.total,sa.hora,1);
+                        });
+                        ListCerradaEnEspera.forEach(ce => {
+                            this.addDataChart(comparacionChartDep,ce.total,ce.hora,2);
+                        });
+                        ListAtendiendo.forEach(a => {
+                            this.addDataChart(comparacionChartDep,a.total,a.hora,3);
+                        });
+                        
                         this.fillNullDataChart(comparacionChartDep,0,horas.length);
                         this.fillNullDataChart(comparacionChartDep,1,horas.length);
+                        this.fillNullDataChart(comparacionChartDep,2,horas.length);
+                        this.fillNullDataChart(comparacionChartDep,3,horas.length);
                     break;
                 case 'INTERVAL 7 DAY':
                         
                         this.LastDays(7).forEach(d => {
                             this.addLabelChart(comparacionChartDep,d.toString());
                         });
-                        this.EstatusbyTime.forEach(s => {
+
+                        /*this.EstatusbyTime.forEach(s => {
                             this.addDataChart(comparacionChartDep,s.total,s.fecha,1);
                         });
                         this.EstatusbyTimeCerradas.forEach(c => {
                             this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
+                        });*/
+                        ListCerradas.forEach(c => {
+                            this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
+                        });
+                        ListSinAtender.forEach(sa => {
+                            this.addDataChart(comparacionChartDep,sa.total,sa.fecha,1);
+                        });
+                        ListCerradaEnEspera.forEach(ce => {
+                            this.addDataChart(comparacionChartDep,ce.total,ce.fecha,2);
+                        });
+                        ListAtendiendo.forEach(a => {
+                            this.addDataChart(comparacionChartDep,a.total,a.fecha,3);
                         });
                         this.fillNullDataChart(comparacionChartDep,0,7);
                         this.fillNullDataChart(comparacionChartDep,1,7);
+                        this.fillNullDataChart(comparacionChartDep,2,7);
+                        this.fillNullDataChart(comparacionChartDep,3,7);
                     break;
                 case 'INTERVAL 1 MONTH':
                         
@@ -779,26 +895,53 @@ new Vue({
                             this.addLabelChart(comparacionChartDep,m.toString());
                         });
                         
-                        this.EstatusbyTime.forEach(s => {
+                        /*this.EstatusbyTime.forEach(s => {
                             this.addDataChart(comparacionChartDep,s.total,s.fecha,1);
                         });
                         this.EstatusbyTimeCerradas.forEach(c => {
                             this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
+                        });*/
+                        ListCerradas.forEach(c => {
+                            this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
+                        });
+                        ListSinAtender.forEach(sa => {
+                            this.addDataChart(comparacionChartDep,sa.total,sa.fecha,1);
+                        });
+                        ListCerradaEnEspera.forEach(ce => {
+                            this.addDataChart(comparacionChartDep,ce.total,ce.fecha,2);
+                        });
+                        ListAtendiendo.forEach(a => {
+                            this.addDataChart(comparacionChartDep,a.total,a.fecha,3);
                         });
                         this.fillNullDataChart(comparacionChartDep,0,30);
                         this.fillNullDataChart(comparacionChartDep,1,30);
+                        this.fillNullDataChart(comparacionChartDep,2,30);
+                        this.fillNullDataChart(comparacionChartDep,3,30);
                     break;
                 case 'INTERVAL 3 MONTH':
                         this.LastMonths(3).forEach(m => {
                             //console.log(m);
                             this.addLabelChart(comparacionChartDep,m.toString());
                         });
-                        this.EstatusbyTime.forEach(s => {
+                        /*this.EstatusbyTime.forEach(s => {
                             this.addDataChart(comparacionChartDep,s.total,s.mes,1);
                         });
                         this.EstatusbyTimeCerradas.forEach(c => {
                             this.addDataChart(comparacionChartDep,c.total,c.mes,0);
+                        });*/
+                        ListCerradas.forEach(c => {
+                            this.addDataChart(comparacionChartDep,c.total,c.mes,0);
                         });
+                        ListSinAtender.forEach(sa => {
+                            this.addDataChart(comparacionChartDep,sa.total,sa.mes,1);
+                        });
+                        ListCerradaEnEspera.forEach(ce => {
+                            this.addDataChart(comparacionChartDep,ce.total,ce.mes,2);
+                        });
+                        ListAtendiendo.forEach(a => {
+                            this.addDataChart(comparacionChartDep,a.total,a.mes,3);
+                        });
+                        
                         this.fillNullDataChart(comparacionChartDep,0,3);
                         this.fillNullDataChart(comparacionChartDep,1,3);
                     break;
