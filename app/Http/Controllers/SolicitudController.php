@@ -555,7 +555,7 @@ class SolicitudController extends Controller
         $idUsuario=Session::get('id_sgu');
         try{
             $num_status=Usuario::find($idUsuario)
-            ->solicitudes()
+            ->solicitudes_atendiendo()
             ->select('solicitud.estatus',DB::raw('count(*) as total'))
             ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
             return $num_status;
@@ -900,6 +900,72 @@ class SolicitudController extends Controller
                     'data' => ''
                 ]);
             }
+            
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'data' => $idUsuario
+            ]);
+        }
+    }
+    public function get_num_solicitudes_by_estatus_todos(Request $request){
+        
+        
+        try{
+            
+            $listaUsuarios=$request->input('listaUsuarios');
+            
+            $listaDetalle=array();
+           
+            foreach ($listaUsuarios as $key => $u) {
+                //return gettype($listaUsuarios[$key]);
+                $idUsuario=$u['id_sgu'];
+                
+                if($idUsuario!=''){
+                    
+
+                    $user=Usuario::find($idUsuario);
+
+                    if(!is_null($user)){
+                        $num_status=$user->solicitudes()
+                        ->select('solicitud.estatus',DB::raw('count(*) as total'))
+                        ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+
+                        $lista=array();
+                        $lista["id_sgu"]=$u['id_sgu'];
+                        $lista["nombre"]=$u['nombre'];
+                        foreach ($num_status as $s) {
+                            $estado=strval($s->estatus);
+                            $total=strval($s->total);
+                            $estado=strtr($estado, " ", "_");
+                            $estado=str_replace(array('(', ')'), '', $estado); 
+                            $lista[$estado]=$total;
+                            
+                        }
+                        $listaDetalle[$key]=$lista;
+                        
+                    }
+                    else{
+                        $listaDetalle[$key]=(object)[
+                            "id_sgu"=>$u['id_sgu'],
+                            "nombre"=>$u['nombre'],
+                        ];
+                    }
+                    
+                    
+                }
+                else{
+                    return response()->json([
+                        'status' => false,
+                        'data' => ''
+                    ]);
+                }
+                
+
+            }
+            return $listaDetalle;
+            
+            
             
         }catch(Exception $e){
             return response()->json([

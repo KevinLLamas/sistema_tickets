@@ -23,6 +23,8 @@ new Vue({
         myDepartamento:'',
         rolUsuario:'',
 
+        EstatusTodos:[],
+
         listaSubcategorias:[],
         subcategoriaSeleccionada:'',
         numReportesSubc:[],
@@ -77,6 +79,7 @@ new Vue({
         await this.generar_Grafica_Estados_Subc();
         await this.getInfoOfTickets();
         await this.getSubcategoriasDepartamento();
+        await this.getNumSolicitudesByEstatusTodos();
         
         swal.close();
         
@@ -151,7 +154,7 @@ new Vue({
                 idDepartamento:this.departamentoSeleccionado,
             })
             .then(response=>{
-                //console.log(response.data);
+                console.log(response.data);
                 this.listaUsuarios=response.data;
                 this.usuarioSeleccionado = this.listaUsuarios[0].id_sgu;
                 
@@ -166,6 +169,20 @@ new Vue({
                 .then(response=>{
                     //console.log(response.data);
                     this.Estatus=response.data;
+                })
+            }catch(e){
+                //console.log('usuario invalido');
+            }
+        },
+        getNumSolicitudesByEstatusTodos:async function(){
+            try{
+                url="get_num_solicitudes_by_estatus_todos";
+                data=await axios.post(url,{
+                    listaUsuarios:this.listaUsuarios,
+                })
+                .then(response=>{
+                    console.log(response.data);
+                    this.EstatusTodos=response.data;
                 })
             }catch(e){
                 //console.log('usuario invalido');

@@ -47,6 +47,7 @@ Route::post('get_num_solicitudes_through_time_dep', [SolicitudController::class,
 Route::post('get_num_solicitudes_through_time_cerradas_dep', [SolicitudController::class, 'get_num_solicitudes_through_time_cerradas_dep']);
 Route::get('get_usuarios_by_departamento', [SolicitudController::class, 'get_usuarios_by_departamento']);
 Route::post('get_num_solicitudes_by_estatus_usuario', [SolicitudController::class, 'get_num_solicitudes_by_estatus_usuario']);
+Route::post('get_num_solicitudes_by_estatus_todos', [SolicitudController::class, 'get_num_solicitudes_by_estatus_todos']);
 Route::post('get_solicitudes_departamento_rep', [SolicitudController::class, 'get_solicitudes_departamento_rep']);
 Route::post('get_porcentaje_cerradas', [SolicitudController::class, 'get_porcentaje_cerradas']);
 

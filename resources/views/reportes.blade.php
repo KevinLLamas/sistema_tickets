@@ -215,46 +215,97 @@
                   </div>
               </div>
                 
-            </div> 
+            </div>
             <div class="row">
-                <!-- Grafica Dona numero De Solicitudes por tipo -->
+              <!-- Grafica Dona numero De Solicitudes por tipo -->
+              <div class="col-xl-12 col-lg-5" id="graficas">
+                  <div class="card shadow mb-4">
+                      <!-- Card Header - Dropdown -->
+                      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                          <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes por Usuario</h6>
+                          <div class="dropdown no-arrow">
+                              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                  <div class="dropdown-header">Opciones:</div>
+                                  <button class="dropdown-item" @click="generar_Grafica_ByStatus();generar_Grafica_Estados();">Recargar Grafica</button>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- Card Body -->
+                      <div class="card-body" >
+                        <div class="form-group">
+                          <label for="listaUsuarios">Usuarios en mi departamento</label>
+                          <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-if="listaUsuarios.length > 0" v-model="usuarioSeleccionado" @change="generar_Grafica_ByStatus();generar_Grafica_Estados();">
+                            <option value="" disabled selected>Selecciona a un usuario</option>
+                            <option  v-for="u in listaUsuarios" :value="u.id_sgu" ><span>@{{u.nombre}}</span></option>
+                            
+                          </select>
+                          
+                        </div>
+                        <div class="chart-pie pt-4 pb-3">
+                          <canvas id="solicitudesUsuarioChart"></canvas>
+                          <label v-if="usuarioSeleccionado=='' || Estatus.length == 0">Nada que mostrar</label>
+                        </div>
+                        
+                        <div class="mt-5 text-center small">
+                          
+                          <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
+                            <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i> @{{e.estatus}}-@{{e.total}}
+                          </span>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="row">
+                <!-- Listado de personas en el departamento y sus numero de solicitudes -->
                 <div class="col-xl-12 col-lg-5" id="graficas">
                     <div class="card shadow mb-4">
                         <!-- Card Header - Dropdown -->
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">Grafica de Solicitudes por Usuario</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">Listado de personas en el departamento</h6>
                             <div class="dropdown no-arrow">
                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-header">Opciones:</div>
-                                    <button class="dropdown-item" @click="generar_Grafica_ByStatus();generar_Grafica_Estados();">Recargar Grafica</button>
+                                    <button class="dropdown-item" @click="">Recargar Table</button>
                                 </div>
                             </div>
                         </div>
                         <!-- Card Body -->
                         <div class="card-body" >
-                          <div class="form-group">
-                            <label for="listaUsuarios">Usuarios en mi departamento</label>
-                            <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-if="listaUsuarios.length > 0" v-model="usuarioSeleccionado" @change="generar_Grafica_ByStatus();generar_Grafica_Estados();">
-                              <option value="" disabled selected>Selecciona a un usuario</option>
-                              <option  v-for="u in listaUsuarios" :value="u.id_sgu" ><span>@{{u.nombre}}</span></option>
-                              
-                            </select>
-                            
-                          </div>
-                          <div class="chart-pie pt-4 pb-3">
-                            <canvas id="solicitudesUsuarioChart"></canvas>
-                            <label v-if="usuarioSeleccionado=='' || Estatus.length == 0">Nada que mostrar</label>
+                          <div class=" mt-4 mb-2  container-fluid border-bottom">
+                            <table class="table table-responsive">
+                              <thead>
+                                <tr>
+                                  <th>Nombre</th>
+                                  <th>Sin Atender</th>
+                                  <th>Atendiendo</th>
+                                  <th>Cerrada</th>
+                                  <th>Cerrada(En espera)</th>
+                                  <th>Suspendida</th>
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="u in EstatusTodos">
+                                  <td>@{{u.nombre}}</td>
+                                  <td>@{{u.Sin_atender!=undefined ? u.Sin_atender : "N/A"}}</td>
+                                  <td>@{{u.Atendiendo!=undefined ? u.Atendiendo : "N/A"}}</td>
+                                  <td>@{{u.Cerrada!=undefined ? u.Cerrada : "N/A"}}</td>
+                                  <td>@{{u.Cerrada_En_espera_de_aprobación!=undefined ? u.Cerrada_En_espera_de_aprobación : "N/A"}}</td>
+                                  <td>@{{u.Suspendida!=undefined ? u.Suspendida : "N/A"}}</td>
+                                </tr>
+                                
+                              </tbody>
+                            </table>
                           </div>
                           
-                          <div class="mt-5 text-center small">
-                            
-                            <span class="mr-2" v-if="Estatus.length > 0" v-for="(e,index) in Estatus">
-                              <i :id="index" class="fas fa-circle" :style="'color:'+asignarColorHex(e.estatus)" ></i> @{{e.estatus}}-@{{e.total}}
-                            </span>
-                          </div>
+                          
                         </div>
                     </div>
                 </div>
