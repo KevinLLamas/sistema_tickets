@@ -161,7 +161,7 @@
                               </a>
                               <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                   <div class="dropdown-header">Opciones:</div>
-                                  <button class="dropdown-item" @click="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento()">Recargar</button>
+                                  <button class="dropdown-item" @click="recargarGraficaComparacionDep()">Recargar</button>
                                   
                               
                               </div>
@@ -174,7 +174,7 @@
                                   <div class="form-group col-lg-12">
                                       <div class="form-group">
                                         <label for="">Departamento</label>
-                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();getUsuariosbyIdDepartamento();getNumSolicitudesByEstatusTodos();getInfoOfTickets();getSubcategoriasDepartamento();">
+                                        <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="recargarTodoDepartamento()">
                                           
                                           <option  v-for="d in listaDepartamentos" :value="d.id" ><span>@{{d.nombre}}</span></option>
                                           
@@ -184,7 +184,7 @@
                                   <div class="form-group col-lg-12">
                                       <div class="form-group">
                                         <label for="">Periodo de tiempo</label>
-                                        <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="generar_Grafica_ByTime_Dep();generar_Grafica_Comparacion_Dep();">
+                                        <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="recargarGraficaComparacionDep()">
                                           
                                           <option value="INTERVAL 1 DAY">Hoy</option>
                                           <option value="INTERVAL 7 DAY">7 Dias</option>
@@ -231,7 +231,7 @@
                               </a>
                               <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                   <div class="dropdown-header">Opciones:</div>
-                                  <button class="dropdown-item" @click="generar_Grafica_ByStatus();generar_Grafica_Estados();">Recargar Grafica</button>
+                                  <button class="dropdown-item" @click="recargarGraficaByStatus()">Recargar Grafica</button>
                               </div>
                           </div>
                       </div>
@@ -239,7 +239,7 @@
                       <div class="card-body" >
                         <div class="form-group">
                           <label for="listaUsuarios">Usuarios en mi departamento</label>
-                          <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-if="listaUsuarios.length > 0" v-model="usuarioSeleccionado" @change="generar_Grafica_ByStatus();generar_Grafica_Estados();">
+                          <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-if="listaUsuarios.length > 0" v-model="usuarioSeleccionado" @change="recargarGraficaByStatus()">
                             <option value="" disabled selected>Selecciona a un usuario</option>
                             <option  v-for="u in listaUsuarios" :value="u.id_sgu" ><span>@{{u.nombre}}</span></option>
                             
@@ -274,22 +274,31 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-header">Opciones:</div>
-                                    <button class="dropdown-item" @click="getNumSolicitudesByEstatusTodos()">Recargar Tabla</button>
+                                    <button class="dropdown-item" @click="recargarListadoUsuariosTodos()">Recargar Tabla</button>
                                 </div>
                             </div>
                         </div>
                         <!-- Card Body -->
                         <div class="card-body" >
                           <div class=" mt-4 mb-2  container-fluid border-bottom">
-                            <table class="table table-responsive">
-                              <thead>
+                            
+                            <table class="table table-responsive" v-if="EstatusTodos && EstatusTodos.length > 0">
+                              <colgroup>
+                                <col span="1" ></col>
+                                <col span="1" class="table-danger"></col>
+                                <col span="1" class="table-primary"></col>
+                                <col span="1" class="table-success"></col>
+                                <col span="1" class="table-secondary"></col>
+                                <col span="1" class="table-active"></col>
+                              </colgroup>
+                              <thead style="color:whitesmoke">
                                 <tr>
-                                  <th>Nombre</th>
-                                  <th>Sin Atender</th>
-                                  <th>Atendiendo</th>
-                                  <th>Cerrada</th>
-                                  <th>Cerrada(En espera)</th>
-                                  <th>Suspendida</th>
+                                  <th style="color: black">Nombre del Usuario</th>
+                                  <th class="bg-primary">Sin Atender</th>
+                                  <th class="bg-info">Atendiendo</th>
+                                  <th class="bg-success">Cerrada</th>
+                                  <th class="bg-secondary">Cerrada(En espera)</th>
+                                  <th class="bg-dark">Suspendida</th>
 
                                 </tr>
                               </thead>
@@ -325,7 +334,7 @@
                               </a>
                               <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                   <div class="dropdown-header">Opciones:</div>
-                                  <button class="dropdown-item" @click="generar_Grafica_ByStatus_Subc();generar_Grafica_Estados_Subc();">Recargar Grafica</button>
+                                  <button class="dropdown-item" @click="recargarGraficaByStatusSubc()">Recargar Grafica</button>
                               </div>
                           </div>
                       </div>
@@ -333,7 +342,7 @@
                       <div class="card-body" >
                         <div class="form-group">
                           <label for="listaUsuarios">Subcategorias en el departamento</label>
-                          <select class="form-control" name="listaSubcategorias" id="listaSubcategorias"  v-if="listaSubcategorias.length > 0"  v-model="subcategoriaSeleccionada"  @change="generar_Grafica_ByStatus_Subc();generar_Grafica_Estados_Subc();">
+                          <select class="form-control" name="listaSubcategorias" id="listaSubcategorias"  v-if="listaSubcategorias.length > 0"  v-model="subcategoriaSeleccionada"  @change="recargarGraficaByStatusSubc()">
                             <option value='' disabled>Selecciona una subcategoria</option>
                             <option v-for="(s,index) in listaSubcategorias" :value="s.id" :selected="index == 0" ><span>@{{s.nombre}}</span></option>
                             

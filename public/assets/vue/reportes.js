@@ -65,7 +65,7 @@ new Vue({
         });
         this.rolUsuario=$("#rol").val();
         await this.getMyDepartamento();
-        this.getUsuariosbyIdDepartamento();
+        await this.getUsuariosbyIdDepartamento();
         if(this.rolUsuario=="SUPER"){
             await this.getDepartamentos();   
             await this.generar_Grafica_Comparacion_Dep();
@@ -97,6 +97,80 @@ new Vue({
         this.generar_Grafica_ByStatus();
     },
     methods:{
+        recargarTodoDepartamento:async function(){
+            swal.fire({
+                title: "Cargando...",
+                imageUrl: "assets/images/loading-79.gif",
+                imageWidth: 250,
+                imageHeight: 250,
+                showConfirmButton: false,
+                
+            });
+            this.generar_Grafica_ByTime_Dep();
+            this.generar_Grafica_Comparacion_Dep();
+            await this.getUsuariosbyIdDepartamento();
+            await this.getNumSolicitudesByEstatusTodos();
+            this.getInfoOfTickets();
+            await this.getSubcategoriasDepartamento();
+            swal.close();
+        },
+        recargarGraficaComparacionDep: async function(){
+            
+            swal.fire({
+                title: "Cargando...",
+                imageUrl: "assets/images/loading-79.gif",
+                imageWidth: 250,
+                imageHeight: 250,
+                showConfirmButton: false,
+                
+            });
+
+            this.generar_Grafica_ByTime_Dep();
+            await this.generar_Grafica_Comparacion_Dep();
+            await this.getUsuariosbyIdDepartamento()
+            swal.close();
+
+
+        },
+        recargarGraficaByStatus: async function(){
+            swal.fire({
+                title: "Cargando...",
+                imageUrl: "assets/images/loading-79.gif",
+                imageWidth: 250,
+                imageHeight: 250,
+                showConfirmButton: false,
+                
+            });
+            this.generar_Grafica_ByStatus();
+            await this.generar_Grafica_Estados();
+            swal.close();
+
+        },
+        recargarListadoUsuariosTodos: async function(){
+            swal.fire({
+                title: "Cargando...",
+                imageUrl: "assets/images/loading-79.gif",
+                imageWidth: 250,
+                imageHeight: 250,
+                showConfirmButton: false,
+                
+            });
+            await this.getNumSolicitudesByEstatusTodos();
+            swal.close();
+        },
+        recargarGraficaByStatusSubc:async function(){
+            swal.fire({
+                title: "Cargando...",
+                imageUrl: "assets/images/loading-79.gif",
+                imageWidth: 250,
+                imageHeight: 250,
+                showConfirmButton: false,
+                
+            });
+            this.generar_Grafica_ByStatus_Subc();
+            await this.generar_Grafica_Estados_Subc();
+            swal.close();
+        },
         asignarColor:function(tipo){
             if (tipo == 'Sin atender') {
                 return 'text-primary'
@@ -156,6 +230,11 @@ new Vue({
                 //console.log(response.data);
                 this.listaUsuarios=response.data;
                 this.usuarioSeleccionado = this.listaUsuarios[0].id_sgu;
+                //Buscamos los datos de cada usuario una vez la lista esta completa
+                this.getNumSolicitudesByEstatusTodos();
+                //Y recarga la grafica con el usuario seleccionado
+                this.generar_Grafica_ByStatus();
+                this.generar_Grafica_Estados();
                 
             })
         },
@@ -289,7 +368,7 @@ new Vue({
                 estado:estado
             })
             .then(response=>{
-                console.log(response.data);
+                //console.log(response.data);
                 this.EstatusTime=response.data;
             })
         },
@@ -813,24 +892,24 @@ new Vue({
             //console.log("Tickets en total");
             await this.getNumSolicitudesThroughTimeDep();
             let ListCreadas=this.EstatusbyTime;
-            console.log("Creadas:"+ListCreadas);
+            //console.log("Creadas:"+ListCreadas);
             //await this.getNumSolicitudesThroughTimeCerradasDep();
             //console.log(this.EstatusbyTime);
             await this.getNumSolicitudesThroughTimeByStatusDep('Sin Atender');
             let ListSinAtender=this.EstatusTime;
-            console.log("Sin Atender:"+ListSinAtender);
+            //console.log("Sin Atender:"+ListSinAtender);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Atendiendo');
             let ListAtendiendo=this.EstatusTime;
-            console.log("Atendiendo:"+ListAtendiendo);
+            //console.log("Atendiendo:"+ListAtendiendo);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada (En espera de aprobación)');
             let ListCerradaEnEspera=this.EstatusTime;
-            console.log("Cerrada (En espera de aprobación):"+ListCerradaEnEspera);
+            //console.log("Cerrada (En espera de aprobación):"+ListCerradaEnEspera);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada');
             let ListCerradas=this.EstatusTime;
-            console.log("Cerrada:"+ListCerradas);
+            //console.log("Cerrada:"+ListCerradas);
             
             
             switch(this.rangoTiempo){
