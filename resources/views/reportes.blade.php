@@ -103,7 +103,7 @@
                               </a>
                               <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                   <div class="dropdown-header">Opciones:</div>
-                                  <button class="dropdown-item" @click="generar_Grafica_ByTime();generar_Grafica_Comparacion();">Recargar</button>
+                                  <button class="dropdown-item" @click="recargarGraficaComparacion()">Recargar</button>
                                   
                               
                               </div>
@@ -116,7 +116,7 @@
                                   <div class="form-group col-lg-12">
                                       <div class="form-group">
                                         <label for="">Periodo de tiempo</label>
-                                        <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="generar_Grafica_ByTime();generar_Grafica_Comparacion();">
+                                        <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="recargarGraficaComparacion">
                                           
                                           <option value="INTERVAL 1 DAY">Hoy</option>
                                           <option value="INTERVAL 7 DAY">7 Dias</option>
@@ -238,7 +238,7 @@
                       <!-- Card Body -->
                       <div class="card-body" >
                         <div class="form-group">
-                          <label for="listaUsuarios">Usuarios en mi departamento</label>
+                          <label for="listaUsuarios">Usuarios en el departamento</label>
                           <select class="form-control" name="listaUsuarios" id="listaUsuarios" v-if="listaUsuarios.length > 0" v-model="usuarioSeleccionado" @change="recargarGraficaByStatus()">
                             <option value="" disabled selected>Selecciona a un usuario</option>
                             <option  v-for="u in listaUsuarios" :value="u.id_sgu" ><span>@{{u.nombre}}</span></option>
