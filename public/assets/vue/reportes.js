@@ -1,20 +1,3 @@
-//Declaracion de variables para las graficas de manera global
-var comparacionChart=null;
-var comparacionChartDep=null;
-var solicitudesUsuarioChart=null;
-var solicitudesSubcategoriaChart=null;
-var ctx = document.getElementById("ComparacionSolicitudesChart");
-var ctxdep = document.getElementById("ComparacionSolicitudesChartDep");
-comparacionChart = new Chart(ctx,{});
-comparacionChartDep = new Chart(ctxdep,{});
-var pastelUser = document.getElementById("solicitudesUsuarioChart");
-var pastelSubc = document.getElementById("solicitudesSubcategoriaChart");
-solicitudesUsuarioChart = new Chart(pastelUser,{});
-solicitudesSubcategoriaChart = new Chart(pastelSubc,{});
-// Set new default font family and font color to mimic Bootstrap's default styling
-Chart.defaults.global.defaultFontFamily = 'Montserrat';
-Chart.defaults.global.defaultFontColor = '#858796';
-
 new Vue({
     el: '#reportes',
     data:{
@@ -50,6 +33,20 @@ new Vue({
         EstatusbyTime:[],
         EstatusbyTimeCerradas:[],
     },
+    beforeCreate: function(){
+        //Declaracion de variables para las graficas de manera global
+        let ctx = document.getElementById("ComparacionSolicitudesChart");
+        let ctxdep = document.getElementById("ComparacionSolicitudesChartDep");
+        let pastelUser = document.getElementById("solicitudesUsuarioChart");
+        let pastelSubc = document.getElementById("solicitudesSubcategoriaChart");
+        solicitudesSubcategoriaChart = null;
+        
+        solicitudesUsuarioChart = null;
+        comparacionChart = null;
+        comparacionChartDep = null;
+       
+        
+    },
     created: async function(){   
 
 
@@ -75,9 +72,10 @@ new Vue({
             await this.generar_Grafica_Comparacion();
         }
         await this.generar_Grafica_Estados();
-        await this.generar_Grafica_Estados_Subc();
+        //await this.generar_Grafica_Estados_Subc();
         await this.getInfoOfTickets();
         await this.getSubcategoriasDepartamento();
+        
         await this.getNumSolicitudesByEstatusTodos();
         
         swal.close();
@@ -231,9 +229,9 @@ new Vue({
             }
         },
         getRandomColor:function(){
-            var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
+            let letters = '0123456789ABCDEF'.split('');
+            let color = '#';
+            for (let i = 0; i < 6; i++ ) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
@@ -308,6 +306,9 @@ new Vue({
                 .then(response=>{
                     //console.log(response.data);
                     this.listaSubcategorias=response.data;
+                    this.subcategoriaSeleccionada=this.listaSubcategorias[0].id;
+                    this.generar_Grafica_ByStatus_Subc();
+                    this.generar_Grafica_Estados_Subc();
                 })
             }catch(e){
                 //console.log('usuario invalido');
@@ -394,8 +395,9 @@ new Vue({
         generar_Grafica_ByStatus:function(){
             
             // Pie Chart Example
-            solicitudesUsuarioChart.destroy();
-            var ctx = document.getElementById("solicitudesUsuarioChart");
+            if(solicitudesUsuarioChart!=null)
+                solicitudesUsuarioChart.destroy();
+            let ctx = document.getElementById("solicitudesUsuarioChart");
             solicitudesUsuarioChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
@@ -430,12 +432,12 @@ new Vue({
         generar_Grafica_ByStatus_Subc:function(){
             
             // Pie Chart Example
-            solicitudesSubcategoriaChart.destroy();
-            var ctx = document.getElementById("solicitudesSubcategoriaChart");
-            solicitudesSubcategoriaChart = new Chart(ctx, {
+            if(solicitudesSubcategoriaChart!=null)
+                solicitudesSubcategoriaChart.destroy();
+            let grafica_canvas = document.getElementById("solicitudesSubcategoriaChart");
+            solicitudesSubcategoriaChart = new Chart(grafica_canvas, {
             type: 'doughnut',
             data: {
-                
                 labels: [],
                 datasets: [{
                     data: [],
@@ -470,13 +472,13 @@ new Vue({
             // *     example: number_format(1234.56, 2, ',', ' ');
             // *     return: '1 234,56'
             number = (number + '').replace(',', '').replace(' ', '');
-            var n = !isFinite(+number) ? 0 : +number,
+            let n = !isFinite(+number) ? 0 : +number,
                 prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
                 sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
                 dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
                 s = '',
                 toFixedFix = function(n, prec) {
-                var k = Math.pow(10, prec);
+                let k = Math.pow(10, prec);
                 return '' + Math.round(n * k) / k;
                 };
             // Fix for IE parseFloat(0.55).toFixed(0) = 0;
@@ -492,8 +494,9 @@ new Vue({
             }
 
             // Area Chart Example
-            comparacionChart.destroy();
-            var ctx = document.getElementById("ComparacionSolicitudesChart");
+            if(comparacionChart!=null)
+                comparacionChart.destroy();
+            let ctx = document.getElementById("ComparacionSolicitudesChart");
             comparacionChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -618,7 +621,7 @@ new Vue({
                     caretPadding: 10,
                     callbacks: {
                         label: function(tooltipItem, chart) {
-                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        let datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
                         return datasetLabel + ' : ' + number_format(tooltipItem.yLabel);
                         }
                     }
@@ -635,13 +638,13 @@ new Vue({
             // *     example: number_format(1234.56, 2, ',', ' ');
             // *     return: '1 234,56'
             number = (number + '').replace(',', '').replace(' ', '');
-            var n = !isFinite(+number) ? 0 : +number,
+            let n = !isFinite(+number) ? 0 : +number,
                 prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
                 sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
                 dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
                 s = '',
                 toFixedFix = function(n, prec) {
-                var k = Math.pow(10, prec);
+                let k = Math.pow(10, prec);
                 return '' + Math.round(n * k) / k;
                 };
             // Fix for IE parseFloat(0.55).toFixed(0) = 0;
@@ -657,8 +660,9 @@ new Vue({
             }
 
             // Area Chart Example
-            comparacionChartDep.destroy();
-            var ctx = document.getElementById("ComparacionSolicitudesChartDep");
+            if(comparacionChartDep!=null)
+                comparacionChartDep.destroy();
+            let ctx = document.getElementById("ComparacionSolicitudesChartDep");
             comparacionChartDep = new Chart(ctx, {
             type: 'line',
             data: {
@@ -783,7 +787,7 @@ new Vue({
                     caretPadding: 10,
                     callbacks: {
                         label: function(tooltipItem, chart) {
-                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        let datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
                         return datasetLabel + ' : ' + number_format(tooltipItem.yLabel);
                         }
                     }
@@ -795,17 +799,22 @@ new Vue({
         },
         generar_Grafica_Estados:async function(){   
             await this.getNumSolicitudesByEstatusUsuario();
+            let numSolicitudes=0;
             if(typeof this.Estatus !== 'undefined' && this.Estatus.length > 0){
                 this.coloresHex=[];
                 this.Estatus.forEach(e => {
                     //console.log(`estado: ${e.estatus}  color: ${this.asignarColorHex(e.estatus)}`);
                     this.coloresHex.push(this.asignarColorHex(e.estatus))
+                    numSolicitudes+=e.total;
                 });
+                console.log(numSolicitudes);
                 this.generar_Grafica_ByStatus();
                 this.Estatus.forEach(e => {
                     //console.log(e.estatus);
-                    this.addLabelChart(solicitudesUsuarioChart,e.estatus.toString());
-                    this.addDataChartsinOrden(solicitudesUsuarioChart,e.total,0);
+                    let porcentaje=Math.round((((e.total/numSolicitudes)*100) + Number.EPSILON) * 100) / 100;
+                    this.addLabelChart(solicitudesUsuarioChart,e.estatus.toString()+" %");
+                    
+                    this.addDataChartsinOrden(solicitudesUsuarioChart,porcentaje,0);
                     
                 });
             }
@@ -814,17 +823,20 @@ new Vue({
         },
         generar_Grafica_Estados_Subc:async function(){   
             await this.getNumSolicitudesByEstatusSubcategoria();
+            let numSolicitudes=0;
             if(typeof this.EstatusSubc !== 'undefined' && this.EstatusSubc.length > 0){
                 this.coloresHexSubc=[];
                 this.EstatusSubc.forEach(e => {
                     //console.log(`estado: ${e.estatus}  color: ${this.asignarColorHex(e.estatus)}`);
                     this.coloresHexSubc.push(this.asignarColorHex(e.estatus))
+                    numSolicitudes+=e.total;
                 });
                 this.generar_Grafica_ByStatus_Subc();
                 this.EstatusSubc.forEach(e => {
                     //console.log(e.estatus);
-                    this.addLabelChart(solicitudesSubcategoriaChart,e.estatus.toString());
-                    this.addDataChartsinOrden(solicitudesSubcategoriaChart,e.total,0);
+                    let porcentaje=Math.round((((e.total/numSolicitudes)*100) + Number.EPSILON) * 100) / 100;
+                    this.addLabelChart(solicitudesSubcategoriaChart,e.estatus.toString()+" %");
+                    this.addDataChartsinOrden(solicitudesSubcategoriaChart,porcentaje,0);
                     
                 });
             }
@@ -1130,9 +1142,9 @@ new Vue({
             chart.update();
         },
         LastHours:function(hours) {
-            var result = [];
-            for (var i=0; i<=hours && result[result.length - 1]!="0 Horas"; i++) {
-                var t = new Date();
+            let result = [];
+            for (let i=0; i<=hours && result[result.length - 1]!="0 Horas"; i++) {
+                let t = new Date();
                 t.setTime(t.getTime() - (i*60*60*1000));
                 
                 
@@ -1153,9 +1165,9 @@ new Vue({
             
         },
         LastDays:function(days) {
-            var result = [];
-            for (var i=days-1; i>=0; i--) {
-                var d = new Date();
+            let result = [];
+            for (let i=days-1; i>=0; i--) {
+                let d = new Date();
                 d.setDate(d.getDate() - i);
                 result.push( this.formatDate(d) );
             }
@@ -1180,11 +1192,11 @@ new Vue({
         },
         
         LastMonths:function(months) {
-            var monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+            let monthNames = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
                 "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
             ];
-            var d = new Date();
-            var result = []
+            let d = new Date();
+            let result = []
 
             for (i = months-1; i >= 0; i--) {
                 result.push(monthNames[(d.getMonth() - i)] + ' - ' +d.getFullYear()  );
@@ -1192,7 +1204,7 @@ new Vue({
             return result;
         },
         formatMonth:function(date){
-            var monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            let monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                 "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
             ];
             return monthNames[(date.getMonth() - i)] + ' - ' +date.getFullYear();
@@ -1200,7 +1212,7 @@ new Vue({
         
         
         getSolicitudesDepartamento: function(page){
-            var url = 'get_solicitudes_departamento';
+            let url = 'get_solicitudes_departamento';
             axios.post(url,{
                 page: page,
                 busqueda: this.busqueda,
@@ -1225,7 +1237,7 @@ new Vue({
             this.getPorcentajeCerradas();           
         },
         getSolicitudesDeptoCerradas: function(){
-            var url = 'get_solicitudes_departamento_rep';
+            let url = 'get_solicitudes_departamento_rep';
             axios.post(url,{
                 estado: 'Cerrada',
                 orden: 'ASC',
@@ -1238,7 +1250,7 @@ new Vue({
             });
         },
         getSolicitudesDeptoEspera: function(){
-            var url = 'get_solicitudes_departamento_rep';
+            let url = 'get_solicitudes_departamento_rep';
             axios.post(url,{
                 estado: 'Cerrada (En espera de aprobación)',
                 orden: 'ASC',
@@ -1251,7 +1263,7 @@ new Vue({
             });
         },
         getSolicitudesDeptoAtendiendo: function(){
-            var url = 'get_solicitudes_departamento_rep';
+            let url = 'get_solicitudes_departamento_rep';
             axios.post(url,{
                 estado: 'Atendiendo',
                 orden: 'ASC',
@@ -1264,7 +1276,7 @@ new Vue({
             });
         },
         getSolicitudesDeptoSinAtender: function(){
-            var url = 'get_solicitudes_departamento_rep';
+            let url = 'get_solicitudes_departamento_rep';
             axios.post(url,{
                 estado: 'Sin atender',
                 orden: 'ASC',
@@ -1278,7 +1290,7 @@ new Vue({
             });
         },
         getPorcentajeCerradas: function(){
-            var url = 'get_porcentaje_cerradas';
+            let url = 'get_porcentaje_cerradas';
             axios.post(url,{
                 id_departamento: this.departamentoSeleccionado
             })

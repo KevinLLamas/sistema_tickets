@@ -1216,7 +1216,13 @@ class SolicitudController extends Controller
         ->solicitudes()
         ->where('solicitud.estatus',"Cerrada")
         ->count();
-        return $porcentaje = ($solicitudes_close / $solicitudes) * 100;
+        if($solicitudes>0){
+            return $porcentaje = ($solicitudes_close / $solicitudes) * 100;
+        }
+        else{
+            return $porcentaje = 0;
+        }
+        
         
     }
     public function asignar_solicitudes(Request $request){
