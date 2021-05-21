@@ -590,6 +590,7 @@ new Vue({
                     yAxes: [{
                         id:"Tickets Resueltas",
                         ticks: {
+                            beginAtZero:true,
                             maxTicksLimit: 5,
                             padding: 10,
                         },
@@ -756,6 +757,7 @@ new Vue({
                     yAxes: [{
                         id:"Tickets Resueltas",
                         ticks: {
+                            beginAtZero: true,
                             maxTicksLimit: 5,
                             padding: 10,
                         },
