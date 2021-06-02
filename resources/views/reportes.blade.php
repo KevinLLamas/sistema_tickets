@@ -136,8 +136,10 @@
                         <div class="mt-5 text-center small">
                       
                           <span class="mr-2">
-                            <i  class="fas fa-circle" style="color:#E9004C"></i> - Creadas
+                            <i  class="fas fa-circle" style="color:#E9004C"></i> - Sin Atender
                             <i  class="fas fa-circle" style="color:#28a745"></i> - Cerradas
+                            <i  class="fas fa-circle" style="color:#CDCDCD"></i> - Cerradas(En Espera)
+                            <i  class="fas fa-circle" style="color:#007bff"></i> - Atendiendo
                           </span>
                         </div>
                         <!---->
@@ -171,7 +173,7 @@
                 <div class="card-body">
                     <div class=" mt-1 mb-2 border-bottom">
                         <div class="form-row">
-                            <div class="form-group col-lg-12">
+                            <div class="form-group col-lg-6">
                                 <div class="form-group">
                                   <label for="">Departamento</label>
                                   <select class="form-control" name="listaDeps" id="listaDeps" v-if="listaDepartamentos.length > 0" v-model="departamentoSeleccionado" @change="recargarTodoDepartamento()">
@@ -181,7 +183,7 @@
                                   </select>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-12">
+                            <div class="form-group col-lg-6">
                                 <div class="form-group">
                                   <label for="">Periodo de tiempo</label>
                                   <select class="form-control" name="periodo" id="periodo" v-model="rangoTiempo" @change="recargarGraficaComparacionDep()">

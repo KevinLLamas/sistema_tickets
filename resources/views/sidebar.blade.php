@@ -58,11 +58,13 @@
         </div>
       </div>
     </li>
+    @if(Session::get('rol') == 'SUPER' || Session::get('rol') == 'ADMIN' )
     <li class="nav-item">
       <a class="nav-link" href="/sass/reportes">
         <i class="fas fa-fw fa-cog"></i>
         <span>Reportes</span></a>
     </li>
+    @endif
     <!-- Nav Item - Pages Collapse Menu 
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud2" aria-expanded="true" aria-controls="collapseSolicitud">
