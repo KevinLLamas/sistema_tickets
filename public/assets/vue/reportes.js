@@ -960,6 +960,8 @@ new Vue({
                         
                         this.fillNullDataChart(comparacionChart,0,3);
                         this.fillNullDataChart(comparacionChart,1,3);
+                        this.fillNullDataChart(comparacionChart,2,3);
+                        this.fillNullDataChart(comparacionChart,3,3);
                     break;
             }
             
@@ -1099,6 +1101,8 @@ new Vue({
                         
                         this.fillNullDataChart(comparacionChartDep,0,3);
                         this.fillNullDataChart(comparacionChartDep,1,3);
+                        this.fillNullDataChart(comparacionChartDep,2,3);
+                        this.fillNullDataChart(comparacionChartDep,3,3);
                     break;
             }
             

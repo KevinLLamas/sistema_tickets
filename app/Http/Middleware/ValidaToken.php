@@ -20,7 +20,7 @@ class ValidaToken
     public function handle(Request $request, Closure $next)
     {
         //Session::flush();
-        /* if(Session::get('key')){
+        if(Session::get('key')){
             return $next($request);
         }
         $token = $request->query('ssid');
@@ -31,15 +31,15 @@ class ValidaToken
             'nombre'=> 'Kevin Llamas',
             'curp'=> 'MAHL920209HJCRRS02',
             'usuario'=> 'kevindejesus.llamas@jalisco.gob.mx',
-            'rol'=>'SUPER',
+            'rol'=>'ADMIN',
             'id_departamento'=>2,
             'departamento'=>'DTI',
         ]);
         Session::save();
         return $next($request);
         
-    } */
-     $token = $request->query('ssid');
+    } 
+     /*$token = $request->query('ssid');
         
         //Se esta ingresando a cualquier url sin el token
         if(is_null($token)){
@@ -149,5 +149,5 @@ class ValidaToken
 
         $res = json_decode($response);
         return $res;
-    }
+    }*/
 }
