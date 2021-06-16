@@ -15,11 +15,11 @@
       <input type="hidden" value="{{Session::get('id_departamento')}}" id="departamento" name="departamento">
       <div class="row" v-if="departamentoSeleccionado != ''">
           <div class="col-xl-2 col-md-4 mb-4">
-            <div class="card border-left-primary shadow bg-white py-2">
+            <div class="card border-left-info shadow bg-white py-2">
               <div class="card-body">
                 <div class="row no-gutters align-items-center">
                   <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Atendiendo</div>
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Atendiendo</div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800">@{{numAtendiendo}}</div>
                   </div>
                   <div class="col-auto">
@@ -30,11 +30,11 @@
             </div>
           </div>
           <div class="col-xl-2 col-md-4 mb-4">
-            <div class="card border-left-secondary shadow h-100 py-2">
+            <div class="card border-left-primary shadow h-100 py-2">
               <div class="card-body">
                 <div class="row no-gutters align-items-center">
                   <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Sin Atender</div>
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sin Atender</div>
                     <div class="h5 mb-0 font-weight-bold text-gray-800">@{{numSinAtender}}</div>
                   </div>
                   <div class="col-auto">
@@ -60,11 +60,11 @@
             </div>
           </div>
           <div class="col-xl-2 col-md-4 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
+            <div class="card border-left-success shadow h-100 py-2">
               <div class="card-body">
                 <div class="row no-gutters align-items-center">
                   <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Cerrados</div>
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Cerrados %</div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800">@{{porcentajeCerrados}}%</div>
                   </div>
                   <div class="col-auto">
@@ -75,11 +75,11 @@
             </div>
           </div>
         <div class="col-xl-2 col-md-4 mb-4">
-          <div class="card border-left-warning shadow h-100 py-2">
+          <div class="card border-left-secondary shadow h-100 py-2">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
                 <div class="col mr-2">
-                  <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">En Espera</div>
+                  <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">En Espera</div>
                 <div class="h5 mb-0 font-weight-bold text-gray-800">@{{numEspera}}</div>
                 </div>
                 <div class="col-auto">

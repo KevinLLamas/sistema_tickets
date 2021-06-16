@@ -261,7 +261,6 @@ new Vue({
                     idUsuario:this.usuarioSeleccionado,
                 })
                 .then(response=>{
-                    //console.log(response.data);
                     this.Estatus=response.data;
                 })
             }catch(e){

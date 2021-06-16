@@ -958,13 +958,30 @@ class SolicitudController extends Controller
         try{
             
             $idUsuario=$request->input('idUsuario');
+            $idDepartamento=$request->input('departamentoSeleccionado');
             if($idUsuario!=''){
-                $num_status=Usuario::find($idUsuario)
-                ->solicitudes_atendiendo()
-                ->select('solicitud.estatus',DB::raw('count(*) as total'))
+                $consulta="select solicitud.estatus, count(*) as total from solicitud ";
+                $consulta.="join solicitud_usuario join solicitud_departamento ";
+                $consulta.="join usuario where solicitud.id_solicitud = solicitud_usuario.id_solicitud ";
+                $consulta.="and solicitud_usuario.id_usuario = :userId and solicitud_usuario.estado in ('Atendiendo','Terminado','Suspendido') ";
+                $consulta.="and usuario.id_sgu = solicitud_usuario.id_usuario ";
+                $consulta.="and solicitud_departamento.id_departamento = usuario.id_departamento ";
+                $consulta.="and solicitud_usuario.id_solicitud = solicitud_departamento.id_solicitud ";
+                $consulta.="group by solicitud.estatus order by total desc";
+
+                $solicitudes=DB::select(DB::raw($consulta),array(
+                    'userId'=>$idUsuario
+                ));
+                
+                
+                return $solicitudes; 
+
+                //->where('departamento.id',$idDepartamento) 
+                /* ->select('solicitud.estatus',DB::raw('count(*) as total'))
+                
                 ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
                 
-                return $num_status;
+                return $num_status; */
             }
             else{
                 return response()->json([
@@ -996,9 +1013,18 @@ class SolicitudController extends Controller
                 if($idUsuario!=''){
                     $user=Usuario::find($idUsuario);
                     if(!is_null($user)){
-                        $num_status=Usuario::find($idUsuario)->solicitudes_atendiendo()
-                        ->select('solicitud.estatus',DB::raw('count(*) as total'))
-                        ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+                        $consulta="select solicitud.estatus, count(*) as total from solicitud ";
+                        $consulta.="join solicitud_usuario join solicitud_departamento ";
+                        $consulta.="join usuario where solicitud.id_solicitud = solicitud_usuario.id_solicitud ";
+                        $consulta.="and solicitud_usuario.id_usuario = :userId and solicitud_usuario.estado in ('Atendiendo','Terminado','Suspendido') ";
+                        $consulta.="and usuario.id_sgu = solicitud_usuario.id_usuario ";
+                        $consulta.="and solicitud_departamento.id_departamento = usuario.id_departamento ";
+                        $consulta.="and solicitud_usuario.id_solicitud = solicitud_departamento.id_solicitud ";
+                        $consulta.="group by solicitud.estatus order by total desc";
+
+                        $num_status=DB::select(DB::raw($consulta),array(
+                            'userId'=>$idUsuario
+                        ));
 
                         $lista=array();
                         $lista["id_sgu"]=$u['id_sgu'];
