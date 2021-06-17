@@ -808,7 +808,7 @@ new Vue({
                     this.coloresHex.push(this.asignarColorHex(e.estatus))
                     numSolicitudes+=e.total;
                 });
-                console.log(numSolicitudes);
+                
                 this.generar_Grafica_ByStatus();
                 this.Estatus.forEach(e => {
                     //console.log(e.estatus);
