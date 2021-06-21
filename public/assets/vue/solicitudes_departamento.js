@@ -68,7 +68,6 @@ new Vue({
     methods:{
         generarGraficaDepartamento:async function(){
             await this.getNumSolicitudesByStatusDepartamento();
-            //console.log("ok",this.Estatus);
             this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
             this.numEstatus=await this.Estatus.map(n=>n.total);
             
@@ -76,8 +75,6 @@ new Vue({
                 this.colorEstatus.push(this.asignarColor(e.estatus));
                 this.coloresHex.push(this.asignarColorHex(e.estatus))
             });
-            //this.colorEstatus=await this.Estatus.map(c=>c.color);
-            //await console.log("ök",colorEstatus);
             this.generar_Grafica_ByStatus();
         },
         asignarColor:function(tipo){
@@ -126,8 +123,6 @@ new Vue({
             url="get_num_solicitudes_bystatus_departamento";
             data= await axios.get(url)
             .then(response=>{
-                //console.log(response.data);
-                
                 this.Estatus= response.data;
             })
             
@@ -135,11 +130,8 @@ new Vue({
         },
         generar_Grafica_ByStatus:function(){
             
-            // Set new default font family and font color to mimic Bootstrap's default styling
             Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#858796';
-            //console.log("colores para grafica",this.coloresHex);
-            // Pie Chart Example
             var ctx = document.getElementById("SolicitudesDepartamentoChart");
             var myPieChart = new Chart(ctx, {
             type: 'doughnut',
@@ -185,7 +177,6 @@ new Vue({
                 orden: this.orden,
             })
             .then(response => {
-                //console.log(response.data);
                 this.pagination=response.data;
                 this.Solicitudes=response.data.data;
             });
@@ -198,7 +189,6 @@ new Vue({
             url="get_usuarios_by_departamento";
             data=await axios.get(url)
             .then(response=>{
-                //console.log(response.data);
                 this.listaUsuarios=response.data;
                 this.usuarioSeleccionado = this.listaUsuarios[0].id_sgu;
                 
@@ -222,8 +212,6 @@ new Vue({
                             usuarioSeleccionado:this.usuarioSeleccionado,
                         })
                         .then(response => {
-                            //console.log(response);
-                            
                             this.asignacion_multiple=false;
                             this.tickets_seleccionados=[];
                             if(response.data.status){
@@ -242,8 +230,6 @@ new Vue({
                                     'error'
                                 )
                             }
-                            //console.log(response.data);
-                            
                         });
 
                     }

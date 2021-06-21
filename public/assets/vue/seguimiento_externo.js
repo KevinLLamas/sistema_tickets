@@ -44,7 +44,6 @@ new Vue({
                 this.seguimiento = response.data;                
                 this.validatePermissionExterno();
                 this.compruebaCerradoAuto();
-                //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
                 //console.log(error);
             });
@@ -61,7 +60,6 @@ new Vue({
                     email: this.seguimiento.usuario.correo,
                     fecha_finalizado: this.nueva_atencion.fecha_finalizado,
                 }).then(result=>{
-                    console.log(result);
                     this.id_atencion = result.data;
                     if(this.id === '')
                         this.muestra();
@@ -125,8 +123,7 @@ new Vue({
             axios.post('../cambiar_estatus',{
                 id: this.seguimiento.id_solicitud,
                 estatus: this.seguimiento.estatus
-             }).then(result=>{           
-                 //this.getSesiones();
+             }).then(result=>{          
                  this.seguimiento.estatus = result.data;
                  if(this.seguimiento.estatus == 'Cerrada')
                     Swal.fire({

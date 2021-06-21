@@ -22,7 +22,6 @@ new Vue({
     methods: {
         getPerfiles: function(){
             axios.get('perfiles').then(result =>{
-                console.log(result.data);
                 this.Perfiles = result.data;
             }).catch(error=>{
                 console.log(error);
@@ -34,7 +33,6 @@ new Vue({
             this.Campos = [];
             axios.get('categorias?id_perfil='+this.solicitud.perfil)
             .then(result =>{
-                console.log(result.data);
                 this.Categorias = result.data;
             }).catch(error=>{
                 console.log(error);
@@ -44,7 +42,6 @@ new Vue({
             this.subcategoria = '';
             this.Campos = [];
             axios.get('subcategorias?id_categoria='+this.solicitud.categoria).then(result =>{
-                console.log(result.data);
                 this.Subcategorias = result.data;
             }).catch(error=>{
                 console.log(error);
@@ -54,7 +51,6 @@ new Vue({
             this.Campos = [];
             axios.get(`getCampos?id_perfil=${this.solicitud.perfil}&id_subcategoria=${this.solicitud.subcategoria}`)
             .then(result =>{
-                console.log(result.data);
                 this.Campos = result.data;
             }).catch(error=>{
                 console.log(error);
@@ -68,7 +64,6 @@ new Vue({
                     perfil: this.solicitud.perfil,
                     curp: curp,
                 }).then(result=>{
-                    console.log(result);
                     if(result.data.status)
                     {
                         if(result.data.data.ok)
@@ -109,7 +104,6 @@ new Vue({
                 solicitud: this.solicitud,
                 datos: this.Campos,
             }).then(result=>{
-                console.log(result);
                 if(result.data.status){
                     this.solicitud.id = result.data.id_solicitud;
                     this.solicitud.id_atencion = result.data.id_atencion;
@@ -175,7 +169,6 @@ new Vue({
                 }
                 axios.post('save_files', formData, config)
                 .then(response => {
-                    console.log(response.data);
                     if(response.data.status){
                         swal.close();
                         Swal.fire('Ticket creado','Tu ID de ticket es: '+this.solicitud.id,'success');

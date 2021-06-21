@@ -12,7 +12,6 @@ new Vue({
     },
     mounted: async function(){
         await this.getNumSolicitudesByStatus();
-        //console.log("ok",this.Estatus);
         this.tipoEstatus=await this.Estatus.map(s=>s.estatus);
         this.numEstatus=await this.Estatus.map(n=>n.total);
         
@@ -20,8 +19,6 @@ new Vue({
             this.colorEstatus.push(this.asignarColor(e.estatus));
             this.coloresHex.push(this.asignarColorHex(e.estatus))
         });
-        //this.colorEstatus=await this.Estatus.map(c=>c.color);
-        //await console.log("ök",colorEstatus);
         this.generar_Grafica_ByStatus();
     },
     methods:{
@@ -73,8 +70,6 @@ new Vue({
             url="get_Num_Solicitudes_ByStatus";
             data= await axios.get(url)
             .then(response=>{
-                //console.log(response.data);
-                
                 this.Estatus= response.data;
             })
             
@@ -85,7 +80,6 @@ new Vue({
             // Set new default font family and font color to mimic Bootstrap's default styling
             Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#858796';
-            //console.log("colores para grafica",this.coloresHex);
             // Pie Chart Example
             var ctx = document.getElementById("myPieChart");
             var myPieChart = new Chart(ctx, {

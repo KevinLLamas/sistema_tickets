@@ -19,7 +19,11 @@
   <link href="{{ asset('assets/css/sb-admin-2.css')}}" rel="stylesheet">
   <!-- Bootstrap core JavaScript-->
   <script src="{{asset('assets/vendor/jquery/jquery.min.js')}}"></script>
-  <script src="{{ asset('assets/js/vue.js')}}"></script>
+  @if(env('APP_DEBUG')=='true')
+    <script src="{{ asset('assets/js/vue.js')}}"></script>
+  @else
+    <script src="{{ asset('assets/js/vue.prod.js')}}"></script>
+  @endif
   <script src="{{ asset('assets/js/axios.js')}}"></script>
   <script src="{{ asset('assets/js/toastr.js')}}"></script> 
   {{--  Version 2.10 sweetalert --}}

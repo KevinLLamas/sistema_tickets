@@ -80,7 +80,6 @@ new Vue({
             axios.get(`../getSolicitud/`+this.id).then(response=>{
                 this.seguimiento = response.data;
                 this.validatePermissionExterno();
-                //console.log(this.seguimiento.correo_atencion);
             }).catch(function (error) {
                 //console.log(error);
             });
@@ -99,7 +98,6 @@ new Vue({
                     rol: this.user.rol,
                     estatus: this.seguimiento.estatus
                 }).then(response=>{
-                    //console.log(response);
                     this.id_atencion = response.data.id;
                     if(response.data.primer)
                     {
@@ -190,7 +188,6 @@ new Vue({
                     email: this.seguimiento.usuario.correo,
                     fecha_finalizado: this.nueva_atencion.fecha_finalizado,
                 }).then(result=>{
-                    console.log(result);
                     this.id_atencion = result.data;
                     if(this.id === '')
                         this.muestra();
@@ -484,13 +481,10 @@ new Vue({
                     slim.enable();
                 }
                 this.isSection1 = true;
-                //this.styleObject.display = 'run-in';
                 for(var i = 0; i < this.departamentoValido.integrantes.length; i++)
                 {
-                    //console.log(this.seguimiento.departamentoValido);
                     for(var x = 0; x < this.seguimiento.solicitud_usuario.length; x++)
                     {
-                        //console.log(this.departamentoValido.integrantes[i].id);
                         if(this.departamentoValido.integrantes[i].id_sgu == this.seguimiento.solicitud_usuario[x].id_usuario && (this.seguimiento.solicitud_usuario[x].estado === "Atendiendo" || this.seguimiento.solicitud_usuario[x].estado === "Terminado"))
                         { 
                             this.integrantesSeleccionados[c] = this.departamentoValido.integrantes[i].id_sgu;
@@ -547,7 +541,6 @@ new Vue({
                 id_solicitud: this.seguimiento.id_solicitud,
                 id_departamento: this.user.id_departamento,
             }).then(response=>{
-                //console.log(response);
                 this.muestra();                
                 var c = 0;  
                 Swal.fire('Correcto','Se han actualizado los usuarios','success');                
@@ -562,7 +555,6 @@ new Vue({
                 id_solicitud: this.seguimiento.id_solicitud,
                 id_departamentos: this.seguimiento.departamentos_seleccionados_id,
             }).then(response=>{
-                console.log(response);
                 this.muestra();                
                 var c = 0;  
                 Swal.fire('Correcto','Se actualizo la asignación de departamento','success');                
@@ -583,8 +575,6 @@ new Vue({
                         {
                             this.nueva_atencion.detalle= 'asignó a el departamento ' + this.seguimiento.departamento[x].nombre + ' a este ticket';
                         }
-                        //console.log(busq);
-                        //const busq = this.seguimiento.departamento.find( departamento => departamento.id == this.departamentosAntesUpdate);
                     } 
                 } 
                 else if(this.departamentosAntesUpdate.length > this.seguimiento.departamento.length)
@@ -596,8 +586,6 @@ new Vue({
                         {
                             this.nueva_atencion.detalle= 'desasignó a el departamento ' + this.departamentosAntesUpdate[x].nombre + ' de este ticket';
                         }
-                        //console.log(busq);
-                        //const busq = this.seguimiento.departamento.find( departamento => departamento.id == this.departamentosAntesUpdate);
                     }
                 }                
                 
@@ -687,7 +675,6 @@ new Vue({
             this.Campos = [];
             axios.get('../categorias?id_perfil='+this.seguimiento.perfil.id)
             .then(result =>{
-                //console.log(result.data);
                 this.Categorias = result.data;
             }).catch(error=>{
                 console.log(error);
@@ -700,7 +687,6 @@ new Vue({
             this.subcategoria = '';
             this.Campos = [];
             axios.get('../subcategorias?id_categoria='+this.seguimiento.categoria.id).then(result =>{
-                //console.log(result.data);
                 this.Subcategorias = result.data;
             }).catch(error=>{
                 console.log(error);
@@ -716,8 +702,7 @@ new Vue({
                     id_solicitud: this.seguimiento.id_solicitud,
                     id_subcategoria: this.seguimiento.subcategoria.id,
                     id_categoria: this.seguimiento.categoria.id
-                }).then(response=>{
-                    console.log(response);                
+                }).then(response=>{                
                     this.muestra();
                     Swal.fire('Correcto','Cambio la categoria y/o subcategoria','success');  
                 }).catch(function (error) {
@@ -775,7 +760,6 @@ new Vue({
             axios.post('../sub_dptos',{
                 id_subcategoria: this.seguimiento.subcategoria.id
             }).then(response=>{
-                console.log(response);
                 this.seguimiento.subcategoria_departamento = response.data;         
             }).catch(function (error) {
                 console.log(error);

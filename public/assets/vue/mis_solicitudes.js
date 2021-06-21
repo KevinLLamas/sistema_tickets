@@ -118,7 +118,6 @@ new Vue({
             url="get_num_solicitudes_bystatus_mis_solicitudes";
             data= await axios.get(url)
             .then(response=>{
-                //console.log(response.data);
                 this.Estatus= response.data;
             })
             
@@ -171,7 +170,6 @@ new Vue({
                 orden: this.orden,
             })
             .then(response => {
-                //console.log(response.data);
                 this.pagination=response.data;
                 this.MisSolicitudes=response.data.data;
             });

@@ -59,7 +59,6 @@ new Vue({
                 leidas: this.ver,
             })
             .then(response => {
-                console.log(response);
                 this.notificaciones = response.data.notificaciones;
             });
         },
@@ -70,7 +69,6 @@ new Vue({
         {
             axios.post('/sass/set_notificacion_leida',{id: id})
             .then(response => {
-                console.log(response.data);
                 window.location = '/sass/seguimiento/'+id_solicitud;
             });
         },

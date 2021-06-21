@@ -243,7 +243,6 @@ new Vue({
                 idDepartamento:this.departamentoSeleccionado,
             })
             .then(response=>{
-                //console.log(response.data);
                 this.listaUsuarios=response.data;
                 this.usuarioSeleccionado = this.listaUsuarios[0].id_sgu;
                 //Buscamos los datos de cada usuario una vez la lista esta completa
@@ -261,11 +260,10 @@ new Vue({
                     idUsuario:this.usuarioSeleccionado,
                 })
                 .then(response=>{
-                    //console.log(response.data);
                     this.Estatus=response.data;
                 })
             }catch(e){
-                //console.log('usuario invalido');
+                console.log('usuario invalido');
             }
         },
         getNumSolicitudesByEstatusTodos:async function(){
@@ -275,11 +273,10 @@ new Vue({
                     listaUsuarios:this.listaUsuarios,
                 })
                 .then(response=>{
-                    //console.log(response.data);
                     this.EstatusTodos=response.data;
                 })
             }catch(e){
-                //console.log('usuario invalido');
+                console.log('usuario invalido');
             }
         },
         getNumSolicitudesByEstatusSubcategoria:async function(){
@@ -290,7 +287,6 @@ new Vue({
                     idSubcategoria:this.subcategoriaSeleccionada,
                 })
                 .then(response=>{
-                    //console.log(response.data);
                     this.EstatusSubc=response.data;
                 })
             }catch(e){
@@ -304,7 +300,6 @@ new Vue({
                     idDepartamento:this.departamentoSeleccionado,
                 })
                 .then(response=>{
-                    //console.log(response.data);
                     this.listaSubcategorias=response.data;
                     this.subcategoriaSeleccionada=this.listaSubcategorias[0].id;
                     this.generar_Grafica_ByStatus_Subc();
@@ -319,11 +314,7 @@ new Vue({
             url="get_my_departamento";
             data=await axios.get(url)
             .then(response=>{
-                //(response.data);
-                //this.myDepartamento=response.data;
                 this.departamentoSeleccionado=response.data;
-                
-                //console.log(response.data);
                 
             })
         },
@@ -331,9 +322,7 @@ new Vue({
             url="get_departamentos";
             data=await axios.get(url)
             .then(response=>{
-                //(response.data);
                 this.listaDepartamentos=response.data;
-                //console.log(response.data);
             })
         },
         getNumSolicitudesThroughTime:async function(){
@@ -352,7 +341,6 @@ new Vue({
                 rangoTiempo:this.rangoTiempo,
             })
             .then(response=>{
-                //console.log(response.data);
                 this.EstatusbyTimeCerradas=response.data;
             })
         },
@@ -364,7 +352,6 @@ new Vue({
                 idDepartamento:this.departamentoSeleccionado
             })
             .then(response=>{
-                //(response.data);
                 this.EstatusbyTime=response.data;
             })
         },
@@ -375,7 +362,6 @@ new Vue({
                 idDepartamento:this.departamentoSeleccionado
             })
             .then(response=>{
-                //console.log(response.data);
                 this.EstatusbyTimeCerradas=response.data;
             })
         },
@@ -388,7 +374,6 @@ new Vue({
                 estado:estado
             })
             .then(response=>{
-                //console.log(response.data);
                 this.EstatusTime=response.data;
             })
         },
@@ -805,14 +790,11 @@ new Vue({
             if(typeof this.Estatus !== 'undefined' && this.Estatus.length > 0){
                 this.coloresHex=[];
                 this.Estatus.forEach(e => {
-                    //console.log(`estado: ${e.estatus}  color: ${this.asignarColorHex(e.estatus)}`);
                     this.coloresHex.push(this.asignarColorHex(e.estatus))
                     numSolicitudes+=e.total;
                 });
-                console.log(numSolicitudes);
                 this.generar_Grafica_ByStatus();
                 this.Estatus.forEach(e => {
-                    //console.log(e.estatus);
                     let porcentaje=Math.round((((e.total/numSolicitudes)*100) + Number.EPSILON) * 100) / 100;
                     this.addLabelChart(solicitudesUsuarioChart,e.estatus.toString()+" %");
                     
@@ -829,13 +811,11 @@ new Vue({
             if(typeof this.EstatusSubc !== 'undefined' && this.EstatusSubc.length > 0){
                 this.coloresHexSubc=[];
                 this.EstatusSubc.forEach(e => {
-                    //console.log(`estado: ${e.estatus}  color: ${this.asignarColorHex(e.estatus)}`);
                     this.coloresHexSubc.push(this.asignarColorHex(e.estatus))
                     numSolicitudes+=e.total;
                 });
                 this.generar_Grafica_ByStatus_Subc();
                 this.EstatusSubc.forEach(e => {
-                    //console.log(e.estatus);
                     let porcentaje=Math.round((((e.total/numSolicitudes)*100) + Number.EPSILON) * 100) / 100;
                     this.addLabelChart(solicitudesSubcategoriaChart,e.estatus.toString()+" %");
                     this.addDataChartsinOrden(solicitudesSubcategoriaChart,porcentaje,0);
@@ -846,27 +826,19 @@ new Vue({
             
         },
         generar_Grafica_Comparacion:async function(){
-            //console.log("Tickets en total");
             await this.getNumSolicitudesThroughTime();
             let ListCreadas=this.EstatusbyTime;
-            //console.log("Creadas:"+ListCreadas);
-            //await this.getNumSolicitudesThroughTimeCerradasDep();
-            //console.log(this.EstatusbyTime);
             await this.getNumSolicitudesThroughTimeByStatusDep('Sin Atender');
             let ListSinAtender=this.EstatusTime;
-            //console.log("Sin Atender:"+ListSinAtender);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Atendiendo');
             let ListAtendiendo=this.EstatusTime;
-            //console.log("Atendiendo:"+ListAtendiendo);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada (En espera de aprobación)');
             let ListCerradaEnEspera=this.EstatusTime;
-            //console.log("Cerrada (En espera de aprobación):"+ListCerradaEnEspera);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada');
             let ListCerradas=this.EstatusTime;
-            //console.log("Cerrada:"+ListCerradas);
             
             
             switch(this.rangoTiempo){
@@ -920,7 +892,6 @@ new Vue({
                 case 'INTERVAL 1 MONTH':
                         
                         this.LastDays(30).forEach(m => {
-                            //console.log(m);
                             this.addLabelChart(comparacionChart,m.toString());
                         });
                         ListCerradas.forEach(c => {
@@ -942,7 +913,6 @@ new Vue({
                     break;
                 case 'INTERVAL 3 MONTH':
                         this.LastMonths(3).forEach(m => {
-                            //console.log(m);
                             this.addLabelChart(comparacionChart,m.toString());
                         });
                         ListCerradas.forEach(c => {
@@ -967,27 +937,21 @@ new Vue({
             
         },
         generar_Grafica_Comparacion_Dep:async function(){
-            //console.log("Tickets en total");
+
             await this.getNumSolicitudesThroughTimeDep();
             let ListCreadas=this.EstatusbyTime;
-            //console.log("Creadas:"+ListCreadas);
-            //await this.getNumSolicitudesThroughTimeCerradasDep();
-            //console.log(this.EstatusbyTime);
+
             await this.getNumSolicitudesThroughTimeByStatusDep('Sin Atender');
             let ListSinAtender=this.EstatusTime;
-            //console.log("Sin Atender:"+ListSinAtender);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Atendiendo');
             let ListAtendiendo=this.EstatusTime;
-            //console.log("Atendiendo:"+ListAtendiendo);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada (En espera de aprobación)');
             let ListCerradaEnEspera=this.EstatusTime;
-            //console.log("Cerrada (En espera de aprobación):"+ListCerradaEnEspera);
 
             await this.getNumSolicitudesThroughTimeByStatusDep('Cerrada');
             let ListCerradas=this.EstatusTime;
-            //console.log("Cerrada:"+ListCerradas);
             
             
             switch(this.rangoTiempo){
@@ -1022,12 +986,6 @@ new Vue({
                             this.addLabelChart(comparacionChartDep,d.toString());
                         });
 
-                        /*this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChartDep,s.total,s.fecha,1);
-                        });
-                        this.EstatusbyTimeCerradas.forEach(c => {
-                            this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
-                        });*/
                         ListCerradas.forEach(c => {
                             this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
                         });
@@ -1048,16 +1006,9 @@ new Vue({
                 case 'INTERVAL 1 MONTH':
                         
                         this.LastDays(30).forEach(m => {
-                            //console.log(m);
                             this.addLabelChart(comparacionChartDep,m.toString());
                         });
                         
-                        /*this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChartDep,s.total,s.fecha,1);
-                        });
-                        this.EstatusbyTimeCerradas.forEach(c => {
-                            this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
-                        });*/
                         ListCerradas.forEach(c => {
                             this.addDataChart(comparacionChartDep,c.total,c.fecha,0);
                         });
@@ -1077,15 +1028,8 @@ new Vue({
                     break;
                 case 'INTERVAL 3 MONTH':
                         this.LastMonths(3).forEach(m => {
-                            //console.log(m);
                             this.addLabelChart(comparacionChartDep,m.toString());
                         });
-                        /*this.EstatusbyTime.forEach(s => {
-                            this.addDataChart(comparacionChartDep,s.total,s.mes,1);
-                        });
-                        this.EstatusbyTimeCerradas.forEach(c => {
-                            this.addDataChart(comparacionChartDep,c.total,c.mes,0);
-                        });*/
                         ListCerradas.forEach(c => {
                             this.addDataChart(comparacionChartDep,c.total,c.mes,0);
                         });
@@ -1106,36 +1050,21 @@ new Vue({
                     break;
             }
             
-            /*console.log("Tickets cerrados");
-            await this.getNumSolicitudesThroughTime('Cerrada');
-            this.EstatusbyTime.forEach(s => {
-                this.addDataChart(comparacionChart,s.fecha,s.total,0);
-            });
-            console.log(this.EstatusbyTime);*/
-            
         },
         addLabelChart:function(chart,label){
             chart.data.labels.push(label);
         },
         addDataChart:function(chart, data,label, dataset) {
-            //console.log("ingresando dato en:")
-            //console.log(label);
             posicion=chart.data.labels.findIndex((f) => f == label);
             chart.data.datasets[dataset].data[posicion]=data;   
-            //console.log("posicion: "+ posicion);
-            //chart.data.datasets[dataset].data.push(data);
+
             chart.update();
         },
         addDataChartsinOrden:function(chart, data,dataset) {
-            //console.log("ingresando dato sin orden:");
-           // console.log(data);
-            chart.data.datasets[dataset].data.push(data);   
-            //console.log("posicion: "+ posicion);
-            //chart.data.datasets[dataset].data.push(data);
+            chart.data.datasets[dataset].data.push(data); 
             chart.update();
         },
         fillNullDataChart:function(chart,dataset,total){
-            //console.log(`array ${chart.data.datasets[dataset].data}`)
             d=chart.data.datasets[dataset].data;
             for (let p = 0; p < total; p++) {
                 if(d[p]==null){
@@ -1143,7 +1072,6 @@ new Vue({
                 }
                 
             }
-            //console.log(`array resulta: ${d}`)
             chart.data.datasets[dataset].data=d;
             chart.update();
         },
@@ -1160,14 +1088,8 @@ new Vue({
             return(result.reverse());
         },
         formatHour:function(date){
-            //console.log(`fecha a convertir ${date}`);
             let hour = date.getHours().toString()+' Horas';
             return hour;
-            /*if(month < 10){
-                return `0$`;
-            }else{
-                return `${day}-${month}-${year}`;
-            }*/
             
         },
         LastDays:function(days) {
@@ -1182,13 +1104,9 @@ new Vue({
         },
         
         formatDate:function(date){
-            //console.log(`fecha a convertir ${date}`);
             let day = date.getDate()
             let month = date.getMonth() + 1
             let year = date.getFullYear()
-            //console.log(`dia ${day}`);
-            //console.log(`mes ${month}`);
-            //console.log(`anio ${year}`);
             if(month < 10){
                 return `${day}-0${month}-${year}`;
             }else{
@@ -1229,7 +1147,6 @@ new Vue({
                 orden: this.orden,
             })
             .then(response => {
-                //console.log(response.data);
                 this.pagination=response.data;
                 this.Solicitudes=response.data.data;
             });
@@ -1250,8 +1167,6 @@ new Vue({
                 id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
-                //console.log(response.data);
-                //this.solicitudesDepto = response.data;
                 this.numCerradas = response.data;
             });
         },
@@ -1263,8 +1178,6 @@ new Vue({
                 id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
-                //console.log(response.data);
-                //this.solicitudesDepto = response.data;
                 this.numEspera = response.data;
             });
         },
@@ -1276,8 +1189,6 @@ new Vue({
                 id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
-                //console.log(response.data);
-                //this.solicitudesDepto = response.data;
                 this.numAtendiendo = response.data;
             });
         },
@@ -1289,11 +1200,8 @@ new Vue({
                 id_departamento: this.departamentoSeleccionado
             })
             .then(response => {
-                //console.log(response.data);
-                //this.solicitudesDepto = response.data;
                 this.numSinAtender = response.data;
-                //this.porcentajeCerrados = ((this.numCerradas/(this.numAtendiendo + this.numSinAtender + this.numCerradas + this.numEspera)) * 100).toFixed(2);
-            });
+                });
         },
         getPorcentajeCerradas: function(){
             let url = 'get_porcentaje_cerradas';
