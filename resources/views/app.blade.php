@@ -25,10 +25,10 @@
   {{--  Version 2.10 sweetalert --}}
   <script src="{{asset('assets/js/sweetalert.js')}}"></script>
 </head>
-<body id="page-top">
+<body id="page-top" class="sidebar-toggled">
 
   <!-- Page Wrapper -->
-<div id="wrapper">
+<div id="wrapper" >
     @include('sidebar'){{-- Sidebar /Menu lateral --}}
         @include('navbar') {{-- Menu superior --}}
             @yield('content') {{-- Cotenido de la pagina --}}
