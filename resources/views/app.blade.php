@@ -9,6 +9,12 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
+  <style>
+    [v-cloak] {
+        display: none;
+    }
+  </style>
+
   <title>SISTEMA DE ATENCION, SOPORTE Y SEGUIMIENTO</title>
   <link rel="icon" type="image/png" href="{{ asset('assets/images/logo_edu.png')}}" /> 
   <!-- Custom fonts for this template-->
