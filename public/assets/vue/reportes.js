@@ -962,6 +962,35 @@ new Vue({
                         this.fillNullDataChart(comparacionChart,2,3);
                         this.fillNullDataChart(comparacionChart,3,3);
                     break;
+                case 'INTERVAL 12 MONTH':
+                        this.LastMonths(12).forEach(m => {
+                            //console.log(m);
+                            this.addLabelChart(comparacionChart,m.toString());
+                        });
+                        /*this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChartDep,s.total,s.mes,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChartDep,c.total,c.mes,0);
+                        });*/
+                        ListCerradas.forEach(c => {
+                            this.addDataChart(comparacionChart,c.total,c.mes,0);
+                        });
+                        ListSinAtender.forEach(sa => {
+                            this.addDataChart(comparacionChart,sa.total,sa.mes,1);
+                        });
+                        ListCerradaEnEspera.forEach(ce => {
+                            this.addDataChart(comparacionChart,ce.total,ce.mes,2);
+                        });
+                        ListAtendiendo.forEach(a => {
+                            this.addDataChart(comparacionChart,a.total,a.mes,3);
+                        });
+                        
+                        this.fillNullDataChart(comparacionChart,0,12);
+                        this.fillNullDataChart(comparacionChart,1,12);
+                        this.fillNullDataChart(comparacionChart,2,12);
+                        this.fillNullDataChart(comparacionChart,3,12);
+                    break;    
             }
             
         },
@@ -1103,6 +1132,35 @@ new Vue({
                         this.fillNullDataChart(comparacionChartDep,2,3);
                         this.fillNullDataChart(comparacionChartDep,3,3);
                     break;
+                case 'INTERVAL 12 MONTH':
+                        this.LastMonths(12).forEach(m => {
+                            //console.log(m);
+                            this.addLabelChart(comparacionChartDep,m.toString());
+                        });
+                        /*this.EstatusbyTime.forEach(s => {
+                            this.addDataChart(comparacionChartDep,s.total,s.mes,1);
+                        });
+                        this.EstatusbyTimeCerradas.forEach(c => {
+                            this.addDataChart(comparacionChartDep,c.total,c.mes,0);
+                        });*/
+                        ListCerradas.forEach(c => {
+                            this.addDataChart(comparacionChartDep,c.total,c.mes,0);
+                        });
+                        ListSinAtender.forEach(sa => {
+                            this.addDataChart(comparacionChartDep,sa.total,sa.mes,1);
+                        });
+                        ListCerradaEnEspera.forEach(ce => {
+                            this.addDataChart(comparacionChartDep,ce.total,ce.mes,2);
+                        });
+                        ListAtendiendo.forEach(a => {
+                            this.addDataChart(comparacionChartDep,a.total,a.mes,3);
+                        });
+                        
+                        this.fillNullDataChart(comparacionChartDep,0,12);
+                        this.fillNullDataChart(comparacionChartDep,1,12);
+                        this.fillNullDataChart(comparacionChartDep,2,12);
+                        this.fillNullDataChart(comparacionChartDep,3,12);
+                    break;    
             }
             
             /*console.log("Tickets cerrados");
@@ -1203,10 +1261,14 @@ new Vue({
             let d = new Date();
             let result = []
 
-            for (i = months-1; i >= 0; i--) {
-                result.push(monthNames[(d.getMonth() - i)] + ' - ' +d.getFullYear()  );
+            //let num_mes=0;
+            for (i = 0; i > -months; i--) {
+                var future = new Date(d.getFullYear(), d.getMonth() + i, 1);
+                var month = monthNames[future.getMonth()];
+                var year = future.getFullYear();
+                result.push(month + ' - ' + year  ); 
             }
-            return result;
+            return result.reverse();
         },
         formatMonth:function(date){
             let monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",

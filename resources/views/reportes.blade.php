@@ -122,6 +122,7 @@
                                     <option value="INTERVAL 7 DAY">7 Dias</option>
                                     <option value="INTERVAL 1 MONTH">1 Mes</option>
                                     <option value="INTERVAL 3 MONTH">3 Meses</option>
+                                    <option value="INTERVAL 12 MONTH">12 Meses</option>
                                   </select>
                                 </div>
                             </div>
@@ -192,6 +193,7 @@
                                     <option value="INTERVAL 7 DAY">7 Dias</option>
                                     <option value="INTERVAL 1 MONTH">1 Mes</option>
                                     <option value="INTERVAL 3 MONTH">3 Meses</option>
+                                    <option value="INTERVAL 12 MONTH">12 Meses</option>
                                   </select>
                                 </div>
                             </div>
