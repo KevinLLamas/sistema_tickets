@@ -27,7 +27,7 @@ class ValidaToken
        
         Session::put([
             'key'=>$token,
-            'id_sgu'=>'1633803',
+            'id_sgu'=>'1865',
             'curp'=> 'MAHL920209HJCRRS02',
             'usuario'=> 'kevindejesus.llamas@jalisco.gob.mx',
             'rol'=>'SUPER',
