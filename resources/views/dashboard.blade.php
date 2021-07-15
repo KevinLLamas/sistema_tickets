@@ -89,6 +89,7 @@
                                                     <option value='Suspendida'>Suspendida</option>
                                                     <option value='Cancelada'>Cancelada</option>
                                                     <option value='Cerrada'>Cerrada</option>
+                                                    <option value='Cerrada (En espera de aprobacion)'>Cerrada(En espera de aprobación)</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -110,8 +111,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-row">
-                                        <table class="table table-responsive">
+                                    <div class="table-responsive">
+                                        <div class="alert alert-warning text-center" role="alert" v-if="Solicitudes.length===0">
+                                            <strong>Sin resultados</strong>
+                                        </div>
+                                        <table class="table" v-if="Solicitudes.length>0">
                                             <thead>
                                                 <tr>
                                                     <th><button type="button" name="ordenID1" id="ordenID1" class="btn btn-sm btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAdmin">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
@@ -142,7 +146,7 @@
                                         
                                         
                                     </div>
-                                    <div class="text-center font-weight-bold">
+                                    <div class="text-center font-weight-bold" v-if="Solicitudes.length>0">
                                         Mostrando @{{(pagination.per_page < pagination.total) ? (pagination.per_page) : (pagination.total)}} de @{{pagination.total}}
                                     </div>
                                     <!--Paginación-->
@@ -271,6 +275,7 @@
                                                 <option value='Suspendida'>Suspendida</option>
                                                 <option value='Cancelada'>Cancelada</option>
                                                 <option value='Cerrada'>Cerrada</option>
+                                                <option value='Cerrada (En espera de aprobacion)'>Cerrada(En espera de aprobación)</option>
                                             </select>
                                             </div>
                                         </div>
@@ -291,8 +296,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-row">
-                                        <table class="table" >
+                                    <div class="table-responsive">
+                                        <div class="alert alert-warning text-center" role="alert" v-if="MisSolicitudes.length===0">
+                                            <strong>Sin resultados</strong>
+                                        </div>
+                                        <table class="table" v-if="MisSolicitudes.length>0">
                                             <thead>
                                                 <tr>
                                                     <th><button type="button" name="ordenID2" id="ordenID2" class="btn btn-sm btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getSolicitudesAsignadas">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
@@ -319,7 +327,7 @@
                                         
                                         
                                     </div>
-                                    <div class="text-center font-weight-bold">
+                                    <div class="text-center font-weight-bold" v-if="MisSolicitudes.length>0">
                                         Mostrando @{{(pagination.per_page < pagination.total) ? (pagination.per_page) : (pagination.total)}} de @{{pagination.total}}
                                     </div>
                                     <!--Paginación-->
@@ -440,6 +448,7 @@
                                                 <option value='Suspendida'>Suspendida</option>
                                                 <option value='Cancelada'>Cancelada</option>
                                                 <option value='Cerrada'>Cerrada</option>
+                                                <option value='Cerrada (En espera de aprobacion)'>Cerrada(En espera de aprobación)</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-lg-2">
@@ -460,7 +469,7 @@
                                         </div>
                                     </div>
                                     <div class="form-row">
-                                        <div class="form-group col-lg-4">
+                                        <div class="form-group col-lg-4" v-if="Solicitudes.length>0">
                                             <div class="form-group">
                                                 <label for="">Asignar personal en el listado</label>
                                                 <button type="button" class="btn btn-primary btn-md btn-block" v-on:click="asignacion_multiple=!asignacion_multiple">@{{asignacion_multiple ? 'Desactivar Asignacion' : 'Activar Asignacion'}}</button>
@@ -484,8 +493,11 @@
                                         
                                         
                                     </div>
-                                    <div class="form-row">
-                                        <table class="table">
+                                    <div class="table-responsive">
+                                        <div class="alert alert-warning text-center" role="alert" v-if="Solicitudes.length===0">
+                                            <strong>Sin resultados</strong>
+                                        </div>
+                                        <table class="table" v-if="Solicitudes.length>0">
                                             <thead>
                                                 <tr>
                                                     <th v-if="asignacion_multiple">Asignar</th>
@@ -520,7 +532,7 @@
                                         
                                         
                                     </div>
-                                    <div class="text-center font-weight-bold">
+                                    <div class="text-center font-weight-bold" v-if="Solicitudes.length>0">
                                         Mostrando @{{(pagination.per_page < pagination.total) ? (pagination.per_page) : (pagination.total)}} de @{{pagination.total}}
                                     </div>
                                     <!--Paginación-->
@@ -640,6 +652,7 @@
                                                 <option value='Suspendida'>Suspendida</option>
                                                 <option value='Cancelada'>Cancelada</option>
                                                 <option value='Cerrada'>Cerrada</option>
+                                                <option value='Cerrada (En espera de aprobacion)'>Cerrada(En espera de aprobación)</option>
                                             </select>
                                         </div>
                                         <div class="form-group col-lg-2">
@@ -659,8 +672,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-row">
-                                        <table class="table">
+                                    <div class="table-responsive">
+                                        <div class="alert alert-warning text-center" role="alert" v-if="MisSolicitudes.length===0">
+                                            <strong>Sin resultados</strong>
+                                        </div>
+                                        <table class="table" v-if="MisSolicitudes.length>0">
                                             <thead>
                                                 <tr>
                                                     <th><button type="button" name="ordenID4" id="ordenID4" class="btn btn-sm btn-outline-primary" v-on:click="orden=='ASC' ? orden='DESC' : orden='ASC'" @click="getMisSolicitudes">ID@{{orden=='ASC' ? '↓' : '↑'}}</button></th>
@@ -687,7 +703,7 @@
                                         
                                         
                                     </div>
-                                    <div class="text-center font-weight-bold">
+                                    <div class="text-center font-weight-bold" v-if="MisSolicitudes.length>0">
                                         Mostrando @{{(pagination.per_page < pagination.total) ? (pagination.per_page) : (pagination.total)}} de @{{pagination.total}}
                                     </div>
                                     <!--Paginación-->
