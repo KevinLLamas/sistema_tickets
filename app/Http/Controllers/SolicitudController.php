@@ -971,6 +971,17 @@ class SolicitudController extends Controller
                     ->get();
                     return $num_status;
                 break;
+                case 'INTERVAL 12 MONTH':
+                    DB::statement("SET lc_time_names = 'es_ES'");
+                    $num_status=Departamentos::find($idDepartamento)
+                    ->solicitudes()
+                    ->select(DB::raw("count(*) as total, DATE_FORMAT(date(solicitud.fecha_creacion),'%M - %Y') as mes"))
+                    ->where('estatus',$estado)
+                    ->whereRaw("date(solicitud.fecha_creacion) >= (now() - $rangoTiempo)")
+                    ->groupBy("mes")
+                    ->get();
+                    return $num_status;
+                break;
             }
             
             

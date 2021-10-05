@@ -9,6 +9,12 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
+  <style>
+    [v-cloak] {
+        display: none;
+    }
+  </style>
+
   <title>SISTEMA DE ATENCION, SOPORTE Y SEGUIMIENTO</title>
   <link rel="icon" type="image/png" href="{{ asset('assets/images/logo_edu.png')}}" /> 
   <!-- Custom fonts for this template-->
@@ -29,10 +35,10 @@
   {{--  Version 2.10 sweetalert --}}
   <script src="{{asset('assets/js/sweetalert.js')}}"></script>
 </head>
-<body id="page-top">
+<body id="page-top" class="sidebar-toggled">
 
   <!-- Page Wrapper -->
-<div id="wrapper">
+<div id="wrapper" >
     @include('sidebar'){{-- Sidebar /Menu lateral --}}
         @include('navbar') {{-- Menu superior --}}
             @yield('content') {{-- Cotenido de la pagina --}}

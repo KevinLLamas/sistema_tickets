@@ -14,7 +14,7 @@
       <input type="hidden" value="{{Session::get('rol')}}" id="rol" name="rol">
       <input type="hidden" value="{{Session::get('id_departamento')}}" id="departamento" name="departamento">
       <div class="row" v-if="departamentoSeleccionado != ''">
-          <div class="col-xl-2 col-md-4 mb-4">
+          <div class="col-xl-3 col-md-4 mb-4">
             <div class="card border-left-info shadow bg-white py-2">
               <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -29,7 +29,7 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-2 col-md-4 mb-4">
+          <div class="col-xl-3 col-md-4 mb-4">
             <div class="card border-left-primary shadow h-100 py-2">
               <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -44,7 +44,7 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-2 col-md-4 mb-4">
+          <div class="col-xl-3 col-md-4 mb-4">
             <div class="card border-left-success shadow h-100 py-2">
               <div class="card-body">
                 <div class="row no-gutters align-items-center">
@@ -59,22 +59,8 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-2 col-md-4 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-              <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                  <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Cerrados %</div>
-                  <div class="h5 mb-0 font-weight-bold text-gray-800">@{{porcentajeCerrados}}%</div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-percentage fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        <div class="col-xl-2 col-md-4 mb-4">
+          
+        <div class="col-xl-3 col-md-4 mb-4">
           <div class="card border-left-secondary shadow h-100 py-2">
             <div class="card-body">
               <div class="row no-gutters align-items-center">
@@ -122,6 +108,7 @@
                                     <option value="INTERVAL 7 DAY">7 Dias</option>
                                     <option value="INTERVAL 1 MONTH">1 Mes</option>
                                     <option value="INTERVAL 3 MONTH">3 Meses</option>
+                                    <option value="INTERVAL 12 MONTH">12 Meses</option>
                                   </select>
                                 </div>
                             </div>
@@ -192,6 +179,7 @@
                                     <option value="INTERVAL 7 DAY">7 Dias</option>
                                     <option value="INTERVAL 1 MONTH">1 Mes</option>
                                     <option value="INTERVAL 3 MONTH">3 Meses</option>
+                                    <option value="INTERVAL 12 MONTH">12 Meses</option>
                                   </select>
                                 </div>
                             </div>
