@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Str;
 use Illuminate\Http\Request;
 use App\Models\Solicitud;
 use App\Models\Usuario;
@@ -471,16 +472,31 @@ class SolicitudController extends Controller
         $id=$request->input('id');
         $orden=$request->input('orden');
         try{
-            $solicitud_usuario = Usuario::find($idUsuario);
-            if(!is_null($solicitud_usuario))
+            $usuario = Usuario::find($idUsuario);
+            if(!is_null($usuario))
             {
-                $solicitudes = $solicitud_usuario->solicitudes_atendiendo()
+                /* $solicitudes = $solicitud_usuario->solicitudes_atendiendo()
                 ->where('solicitud.id_solicitud','like',"%$id%")
                 ->where('solicitud.descripcion','like',"%$busqueda%")
                 ->where('solicitud.medio_reporte','like',"%$medio%")
                 ->where('solicitud.estatus','like',"%$estado%")
                 ->orderBy('solicitud.id_solicitud',$orden)
-                ->paginate($num);
+                ->paginate($num); */
+                $solicitudes = DB::table('solicitud')
+                ->join('solicitud_departamento', function ($join) use ($usuario) {
+                    $join->on('solicitud.id_solicitud', '=', 'solicitud_departamento.id_solicitud')
+                        ->where('solicitud_departamento.id_departamento', '=', $usuario->id_departamento);
+                })
+                ->join('solicitud_usuario', function ($join) use ($usuario) {
+                    $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
+                        ->where('solicitud_usuario.id_usuario', '=', $usuario->id_sgu);
+                })
+                ->where('solicitud_usuario.estado','Atendiendo')
+                ->where('solicitud.id_solicitud','like',"%$id%")
+                ->where('solicitud.descripcion','like',"%$busqueda%")
+                ->where('solicitud.medio_reporte','like',"%$medio%")
+                ->where('solicitud.estatus','like',"%$estado%")
+                ->orderBy('solicitud.id_solicitud',$orden)->paginate($num);
                 return $solicitudes;
             }
             else
@@ -564,10 +580,25 @@ class SolicitudController extends Controller
         
         $idUsuario=Session::get('id_sgu');
         try{
-            $num_status=Usuario::find($idUsuario)
+            /* $num_status=Usuario::find($idUsuario)
             ->solicitudes_atendiendo()
             ->select('solicitud.estatus',DB::raw('count(*) as total'))
+            ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get(); */
+            $user=Usuario::find($idUsuario);
+            $num_status = DB::table('solicitud')
+            ->join('solicitud_departamento', function ($join) use ($user) {
+                $join->on('solicitud.id_solicitud', '=', 'solicitud_departamento.id_solicitud')
+                    ->where('solicitud_departamento.id_departamento', '=', $user->id_departamento);
+            })
+            ->join('solicitud_usuario', function ($join) use ($user) {
+                $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
+                    ->where('solicitud_usuario.id_usuario', '=', $user->id_sgu);
+            })
+            
+            ->select('solicitud.estatus',DB::raw('count(*) as total'))
+            ->where('solicitud_usuario.estado','Atendiendo')
             ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+            return $num_status;
             return $num_status;
         }catch(Exception $e){
             return response()->json([
@@ -958,13 +989,32 @@ class SolicitudController extends Controller
         try{
             
             $idUsuario=$request->input('idUsuario');
+            $idDepartamento=$request->input('departamentoSeleccionado');
             if($idUsuario!=''){
-                $num_status=Usuario::find($idUsuario)
-                ->solicitudes_atendiendo()
-                ->select('solicitud.estatus',DB::raw('count(*) as total'))
-                ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+                $user=Usuario::find($idUsuario);
+                if(!is_null($user)){
+                    $num_status = DB::table('solicitud')
+                    ->join('solicitud_departamento', function ($join) use ($user) {
+                        $join->on('solicitud.id_solicitud', '=', 'solicitud_departamento.id_solicitud')
+                            ->where('solicitud_departamento.id_departamento', '=', $user->id_departamento);
+                    })
+                    ->join('solicitud_usuario', function ($join) use ($user) {
+                        $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
+                            ->where('solicitud_usuario.id_usuario', '=', $user->id_sgu);
+                    })
+                    ->select('solicitud.estatus',DB::raw('count(*) as total'))
+                    ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
+                    return $num_status;
+                    
+                }
+                else{
+                    return response()->json([
+                        'status' => false,
+                        'data' => $idUsuario
+                    ]);
+                }
+
                 
-                return $num_status;
             }
             else{
                 return response()->json([
@@ -981,8 +1031,6 @@ class SolicitudController extends Controller
         }
     }
     public function get_num_solicitudes_by_estatus_todos(Request $request){
-        
-        
         try{
             
             $listaUsuarios=$request->input('listaUsuarios');
@@ -995,8 +1043,17 @@ class SolicitudController extends Controller
                 
                 if($idUsuario!=''){
                     $user=Usuario::find($idUsuario);
+                    
                     if(!is_null($user)){
-                        $num_status=Usuario::find($idUsuario)->solicitudes_atendiendo()
+                        $num_status = DB::table('solicitud')
+                        ->join('solicitud_departamento', function ($join) use ($user) {
+                            $join->on('solicitud.id_solicitud', '=', 'solicitud_departamento.id_solicitud')
+                                ->where('solicitud_departamento.id_departamento', '=', $user->id_departamento);
+                        })
+                        ->join('solicitud_usuario', function ($join) use ($user) {
+                            $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
+                                ->where('solicitud_usuario.id_usuario', '=', $user->id_sgu);
+                        })
                         ->select('solicitud.estatus',DB::raw('count(*) as total'))
                         ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
 
@@ -1321,6 +1378,21 @@ class SolicitudController extends Controller
         }
         
 
+    }
+
+    function ultimas(){
+       
+            DB::enableQueryLog();
+        
+            $usuarios_depa = Usuario::with('ultima_asignada2')
+            ->where('id_departamento', 1)
+            ->where('id_sgu','!=','1')
+            ->where('rol','TECNICO')
+            ->get();
+
+            // binding replaced
+            
+            dd($usuarios_depa);
     }
 }
 

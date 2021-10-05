@@ -111,3 +111,5 @@ Route::post('save_files', [SolicitudController::class, 'save_files']);
 Route::get('ejemplo', [seguimientoController::class, 'ejemplo']);
 //Route::get('setIdTicket', [SolicitudController::class, 'setIdTicket']);
 Route::get('getUsers', [seguimientoController::class, 'getUsers']); 
+
+Route::get('ultima', [SolicitudController::class, 'ultimas']);

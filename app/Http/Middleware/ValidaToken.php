@@ -27,13 +27,12 @@ class ValidaToken
        
         Session::put([
             'key'=>$token,
-            'id_sgu'=>'1865',
-            'nombre'=> 'Kevin Llamas',
+            'id_sgu'=>'1633803',
             'curp'=> 'MAHL920209HJCRRS02',
             'usuario'=> 'kevindejesus.llamas@jalisco.gob.mx',
-            'rol'=>'ADMIN',
-            'id_departamento'=>2,
-            'departamento'=>'DTI',
+            'rol'=>'SUPER',
+            'id_departamento'=>1,
+            'departamento'=>'CAST',
         ]);
         Session::save();
         return $next($request);

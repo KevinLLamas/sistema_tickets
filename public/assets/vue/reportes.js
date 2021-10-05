@@ -793,6 +793,7 @@ new Vue({
                     this.coloresHex.push(this.asignarColorHex(e.estatus))
                     numSolicitudes+=e.total;
                 });
+                
                 this.generar_Grafica_ByStatus();
                 this.Estatus.forEach(e => {
                     let porcentaje=Math.round((((e.total/numSolicitudes)*100) + Number.EPSILON) * 100) / 100;
