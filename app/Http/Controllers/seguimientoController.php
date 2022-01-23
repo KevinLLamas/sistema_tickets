@@ -30,7 +30,7 @@ class seguimientoController extends Controller
 		if($id == null || $id == 0)
 			return ['ok'=>false,'nombre'=>'Usuario'];
 		foreach ($this->users as $user) {
-			if($user['id_sgu'] == $id)
+			if($user['id'] == $id)
 				return $user;
 		}
 		//API
@@ -46,7 +46,7 @@ class seguimientoController extends Controller
 		$response = curl_exec($url);
 		curl_close($url);
 		$res = json_decode($response, true);
-		array_push($this->users, ['ok'=>true,'id_sgu'=>$id,'nombre'=>$res['nombre']]);
+		array_push($this->users, ['ok'=>true,'id'=>$id,'nombre'=>$res['nombre']]);
 		return $res;
 	}
 	public function getUsers()
@@ -60,7 +60,7 @@ class seguimientoController extends Controller
 		{
 			if(!is_null($solicitud->usuario))
 			{
-				$res = $this->get_usuario($solicitud->usuario->id_sgu);
+				$res = $this->get_usuario($solicitud->usuario->id);
 				if($res['ok'])
 					$solicitud->usuario->nombre = $res['nombre'];
 				else
@@ -120,7 +120,7 @@ class seguimientoController extends Controller
 			$dtp->integrantes = $usuarios;
 			foreach($dtp->integrantes as $usuario)
 			{
-				$usuario->nombre = $this->get_usuario($usuario->id_sgu)['nombre'];
+				$usuario->nombre = $this->get_usuario($usuario->id)['nombre'];
 			}
 			$departamentos_seleccionados_id[] = $dtp->id;
 		}
@@ -154,7 +154,7 @@ class seguimientoController extends Controller
 		//NOTIFICACION
 		$usuarios = Solicitud_usuario::where('id_solicitud',$atencion->id_solicitud)->get();
 		foreach ($usuarios as $usuario) {
-			if($usuario->id_usuario != Session::get('id_sgu')){
+			if($usuario->id_usuario != Session::get('id')){
 				$notificacion = new Solicitud_notificacion;
 				$notificacion->id_solicitud = $atencion->id_solicitud;
 				$notificacion->id_atencion = $atencion->id;
@@ -291,7 +291,7 @@ class seguimientoController extends Controller
 
 	public function getUserData()
 	{
-		return $user = Usuario::where('id_sgu', Session::get('id_sgu'))->first(); 
+		return $user = Usuario::where('id', Session::get('id'))->first(); 
 		//return Session::all();
 	}
 
@@ -511,7 +511,7 @@ class seguimientoController extends Controller
 					//TRAEMOS TECNICOS DE EL DEPARTAMENTO ACTUAL
 					$usuarios_depa = Usuario::with('ultima_asignada')
 					->where('id_departamento', $id_departamento)
-					->where('id_sgu','!=','1')
+					->where('id','!=','1')
 					->where('rol','TECNICO')
 					->get();
 					//BUSCAMOS A EL USUARIO EL CUAL TENGA MAS TIEMPO SIN QUE SE LE ASIGNE UNA SOLICITUD
@@ -527,7 +527,7 @@ class seguimientoController extends Controller
 					//ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
 					$solicitud_usuario = new Solicitud_usuario;
 					$solicitud_usuario->id_solicitud = $id_solicitud;
-					$solicitud_usuario->id_usuario = $usuario_asignar->id_sgu;
+					$solicitud_usuario->id_usuario = $usuario_asignar->id;
 					$solicitud_usuario->momento = now();
 					$solicitud_usuario->estado = 'Atendiendo';
 					$solicitud_usuario->save();
@@ -535,7 +535,7 @@ class seguimientoController extends Controller
 					$atencion = new Solicitud_atencion;
 
 					$nombre = '';
-					$res = $this->get_usuario($usuario_asignar->id_sgu);
+					$res = $this->get_usuario($usuario_asignar->id);
 					if($res['ok'])
 						$nombre = $res['nombre'];
 					else

@@ -14,7 +14,7 @@ new Vue({
             necesita_respuesta: false,
             correo_contacto:'',
         },
-       
+        show_inputs: false,
     },
     created: function(){
         this.getPerfiles();
@@ -47,7 +47,10 @@ new Vue({
                 console.log(error);
             });
         },
-        getCampos: function(){
+        mostrar_inputs: function(){
+            this.show_inputs = true;
+        },
+        /*getCampos: function(){
             this.Campos = [];
             axios.get(`getCampos?id_perfil=${this.solicitud.perfil}&id_subcategoria=${this.solicitud.subcategoria}`)
             .then(result =>{
@@ -93,7 +96,7 @@ new Vue({
                     console.log(error);
                 })
             }
-        },
+        },*/
         guardar: function()
         {
             if(this.solicitud.necesita_respuesta)

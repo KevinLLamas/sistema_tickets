@@ -44,9 +44,9 @@ class SolicitudController extends Controller
         {
             //CREAMOS SOLICITUD
             $solicitud = new Solicitud;
-            $solicitud->id_usuario = Session::get('id_sgu');
+            $solicitud->id_usuario = Session::get('id');
             $solicitud->estatus = "Sin atender";
-            $solicitud->medio_reporte = "Internet"; 
+            $solicitud->medio_reporte = "Sistema"; 
             $solicitud->id_perfil = $request->input('solicitud.perfil');     
             $solicitud->id_subcategoria = $request->input('solicitud.subcategoria');
             $solicitud->id_categoria = $request->input('solicitud.categoria');
@@ -57,7 +57,7 @@ class SolicitudController extends Controller
             $solicitud -> save();
             $id_solicitud = $solicitud->id_solicitud;
 
-            //AGREGAMOS DATOS ADICIONALES A LA SOLICITUD
+            /*AGREGAMOS DATOS ADICIONALES A LA SOLICITUD
             $datos = $request->input('datos');
             foreach ($datos as $key){
                 $solicitud_dato = new Solicitud_dato_adicional;
@@ -65,19 +65,19 @@ class SolicitudController extends Controller
                 $solicitud_dato->valor = $key['respuesta'];
                 $solicitud_dato->tipo_dato = $key['model'];
                 $solicitud_dato -> save();
-            }
+            }*/
 
             //AGREGAMOS EL MENSAJE DE SOLICITUD CREADA
             $solicitud_atencion = new Solicitud_atencion;
             $solicitud_atencion->id_solicitud = $id_solicitud;
-            $solicitud_atencion->id_usuario = Session::get('id_sgu');;
+            $solicitud_atencion->id_usuario = Session::get('id');;
             $solicitud_atencion->detalle = 'Ticket creado';
             $solicitud_atencion->tipo_respuesta = 'Todos';
             $solicitud_atencion->momento =now();
             $solicitud_atencion->tipo_at = 'Creacion';
             $solicitud_atencion->save();
 
-            //BUSCAMOS Y ASIGNAMOS A LOS DEPARTAMENTOS A LOS QUE PERTENECE LA SOLICITUD
+            /*BUSCAMOS Y ASIGNAMOS A LOS DEPARTAMENTOS A LOS QUE PERTENECE LA SOLICITUD
             $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->where('primario', 'true')->get();
             foreach ($departamentos as $departamento)
             {
@@ -91,7 +91,7 @@ class SolicitudController extends Controller
                 //TRAEMOS TECNICOS DE EL DEPARTAMENTO ACTUAL
                 $usuarios_depa = Usuario::with('ultima_asignada')
                 ->where('id_departamento', $departamento->id_departamento)
-                ->where('id_sgu','!=','1')
+                ->where('id','!=','1')
                 ->where('rol','TECNICO')
                 ->get();
 
@@ -108,7 +108,7 @@ class SolicitudController extends Controller
                 //ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
                 $solicitud_usuario = new Solicitud_usuario;
                 $solicitud_usuario->id_solicitud = $id_solicitud;
-                $solicitud_usuario->id_usuario = $usuario_asignar->id_sgu;
+                $solicitud_usuario->id_usuario = $usuario_asignar->id;
                 $solicitud_usuario->momento = now();
                 $solicitud_usuario->estado = 'Atendiendo';
                 $solicitud_usuario->save();
@@ -117,7 +117,7 @@ class SolicitudController extends Controller
                 $atencion = new Solicitud_atencion;
                 $atencion->id_solicitud = $id_solicitud;
                 //$atencion->id_usuario = $id_solicitud;
-                $atencion->detalle = 'asignó a '.$this->get_usuario($usuario_asignar->id_sgu)['nombre'].' a este ticket.';
+                $atencion->detalle = 'asignó a  a este ticket.';
                 $atencion->tipo_respuesta = 'Todos';
                 $atencion->tipo_at = 'Asignacion';
                 $atencion->momento = now();
@@ -127,7 +127,7 @@ class SolicitudController extends Controller
                 $notificacion = new Solicitud_notificacion;
                 $notificacion->id_solicitud = $id_solicitud;
                 $notificacion->id_atencion = $atencion->id;
-                $notificacion->id_usuario = $usuario_asignar->id_sgu;
+                $notificacion->id_usuario = $usuario_asignar->id;
                 $notificacion->status = 'No leida';
                 $notificacion->save();
 
@@ -136,18 +136,10 @@ class SolicitudController extends Controller
                     $solicitud->estatus = 'Atendiendo';
                     $solicitud->save();
                 }
-            }
-
-            
-            //GUARDAMOS INFORMACION PARA EL USUARIO EXTERNO
-            $atencion_externos = new Atencion_externos;
-            $atencion_externos->solicitud =  $this->encriptar($id_solicitud);
-            $atencion_externos->id_solicitud = $id_solicitud; //->Esta es la linea funciona al agregar el campo a la tabla
-            $atencion_externos->codigo =  $this->generarCodigo();
-            $atencion_externos->save();
+            }*/
 
             //MANDAMOS LA INFORMACION POR CORREO
-            if($this->send_mail_nueva($atencion_externos,$solicitud->correo_atencion,$id_solicitud) == 'Enviado');
+            //if($this->send_mail_nueva($solicitud->correo_atencion,$id_solicitud) == 'Enviado');
                 return response()->json([
                     'status' => true, 
                     'id_solicitud' =>$id_solicitud,
@@ -255,7 +247,7 @@ class SolicitudController extends Controller
         } 
         return $randomString; 
     } 
-    public function send_mail_nueva($atencion_externos,$email,$id_solicitud){
+    public function send_mail_nueva($email,$id_solicitud){
 
         $mail = new PHPMailer(true);
         try{
@@ -276,8 +268,7 @@ class SolicitudController extends Controller
             $mailContent = "
                     <p>Usted ha creado el ticket #$id_solicitud con éxito en el sistema SAS.</p><br>
                     <p>ID de ticket: $id_solicitud</p>
-                    <p>Para dar seguimiento a su ticket, <a href='https://plataformadigital.sej.jalisco.gob.mx/sass/seguimiento_externo/$atencion_externos->solicitud'>por favor ingrese a este enlace.</a></p>
-                    <p>Su código de verificación es: $atencion_externos->codigo</p>
+                    
             ";  
 
             $mail->Body = $mailContent;
@@ -463,7 +454,7 @@ class SolicitudController extends Controller
         }
     }
     public function get_solicitudes_asignadas(Request $request){
-        $idUsuario= Session::get('id_sgu');
+        $idUsuario= Session::get('id');
         $busqueda=$request->input('busqueda');
         $page=$request->input('page');
         $num=$request->input('num');
@@ -489,7 +480,7 @@ class SolicitudController extends Controller
                 })
                 ->join('solicitud_usuario', function ($join) use ($usuario) {
                     $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
-                        ->where('solicitud_usuario.id_usuario', '=', $usuario->id_sgu);
+                        ->where('solicitud_usuario.id_usuario', '=', $usuario->id);
                 })
                 ->where('solicitud_usuario.estado','Atendiendo')
                 ->where('solicitud.id_solicitud','like',"%$id%")
@@ -516,7 +507,7 @@ class SolicitudController extends Controller
     }
     public function get_mis_solicitudes(Request $request){
         
-        $idUsuario= Session::get('id_sgu');
+        $idUsuario= Session::get('id');
         $busqueda = $request->input('busqueda');
         $busquedaid = $request->input('busquedaid');
         $page = $request->input('page');
@@ -578,7 +569,7 @@ class SolicitudController extends Controller
     }
     public function get_num_solicitudes_bystatus_asignadas(Request $request){
         
-        $idUsuario=Session::get('id_sgu');
+        $idUsuario=Session::get('id');
         try{
             /* $num_status=Usuario::find($idUsuario)
             ->solicitudes_atendiendo()
@@ -592,7 +583,7 @@ class SolicitudController extends Controller
             })
             ->join('solicitud_usuario', function ($join) use ($user) {
                 $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
-                    ->where('solicitud_usuario.id_usuario', '=', $user->id_sgu);
+                    ->where('solicitud_usuario.id_usuario', '=', $user->id);
             })
             
             ->select('solicitud.estatus',DB::raw('count(*) as total'))
@@ -609,7 +600,7 @@ class SolicitudController extends Controller
 
     }
     public function get_num_solicitudes_bystatus_mis_solicitudes(Request $request){
-        $idUsuario=Session::get('id_sgu');
+        $idUsuario=Session::get('id');
         
         try{
             $num_status=Solicitud::where('id_usuario',$idUsuario)
@@ -695,7 +686,7 @@ class SolicitudController extends Controller
         
     }
     public function get_num_solicitudes_through_time(Request $request){
-        $idUsuario=Session::get('id_sgu');
+        $idUsuario=Session::get('id');
         $rangoTiempo=$request->input('rangoTiempo');
         $idDepartamento=Session::get('id_departamento');
         
@@ -749,7 +740,7 @@ class SolicitudController extends Controller
         }
     }
     public function get_num_solicitudes_through_time_cerradas(Request $request){
-        $idUsuario=Session::get('id_sgu');
+        $idUsuario=Session::get('id');
         $rangoTiempo=$request->input('rangoTiempo');
         $idDepartamento=Session::get('id_departamento');
         
@@ -808,7 +799,7 @@ class SolicitudController extends Controller
         }
     }
     public function get_num_solicitudes_through_time_dep(Request $request){
-        $idUsuario=Session::get('id_sgu');
+        $idUsuario=Session::get('id');
         $rangoTiempo=$request->input('rangoTiempo');
         $idDepartamento=$request->input('idDepartamento');
         
@@ -862,7 +853,7 @@ class SolicitudController extends Controller
         }
     }
     public function get_num_solicitudes_through_time_cerradas_dep(Request $request){
-        $idUsuario=Session::get('id_sgu');
+        $idUsuario=Session::get('id');
 
         $rangoTiempo=$request->input('rangoTiempo');
         $idDepartamento=$request->input('idDepartamento');
@@ -922,7 +913,7 @@ class SolicitudController extends Controller
         }
     }
     public function get_num_solicitudes_through_time_bystatus_dep(Request $request){
-        $idUsuario=Session::get('id_sgu');
+        $idUsuario=Session::get('id');
 
         $rangoTiempo=$request->input('rangoTiempo');
         $idDepartamento=$request->input('idDepartamento');
@@ -1011,7 +1002,7 @@ class SolicitudController extends Controller
                     })
                     ->join('solicitud_usuario', function ($join) use ($user) {
                         $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
-                            ->where('solicitud_usuario.id_usuario', '=', $user->id_sgu);
+                            ->where('solicitud_usuario.id_usuario', '=', $user->id);
                     })
                     ->select('solicitud.estatus',DB::raw('count(*) as total'))
                     ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
@@ -1050,7 +1041,7 @@ class SolicitudController extends Controller
            
             foreach ($listaUsuarios as $key => $u) {
                 //return gettype($listaUsuarios[$key]);
-                $idUsuario=$u['id_sgu'];
+                $idUsuario=$u['id'];
                 
                 if($idUsuario!=''){
                     $user=Usuario::find($idUsuario);
@@ -1063,13 +1054,13 @@ class SolicitudController extends Controller
                         })
                         ->join('solicitud_usuario', function ($join) use ($user) {
                             $join->on('solicitud.id_solicitud', '=', 'solicitud_usuario.id_solicitud')
-                                ->where('solicitud_usuario.id_usuario', '=', $user->id_sgu);
+                                ->where('solicitud_usuario.id_usuario', '=', $user->id);
                         })
                         ->select('solicitud.estatus',DB::raw('count(*) as total'))
                         ->groupBy('solicitud.estatus')->orderBy('total','DESC')->get();
 
                         $lista=array();
-                        $lista["id_sgu"]=$u['id_sgu'];
+                        $lista["id"]=$u['id'];
                         $lista["nombre"]=$u['nombre'];
                         foreach ($num_status as $s) {
                             $estado=strval($s->estatus);
@@ -1084,7 +1075,7 @@ class SolicitudController extends Controller
                     }
                     else{
                         $listaDetalle[$key]=(object)[
-                            "id_sgu"=>$u['id_sgu'],
+                            "id"=>$u['id'],
                             "nombre"=>$u['nombre'],
                         ];
                     }
@@ -1117,15 +1108,15 @@ class SolicitudController extends Controller
         try{
             $usuarios=Departamentos::find($idDepartamento)
             ->usuarios()
-            ->where('usuario.id_sgu','!=',$idDepartamento) 
+            ->where('usuario.id','!=',$idDepartamento) 
             ->get();
             
            
             foreach($usuarios as $u)
             {
-                if(!is_null($u->id_sgu))
+                if(!is_null($u->id))
                 {
-                    $u->nombre = mb_strtoupper($this->get_usuario($u->id_sgu)['nombre']);
+                    $u->nombre = mb_strtoupper($this->get_usuario($u->id)['nombre']);
                 }
                 
             }
@@ -1144,15 +1135,15 @@ class SolicitudController extends Controller
         try{
             $usuarios=Departamentos::find($idDepartamento)
             ->usuarios()
-            ->where('usuario.id_sgu','!=',$idDepartamento) 
+            ->where('usuario.id','!=',$idDepartamento) 
             ->get();
             
            
             foreach($usuarios as $u)
             {
-                if(!is_null($u->id_sgu))
+                if(!is_null($u->id))
                 {
-                    $u->nombre = mb_strtoupper($this->get_usuario($u->id_sgu)['nombre']);
+                    $u->nombre = mb_strtoupper($this->get_usuario($u->id)['nombre']);
                 }
                 
             }
@@ -1170,7 +1161,7 @@ class SolicitudController extends Controller
 
         //Insert a tabla Solicitud
         $solicitud=new Solicitud;
-        $solicitud->id_usuario= Session::get('id_sgu');;
+        $solicitud->id_usuario= Session::get('id');;
         $solicitud->descripcion=$request->input('descripcion');
         $solicitud->estatus="Sin atender";
         $solicitud->medio_reporte="Internet";
@@ -1294,14 +1285,14 @@ class SolicitudController extends Controller
         
     }
     public function asignar_solicitudes(Request $request){
-        $id_sgu=$request->input('usuarioSeleccionado');
+        $id=$request->input('usuarioSeleccionado');
         $id_solicitudes=$request->input('tickets_seleccionados');
-        $id_asignante=$idUsuario=Session::get('id_sgu');
+        $id_asignante=$idUsuario=Session::get('id');
         try{
             foreach ($id_solicitudes as $id_solicitud) {
 
                     $sol_user=Solicitud_usuario::where('id_solicitud',$id_solicitud)
-                    ->where('id_usuario',$id_sgu)->first();
+                    ->where('id_usuario',$id)->first();
 
                     $solicitud=Solicitud::where('id_solicitud',"$id_solicitud")->first();
                     if($sol_user){
@@ -1313,7 +1304,7 @@ class SolicitudController extends Controller
                             $atencion = new Solicitud_atencion;
                             $atencion->id_solicitud = $id_solicitud;
                             $atencion->id_usuario = $id_asignante;
-                            $atencion->detalle = 'asignó a '.$this->get_usuario($id_sgu)['nombre'].' a este ticket.';
+                            $atencion->detalle = 'asignó a '.$this->get_usuario($id)['nombre'].' a este ticket.';
                             $atencion->tipo_respuesta = 'Todos';
                             $atencion->tipo_at = 'Asignacion';
                             $atencion->momento = now();
@@ -1323,7 +1314,7 @@ class SolicitudController extends Controller
                             $notificacion = new Solicitud_notificacion;
                             $notificacion->id_solicitud = $id_solicitud;
                             $notificacion->id_atencion = $atencion->id;
-                            $notificacion->id_usuario = $id_sgu;
+                            $notificacion->id_usuario = $id;
                             $notificacion->status = 'No leida';
                             $notificacion->save();
 
@@ -1342,7 +1333,7 @@ class SolicitudController extends Controller
                         //ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
                         $solicitud_usuario = new Solicitud_usuario;
                         $solicitud_usuario->id_solicitud = $id_solicitud;
-                        $solicitud_usuario->id_usuario = $id_sgu;
+                        $solicitud_usuario->id_usuario = $id;
                         $solicitud_usuario->momento = now();
                         $solicitud_usuario->estado = 'Atendiendo';
                         $solicitud_usuario->save();
@@ -1351,7 +1342,7 @@ class SolicitudController extends Controller
                         $atencion = new Solicitud_atencion;
                         $atencion->id_solicitud = $id_solicitud;
                         $atencion->id_usuario = $id_asignante;
-                        $atencion->detalle = 'asignó a '.$this->get_usuario($id_sgu)['nombre'].' a este ticket.';
+                        $atencion->detalle = 'asignó a '.$this->get_usuario($id)['nombre'].' a este ticket.';
                         $atencion->tipo_respuesta = 'Todos';
                         $atencion->tipo_at = 'Asignacion';
                         $atencion->momento = now();
@@ -1361,7 +1352,7 @@ class SolicitudController extends Controller
                         $notificacion = new Solicitud_notificacion;
                         $notificacion->id_solicitud = $id_solicitud;
                         $notificacion->id_atencion = $atencion->id;
-                        $notificacion->id_usuario = $id_sgu;
+                        $notificacion->id_usuario = $id;
                         $notificacion->status = 'No leida';
                         $notificacion->save();
                         
@@ -1397,7 +1388,7 @@ class SolicitudController extends Controller
         
             $usuarios_depa = Usuario::with('ultima_asignada2')
             ->where('id_departamento', 1)
-            ->where('id_sgu','!=','1')
+            ->where('id','!=','1')
             ->where('rol','TECNICO')
             ->get();
 

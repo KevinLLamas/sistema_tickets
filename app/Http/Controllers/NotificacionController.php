@@ -7,7 +7,7 @@ use App\Models\Usuario;
 class NotificacionController extends Controller
 {
     function get_notificaciones(Request $request){
-       $notificaciones = Solicitud_notificacion::with('atencion')->where('id_usuario',Session::get('id_sgu'))->orderBy('id','DESC')->get();
+       $notificaciones = Solicitud_notificacion::with('atencion')->where('id_usuario',Session::get('id'))->orderBy('id','DESC')->get();
        $cont = 0;
        foreach ($notificaciones as $notificacion) {
            $usuario = Usuario::find($notificacion->atencion->id_usuario);
@@ -36,7 +36,7 @@ class NotificacionController extends Controller
         $busquedaid = $request->input('busquedaid');
         $leidas = $request->input('leidas');
         $notificaciones = Solicitud_notificacion::with('atencion')
-        ->where('id_usuario',Session::get('id_sgu'))
+        ->where('id_usuario',Session::get('id'))
         ->where('id_solicitud','like',"%$busquedaid%")
         ->where('status','like',"%$leidas%")
         ->orderBy('id','DESC')

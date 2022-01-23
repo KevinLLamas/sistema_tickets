@@ -138,7 +138,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/sass/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -319,7 +319,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/sass/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -524,7 +524,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/sass/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>
@@ -695,7 +695,7 @@
                                                     <td>@{{s.fecha_creacion}}</td>
                                                     <td>@{{s.estatus}}</td>
                                                     <td>@{{s.medio_reporte}}</td>
-                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/sass/seguimiento/'+s.id_solicitud">Responder</a></td>
+                                                    <td><a type="button" class="btn btn-sm btn-primary" :href="'/seguimiento/'+s.id_solicitud">Responder</a></td>
                                                 </tr>
                                             
                                             </tbody>

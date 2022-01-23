@@ -53,7 +53,7 @@ new Vue({
     },
     methods:{
         getNotificaciones: function(page){
-            axios.post('/sass/get_listado_notificaciones',
+            axios.post('get_listado_notificaciones',
             {
                 busquedaid: this.busquedaid,
                 leidas: this.ver,
@@ -67,9 +67,9 @@ new Vue({
         },
         verSolicitud: function(id,id_solicitud)
         {
-            axios.post('/sass/set_notificacion_leida',{id: id})
+            axios.post('/set_notificacion_leida',{id: id})
             .then(response => {
-                window.location = '/sass/seguimiento/'+id_solicitud;
+                window.location = '/seguimiento/'+id_solicitud;
             });
         },
         tipo: function(tipo){

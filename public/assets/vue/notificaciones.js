@@ -12,7 +12,7 @@ new Vue({
     },
     methods:{
         getNotificaciones: function(){
-            axios.post('/sass/get_notificaciones')
+            axios.post('get_notificaciones')
             .then(response => {
                 this.notificaciones = response.data.notificaciones;
                 this.cont = response.data.cont;
@@ -23,20 +23,20 @@ new Vue({
         },
         verSolicitud: function(id,id_solicitud)
         {
-            axios.post('/sass/set_notificacion_leida',{id: id})
+            axios.post('/set_notificacion_leida',{id: id})
             .then(response => {
-                window.location = '/sass/seguimiento/'+id_solicitud;
+                window.location = '/seguimiento/'+id_solicitud;
             });
         },
         ir_solicitud: function()
         {
-            window.location = '/sass/seguimiento/'+this.id_ticket;
+            window.location = '/seguimiento/'+this.id_ticket;
         },
         buscarTiket: function()
         {
             if(this.id_ticket.length > 2)
             {
-                axios.post('/sass/get_ticket',
+                axios.post('/get_ticket',
                 {id: this.id_ticket})
                 .then(response => {
                     this.tickets = response.data;

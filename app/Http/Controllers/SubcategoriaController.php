@@ -7,7 +7,7 @@ use App\Models\Subcategoria;
 class SubcategoriaController extends Controller
 {
     function subcategorias(Request $request){
-        $subcategorias = Categoria::with('subcategorias')->find($request->input('id_categoria'))->subcategorias;
+        $subcategorias = Subcategoria::where('id_categoria',$request->input('id_categoria'))->get();
         return $subcategorias;
     } 
 }
