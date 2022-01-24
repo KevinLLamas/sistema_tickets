@@ -11,7 +11,7 @@ class Solicitud_usuario extends Model
 
 
     public function usuario(){
-        return $this->hasOne('App\Models\Usuario','id_sgu', 'id_usuario');
+        return $this->hasOne('App\Models\Usuario','id', 'id_usuario');
     }
     /*public function solicitud(){
         return $this->hasOne('App\Models\Solicitud','id_solicitud');

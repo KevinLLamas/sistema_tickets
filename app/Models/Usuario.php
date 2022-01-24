@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Usuario extends Model
 {
     protected $table = 'usuario';
-    protected $primaryKey = 'id_sgu';
+    protected $primaryKey = 'id';
     public $timestamps = false;
     
     public function solicitudes_atendiendo(){
@@ -17,11 +17,11 @@ class Usuario extends Model
     }
     public function ultima_asignada()
     {
-        return $this->hasOne('App\Models\Solicitud_usuario','id_usuario','id_sgu')->latest('momento');
+        return $this->hasOne('App\Models\Solicitud_usuario','id_usuario','id')->latest('momento');
     }
     public function ultima_asignada2()
     {
-        return $this->hasOne('App\Models\Solicitud_usuario','id_usuario','id_sgu')->latest('momento');
+        return $this->hasOne('App\Models\Solicitud_usuario','id_usuario','id')->latest('momento');
     }
     public function departamento(){
         return $this->belongsTo('App\Models\Departamentos');

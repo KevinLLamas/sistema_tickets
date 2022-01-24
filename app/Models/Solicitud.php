@@ -26,7 +26,7 @@ class Solicitud extends Model
     	return $this->hasMany('App\Models\Solicitud_atencion', 'id_solicitud');
     }
     public function usuario(){
-    	return $this->hasOne('App\Models\Usuario', 'id_sgu', 'id_usuario');
+    	return $this->hasOne('App\Models\Usuario', 'id', 'id_usuario');
     }
     public function dato_adicional(){
     	return $this->hasMany('App\Models\Solicitud_dato_adicional', 'id_solicitud');

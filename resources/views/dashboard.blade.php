@@ -10,11 +10,11 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist" >
             
             <li class="nav-item">
-                <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
                     aria-selected="false">Tickets Asignados</a>
             </li>
             <li class="nav-item" v-if="rol == 'SUPER'">
-                <a class="nav-link " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
                     aria-selected="true">Tickets</a>
             </li>
             <li class="nav-item" v-if="rol == 'ADMIN' || rol == 'JEFE' || rol == 'SUPER'">
@@ -29,7 +29,7 @@
         </ul>
     </div>
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             
             <div id="solicitudes">
                 <div class="row">
@@ -72,9 +72,7 @@
                                                 <label for="">Medio de Reporte</label>
                                                 <select class="form-control" name="medioReporte1" id="medioReporte1" v-model="medioReporte" @change="getSolicitudesAdmin">
                                                     <option value="" >Todos</option>
-                                                    <option value='Internet'>Internet</option>
-                                                    <option value='Personal'>Personal</option>
-                                                    <option value='Llamada'>Llamada</option>
+                                                    <option value='Sistema'>Sistema</option>
                                                     <option value='Chatbot'>Chatbot</option>
                                                 </select>
                                             </div>
@@ -214,7 +212,7 @@
             
             
         </div>
-        <div class="tab-pane fade  show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
             
             <div id="mis_solicitudes_asignadas">
@@ -258,9 +256,7 @@
                                             <label for="">Medio de Reporte</label>
                                             <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesAsignadas">
                                                 <option value="" >Todos</option>
-                                                <option value='Internet'>Internet</option>
-                                                <option value='Personal'>Personal</option>
-                                                <option value='Llamada'>Llamada</option>
+                                                <option value='Sistema'>Sistema</option>
                                                 <option value='Chatbot'>Chatbot</option>
                                             </select>
                                             </div>
@@ -433,9 +429,7 @@
                                             <label for="">Medio de Reporte</label>
                                             <select class="form-control" name="" id="" v-model="medioReporte" @change="getSolicitudesDepartamento">
                                                 <option value="">Todos</option>
-                                                <option value='Internet'>Internet</option>
-                                                <option value='Personal'>Personal</option>
-                                                <option value='Llamada'>Llamada</option>
+                                                <option value='Sistema'>Sistema</option>
                                                 <option value='Chatbot'>Chatbot</option>
                                             </select>
                                         </div>
@@ -637,9 +631,7 @@
                                             <label for="">Medio de Reporte</label>
                                             <select class="form-control" name="" id="" v-model="medioReporte" @change="getMisSolicitudes">
                                                 <option value="">Todos</option>
-                                                <option value='Internet'>Internet</option>
-                                                <option value='Personal'>Personal</option>
-                                                <option value='Llamada'>Llamada</option>
+                                                <option value='Sistema'>Sistema</option>
                                                 <option value='Chatbot'>Chatbot</option>
                                             </select>
                                         </div>
