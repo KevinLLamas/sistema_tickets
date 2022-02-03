@@ -1,173 +1,90 @@
- <!-- Sidebar -->
- <ul class="navbar-nav bg-primary sidebar sidebar-dark accordion toggled" id="accordionSidebar">
-
-    <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-      <div class="sidebar-brand-icon rotate-n-10">
-        <i class="fas fa-question-circle"></i>
-      </div>
-      <div class="sidebar-brand-text mx-3">SASS</div>
-    </a>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider my-0">
-
-    <!-- Nav Item - Dashboard-->
-    <li class="nav-item active">
-      <a class="nav-link" href="">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Dashboard</span></a>
-    </li>
-    
-    <!--<li class="nav-item">
-      <a class="nav-link" href="lista_solicitudes">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Lista de tickets admin</span></a>
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" href="index.html">
+        <i class="mdi mdi-grid-large menu-icon"></i>
+        <span class="menu-title">Dashboard</span>
+      </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="mis_solicitudes">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Lista de tickets trabajador</span></a>
+      <a class="nav-link" href="pages/widgets/widgets.html">
+        <i class="mdi mdi-tune menu-icon"></i>
+        <span class="menu-title">Widgets</span>
+      </a>
+    </li>
+    <li class="nav-item nav-category">UI Elements</li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+        <i class="menu-icon mdi mdi-floor-plan"></i>
+        <span class="menu-title">UI Elements</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="collapse" id="ui-basic">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/accordions.html">Accordions</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/buttons.html">Buttons</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/badges.html">Badges</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/breadcrumbs.html">Breadcrumbs</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/dropdowns.html">Dropdowns</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/modals.html">Modals</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/progress.html">Progress bar</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/pagination.html">Pagination</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/tabs.html">Tabs</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/typography.html">Typography</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/tooltips.html">Tooltips</a></li>
+        </ul>
+      </div>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="solicitudes_departamento">
-        <i class="fas fa-fw fa-tachometer-alt"></i>
-        <span>Lista de tickets departamento</span></a>
-    </li> -->
-    
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">
-      Interfaz
-    </div>
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud" aria-expanded="true" aria-controls="collapseSolicitud">
-        <i class="fas fa-envelope-open-text"></i>
-        <span>Tickets</span>
+      <a class="nav-link" data-bs-toggle="collapse" href="#ui-advanced" aria-expanded="false" aria-controls="ui-advanced">
+        <i class="menu-icon mdi mdi-arrow-down-drop-circle-outline"></i>
+        <span class="menu-title">Advanced UI</span>
+        <i class="menu-arrow"></i>
       </a>
-      <div id="collapseSolicitud" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Opciones:</h6>
-          <a class="collapse-item" href="/alta_ticket">Crear Ticket</a>
-          <!--a class="collapse-item" href="/alta_solicitud_servicio">Solicitar un Servicio</a-->
-          <a class="collapse-item" href="/dashboard">Listado</a>
-        </div>
+      <div class="collapse" id="ui-advanced">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/dragula.html">Dragula</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/clipboard.html">Clipboard</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/context-menu.html">Context menu</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/slider.html">Sliders</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/carousel.html">Carousel</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/colcade.html">Colcade</a></li>
+          <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/loaders.html">Loaders</a></li>
+        </ul>
       </div>
     </li>
-    @if(Session::get('rol') == 'SUPER' || Session::get('rol') == 'ADMIN' )
+
+    <li class="nav-item nav-category">Apps</li>
     <li class="nav-item">
-      <a class="nav-link" href="/reportes">
-        <i class="fas fa-fw fa-cog"></i>
-        <span>Reportes</span></a>
+      <a class="nav-link" href="../../pages/apps/email.html">
+        <i class="menu-icon mdi mdi-email-outline"></i>
+        <span class="menu-title">E-mail</span>
+      </a>
     </li>
-    @endif
-    <!-- Nav Item - Pages Collapse Menu 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSolicitud2" aria-expanded="true" aria-controls="collapseSolicitud">
-        <i class="fas fa-envelope-open-text"></i>
-        <span>Tickets Local</span>
+      <a class="nav-link" href="../../pages/apps/calendar.html">
+        <i class="menu-icon mdi mdi-calendar"></i>
+        <span class="menu-title">Calendar</span>
       </a>
-      <div id="collapseSolicitud2" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Opciones:</h6>
-          <a class="collapse-item" href="/alta_ticket">Crear Ticket</a>
-          <a class="collapse-item" href="/dashboard">Listado</a>
-        </div>
-      </div> 
-    </li>-->
-
-    <!-- Nav Item - Pages Collapse Menu -->
-    {{-- <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-        <i class="fas fa-fw fa-cog"></i>
-        <span>Reportes</span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="../../pages/apps/todo.html">
+        <i class="menu-icon mdi mdi-format-list-bulleted"></i>
+        <span class="menu-title">Todo List</span>
       </a>
-      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Reportes:</h6>
-          <a class="collapse-item" href="/reportes">Ver reportes</a>
-        </div>
-      </div>
-    </li> --}}
-
-    <!-- Nav Item - Utilities Collapse Menu 
+    </li>
     <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-        <i class="fas fa-fw fa-wrench"></i>
-        <span>Utilities</span>
+      <a class="nav-link" href="../../pages/apps/gallery.html">
+        <i class="menu-icon mdi mdi-file-image-outline"></i>
+        <span class="menu-title">Gallery</span>
       </a>
-      <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Custom Utilities:</h6>
-          <a class="collapse-item" href="utilities-color.html">Colors</a>
-          <a class="collapse-item" href="utilities-border.html">Borders</a>
-          <a class="collapse-item" href="utilities-animation.html">Animations</a>
-          <a class="collapse-item" href="utilities-other.html">Other</a>
-        </div>
-      </div>
-    </li>-->
-
-    <!-- Divider 
-    <hr class="sidebar-divider">-->
-
-    <!-- Heading 
-    <div class="sidebar-heading">
-      Addons
-    </div>-->
-
-    <!-- Nav Item - Pages Collapse Menu 
+    </li>
+    <li class="nav-item nav-category">help</li>
     <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-        <i class="fas fa-fw fa-folder"></i>
-        <span>Pages</span>
+      <a class="nav-link" href="https://bootstrapdash.com/demo/star-admin2-pro/docs/documentation.html">
+        <i class="menu-icon mdi mdi-file-document"></i>
+        <span class="menu-title">Documentation</span>
       </a>
-      <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <h6 class="collapse-header">Login Screens:</h6>
-          <a class="collapse-item" href="login.html">Login</a>
-          <a class="collapse-item" href="register.html">Register</a>
-          <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-          <div class="collapse-divider"></div>
-          <h6 class="collapse-header">Other Pages:</h6>
-          <a class="collapse-item" href="404.html">404 Page</a>
-          <a class="collapse-item" href="blank.html">Blank Page</a>
-        </div>
-      </div>
-    </li>-->
-
-    <!-- Nav Item - Charts 
-    <li class="nav-item">
-      <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-chart-area"></i>
-        <span>Charts</span></a>
-    </li>-->
-
-    <!-- Nav Item - Tables 
-    <li class="nav-item">
-      <a class="nav-link" href="tables.html">
-        <i class="fas fa-fw fa-table"></i>
-        <span>Tables</span></a>
-    </li>-->
-
-    <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
-
-    <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
-      <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
-
+    </li>
   </ul>
-  <!-- End of Sidebar -->
-
-  <!-- Content Wrapper -->
-  <div id="content-wrapper" class="d-flex flex-column">
-
-    <!-- Main Content -->
-    <div id="content">
-
-     
+</nav>

@@ -57,6 +57,9 @@ Route::post('get_porcentaje_cerradas', [SolicitudController::class, 'get_porcent
 //SOLICITAR SERVICIO
 Route::get('/alta_solicitud_servicio', function(){return view('alta_solicitud_servicio');});
 
+//Mostrar tabla
+Route::get('/tabla', function(){return view('tabla');});
+
 //CATEGORIAS
 Route::get('categorias', [CategoriaController::class, 'categorias']);
 
