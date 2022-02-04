@@ -40,23 +40,26 @@
   <script src="{{ asset('assets/js/toastr.js')}}"></script> 
   {{--  Version 2.10 sweetalert --}}
   <script src="{{asset('assets/js/sweetalert.js')}}"></script>
+  
+
 </head>
 
 
 <body class="sidebar-dark">
-
-  <!-- Page Wrapper -->
-<div class="container-scroller">
-  @include('navbar') {{-- Menu superior --}}
-    {{--@include('sidebar'){{-- Sidebar /Menu lateral --}}
-        
-            @yield('content') {{-- Contenido de la pagina --}}
-           
-
-</div>
-<!-- End of Content Wrapper -->
-        {{-- @include('footer') --}}
-        
+        <div class="container-scroller">
+          @include('navbar')
+          <div class="container-fluid page-body-wrapper">
+            @include('sidebar')
+              <div class="main-panel">
+                <div class="content-wrapper">
+                  <div class="row">
+                    @yield('content')
+                  </div>
+                </div>
+                @include('footer')
+              </div>
+          </div> 
+        </div>
         <script src="{{asset('assets/vendor/js/vendor.bundle.base.js')}}"></script>
         <script src="{{asset('assets/vendor/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
         <!-- endinject -->
@@ -65,7 +68,7 @@
         <!-- inject:js -->
         <script src="{{asset('assets/js/off-canvas.js')}}"></script>
         <script src="{{asset('assets/js/hoverable-collapse.js')}}"></script>
-        <script src="{{asset('assets/js/template.js')}}"></script>
+        <script src="{{asset('assets/js/cookie.js')}}"></script>
         <script src="{{asset('assets/js/settings.js')}}"></script>
         <script src="{{asset('assets/js/todolist.js')}}"></script>
 </body>
