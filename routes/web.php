@@ -10,14 +10,15 @@ use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\seguimientoController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificacionController;
-
+Route::get('/', function(){return view('login');});
+Route::post('login', [LoginController::class, 'login']);
 Route::group(['middleware' => 'validar', 'web'], function()
 {
 Route::get('logout', [LoginController::class, 'logout']);
 //SOLICITUDES
 Route::get('/alta_ticket', function(){return view('alta_solicitud');});
 Route::post('guardar_solicitud', [SolicitudController::class, 'guardar']);
-
+Route::post('editar_solicitud', [SolicitudController::class, 'editar']);
 Route::get('getCampos', [SolicitudController::class, 'getCampos']);
 Route::post('buscar_usuario', [SolicitudController::class, 'buscar_usuario']);
 
@@ -71,7 +72,7 @@ Route::get('perfiles', [PerfilController::class, 'perfiles']);
 
 //DASHBOARD
 Route::get('dashboard', function () {return view('dashboard');});
-Route::get('/', function () {return view('dashboard');});
+Route::get('/listado', function () {return view('dashboard');});
 Route::get('lista_solicitudes', function () {return view('lista_solicitudes');});
 Route::get('mis_solicitudes', function () {return view('mis_solicitudes');});
 Route::get('solicitudes_asignadas', function () {return view('solicitudes_asignadas');});

@@ -1,7 +1,6 @@
 @extends('app')
 @section('content')
 
-
 <!-- Begin Page Content -->
 <div  class="container-fluid" >
     <!-- Content Row -->

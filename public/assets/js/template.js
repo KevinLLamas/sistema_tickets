@@ -81,7 +81,7 @@
       }
     });
 
-    //checkbox and radios
+    /*//checkbox and radios
     $(".form-check label,.form-radio label").append('<i class="input-helper"></i>');
 
     //Horizontal menu in mobile
@@ -145,7 +145,7 @@
       var date = new Date();
       date.setTime(date.getTime() + 24 * 60 * 60 * 1000); 
       $.cookie('staradmin2-pro-banner', "true", { expires: date });
-    });
+    });*/
   });
 
   // focus input when clicking on search icon

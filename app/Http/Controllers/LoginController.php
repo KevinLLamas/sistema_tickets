@@ -4,31 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
+use App\Models\Usuario_login;
+use Redirect;
 class LoginController extends Controller
 {
-    public function logout() {
-
-        $url = curl_init("http://10.9.4.152:3000/logout");
-        //Token enviado por cabecera http
-        $auth = Session::get("key");
-        $headers = array('auth:'. $auth);
-        curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($url, CURLOPT_HTTPHEADER, $headers);
-
-        $response = curl_exec($url);
-        curl_close($url);
-
-        header('Content-Type: application/json');
-        $res = json_decode($response);
-        if( $res->ok == true ){
-            Session::flush();
-            return redirect('http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/sass/');
+    public function login(Request $request) {
+        $user = $request->input("user");
+        $password = hash('SHA512', $request->input("pass"));
+        $usuario = Usuario_login::with('usuario_info')->where('usuario', $user)->where('password', $password)->first();
+        if($usuario){
+            Session::put([
+                'id'=>$usuario->usuario_info->id,
+                'usuario'=>$usuario->usuario,
+                'nombre'=>$usuario->usuario_info->nombre,
+                'path_foto'=>$usuario->usuario_info->path_foto,
+                'numero'=>$usuario->usuario_info->numero,
+                'id_perfil'=>$usuario->usuario_info->id_perfil,
+                'rol'=>$usuario->usuario_info->rol,
+                'id_departamento'=>$usuario->usuario_info->id_departamento,
+            ]);
+            Session::save();
+            return response()->json([
+                'ok' => true,
+                'message' => ''
+            ], 200);
         }
         else{
-            Session::flush();
-            return redirect('http://mi.sej.jalisco.gob.mx?servicio=https://plataformadigital.sej.jalisco.gob.mx/sass/');
+            return response()->json([
+                'ok' => false,
+                'message' => 'Credenciales incorrectas, favor de corroborar su información'
+            ], 200);
+
         }
+    }
+    public function logout() {
+        Session::flush();
+        return redirect('/');
     }
 }

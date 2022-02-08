@@ -158,6 +158,126 @@ class SolicitudController extends Controller
             ]);
         }
     }
+    public function editar(Request $request)
+    {
+        if(filter_var($request->input('solicitud.correo_contacto'), FILTER_VALIDATE_EMAIL))
+        {
+            //CREAMOS SOLICITUD
+            $solicitud = new Solicitud;
+            $solicitud->id_usuario = Session::get('id');
+            $solicitud->estatus = "Sin atender";
+            $solicitud->medio_reporte = "Sistema"; 
+            $solicitud->id_perfil = $request->input('solicitud.perfil');     
+            $solicitud->id_subcategoria = $request->input('solicitud.subcategoria');
+            $solicitud->id_categoria = $request->input('solicitud.categoria');
+            $solicitud->descripcion = $request->input('solicitud.descripcion');
+            $solicitud->correo_atencion = $request->input('solicitud.correo_contacto');
+            $solicitud->necesita_respuesta = $request->input('solicitud.necesita');
+            $solicitud->fecha_creacion = now();
+            $solicitud -> save();
+            $id_solicitud = $solicitud->id_solicitud;
+
+            /*AGREGAMOS DATOS ADICIONALES A LA SOLICITUD
+            $datos = $request->input('datos');
+            foreach ($datos as $key){
+                $solicitud_dato = new Solicitud_dato_adicional;
+                $solicitud_dato->id_solicitud = $id_solicitud;
+                $solicitud_dato->valor = $key['respuesta'];
+                $solicitud_dato->tipo_dato = $key['model'];
+                $solicitud_dato -> save();
+            }*/
+
+            //AGREGAMOS EL MENSAJE DE SOLICITUD CREADA
+            $solicitud_atencion = new Solicitud_atencion;
+            $solicitud_atencion->id_solicitud = $id_solicitud;
+            $solicitud_atencion->id_usuario = Session::get('id');;
+            $solicitud_atencion->detalle = 'Ticket creado';
+            $solicitud_atencion->tipo_respuesta = 'Todos';
+            $solicitud_atencion->momento =now();
+            $solicitud_atencion->tipo_at = 'Creacion';
+            $solicitud_atencion->save();
+
+            /*BUSCAMOS Y ASIGNAMOS A LOS DEPARTAMENTOS A LOS QUE PERTENECE LA SOLICITUD
+            $departamentos = Subcategoria_departamento::where('id_subcategoria', $solicitud->id_subcategoria)->where('primario', 'true')->get();
+            foreach ($departamentos as $departamento)
+            {
+                $solicitud_departamento = new Solicitud_departamento;
+                $solicitud_departamento->id_solicitud = $id_solicitud;
+                $solicitud_departamento->id_departamento = $departamento->id_departamento;
+                $solicitud_departamento->aceptada = 'true';
+                $solicitud_departamento->razon = '';
+                $solicitud_departamento->save();
+                
+                //TRAEMOS TECNICOS DE EL DEPARTAMENTO ACTUAL
+                $usuarios_depa = Usuario::with('ultima_asignada')
+                ->where('id_departamento', $departamento->id_departamento)
+                ->where('id','!=','1')
+                ->where('rol','TECNICO')
+                ->get();
+
+                //BUSCAMOS A EL USUARIO EL CUAL TENGA MAS TIEMPO SIN QUE SE LE ASIGNE UNA SOLICITUD
+                $usuario_asignar = $usuarios_depa[0];
+                foreach ($usuarios_depa as $usuario) {
+                    if(is_null($usuario->ultima_asignada)){
+                        $usuario_asignar = $usuario;
+                        break;
+                    }
+                    if(new \DateTime($usuario->ultima_asignada->momento) < new \DateTime($usuario_asignar->ultima_asignada->momento))
+                        $usuario_asignar = $usuario;
+                }
+                //ASIGNAMOS LA SOLICITUD A EL USUARIO DE ESTE DEPARTAMENTO
+                $solicitud_usuario = new Solicitud_usuario;
+                $solicitud_usuario->id_solicitud = $id_solicitud;
+                $solicitud_usuario->id_usuario = $usuario_asignar->id;
+                $solicitud_usuario->momento = now();
+                $solicitud_usuario->estado = 'Atendiendo';
+                $solicitud_usuario->save();
+
+                //CREAMOS EL MENSAJE DE ATENCION Y ASIGNACION
+                $atencion = new Solicitud_atencion;
+                $atencion->id_solicitud = $id_solicitud;
+                //$atencion->id_usuario = $id_solicitud;
+                $atencion->detalle = 'asignó a  a este ticket.';
+                $atencion->tipo_respuesta = 'Todos';
+                $atencion->tipo_at = 'Asignacion';
+                $atencion->momento = now();
+                $atencion->save();
+
+                //CREAMOS LA NOTIFICACION PARA EL ASIGNADO
+                $notificacion = new Solicitud_notificacion;
+                $notificacion->id_solicitud = $id_solicitud;
+                $notificacion->id_atencion = $atencion->id;
+                $notificacion->id_usuario = $usuario_asignar->id;
+                $notificacion->status = 'No leida';
+                $notificacion->save();
+
+                //ACTUALIZAMOS EL ESTATUS DE LA SOLICITUD
+                if($solicitud->estatus == 'Sin atender'){
+                    $solicitud->estatus = 'Atendiendo';
+                    $solicitud->save();
+                }
+            }*/
+
+            //MANDAMOS LA INFORMACION POR CORREO
+            //if($this->send_mail_nueva($solicitud->correo_atencion,$id_solicitud) == 'Enviado');
+                return response()->json([
+                    'status' => true, 
+                    'id_solicitud' =>$id_solicitud,
+                    'id_atencion' =>$solicitud_atencion->id,
+                ]);
+            return response()->json([
+                'status' => false, 
+                'message' => 'Fue imposible enviar el correo de confirmación.'
+            ]);
+        }
+        else
+        {
+            return response()->json([
+                'status' => false, 
+                'message' => 'Correo invalido.'
+            ]);
+        }
+    }
     public function get_ticket(Request $request)
     {
         $id_ticket = $request->input('id');
