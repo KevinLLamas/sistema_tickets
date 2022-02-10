@@ -50,15 +50,15 @@
             </div-->
             <div class="form-group col-md-6" v-if="show_inputs">
                 <label for="">Correo de contacto</label>
-                <input class="form-control form-control-lg"  v-model="solicitud.correo_contacto"  required data-inputmask="'alias': 'email' ">
+                <input class="form-control form-control-lg"  v-model="solicitud.correo_contacto"  required data-inputmask="'alias': 'email' " placeholder="Correo de contacto">
             </div>
-            <div class="form-group col-md-6 mt-2" v-if="show_inputs">
-                {{-- <label for="" >Subir archivos de ayuda</label>
+            {{--<div class="form-group col-md-6 mt-2" v-if="show_inputs">
+                 <label for="" >Subir archivos de ayuda</label>
                 <div class="custom-file" >
                     <input type="file" class="custom-file-input" id="customFileLang" v-on:change="fileChangeFormato"  multiple>
                     <label class="custom-file-label" id="label_formato" for="customFileLang" data-browse="Seleccionar" >Seleccionar Archivos</label>
                     <small>Extensiones permitidas (pdf , png, jpg, jpeg, xls), El tamaño máximo por archivo es de 3 Mb y se permiten máximo 4 archivos.</small>
-                </div> --}}
+                </div> 
 
                 
             <div class="input-group" v-if="show_inputs">
@@ -68,8 +68,17 @@
                 </span>
             </div>
 
+            </div>--}}
+            <div class="form-group col-md-6 mt-2" v-if="show_inputs">
+                <label>Selecciona un archivo de evidencia</label>
+                <input type="file" class="file-upload-default" v-on:change="fileChangeFormato">
+                <div class="input-group col-xs-12 input-group-md">
+                    <input type="text" class="form-control file-upload-info" disabled placeholder="Seleccionar">
+                    <span class="input-group-append">
+                    <button class="file-upload-browse btn btn-primary btn-sm" type="button">Seleccionar</button>
+                    </span>
+                </div>
             </div>
-
 
             <div class="form-group col-md-12 mt-3" v-if="show_inputs">
                 <label for="">Descripción</label>

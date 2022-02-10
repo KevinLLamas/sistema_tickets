@@ -6,9 +6,10 @@
       </button>
     </div>
     <div>
-      <a class="navbar-brand brand-logo" href="../../index.html">
+      <h2 style="color:white;">ChatBot</h2>
+      <!--a class="navbar-brand brand-logo" href="../../index.html">
         <img src="{{asset('assets/images/logo-light.svg')}}" alt="logo" />
-      </a>
+      </a-->
       <a class="navbar-brand brand-logo-mini" href="../../index.html">
         <img src="{{asset('assets/images/logo-mini.svg')}}" alt="logo" />
       </a>
@@ -17,13 +18,13 @@
   <div class="navbar-menu-wrapper d-flex align-items-top">
     <ul class="navbar-nav">
       <li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-        <h1 class="welcome-text">Bienvenido <span class="text-black fw-bold">@Usuario</span></h1>
-        <h3 class="welcome-sub-text">Your performance summary this week </h3>
+        <h1 class="welcome-text">Bienvenido <span class="text-black fw-bold">{{Session::get('nombre')}}</span></h1>
+        <!--h3 class="welcome-sub-text">Your performance summary this week </h3-->
       </li>
     </ul>
     <ul class="navbar-nav ms-auto">
       <li class="nav-item dropdown d-none d-lg-block">
-        <a class="nav-link dropdown-bordered dropdown-toggle dropdown-toggle-split" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false"> Select Category </a>
+        <a class="nav-link dropdown-bordered dropdown-toggle dropdown-toggle-split" id="messageDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">Selecciona</a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="messageDropdown">
           <a class="dropdown-item py-3" >
             <p class="mb-0 font-weight-medium float-left">Select category</p>
@@ -55,61 +56,15 @@
           </a>
         </div>
       </li>
-      <li class="nav-item d-none d-lg-block">
-        <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
-          <span class="input-group-addon input-group-prepend border-right">
-            <span class="icon-calendar input-group-text calendar-icon"></span>
-          </span>
-          <input type="text" class="form-control">
-        </div>
-      </li>
       <li class="nav-item">
         <form class="search-form" action="#">
           <i class="icon-search"></i>
         <input type="search" class="form-control" placeholder="Search Here" title="Search here">
         </form>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-        <i class="icon-mail icon-lg"></i>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
-          <a class="dropdown-item py-3 border-bottom">
-            <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
-            <span class="badge badge-pill badge-primary float-right">View all</span>
-          </a>
-          <a class="dropdown-item preview-item py-3">
-            <div class="preview-thumbnail">
-              <i class="mdi mdi-alert m-auto text-primary"></i>
-            </div>
-            <div class="preview-item-content">
-              <h6 class="preview-subject fw-normal text-dark mb-1">Application Error</h6>
-              <p class="fw-light small-text mb-0"> Just now </p>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item py-3">
-            <div class="preview-thumbnail">
-              <i class="mdi mdi-settings m-auto text-primary"></i>
-            </div>
-            <div class="preview-item-content">
-              <h6 class="preview-subject fw-normal text-dark mb-1">Settings</h6>
-              <p class="fw-light small-text mb-0"> Private message </p>
-            </div>
-          </a>
-          <a class="dropdown-item preview-item py-3">
-            <div class="preview-thumbnail">
-              <i class="mdi mdi-airballoon m-auto text-primary"></i>
-            </div>
-            <div class="preview-item-content">
-              <h6 class="preview-subject fw-normal text-dark mb-1">New user registration</h6>
-              <p class="fw-light small-text mb-0"> 2 days ago </p>
-            </div>
-          </a>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
+      {{--<li class="nav-item dropdown">
         <a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="icon-bell"></i>
+        <i class="icon-mail icon-lg "></i>
           <span class="count"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
@@ -146,21 +101,68 @@
             </div>
           </a>
         </div>
+      </li>--}}
+      <li class="nav-item dropdown">
+        <a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+        <i class="icon-bell"></i>
+        <span class="count" style="color:black;"></span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
+          <a class="dropdown-item py-3 border-bottom">
+            <p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
+            <span class="badge badge-pill badge-primary float-right">View all</span>
+          </a>
+          <a class="dropdown-item preview-item py-3">
+            <div class="preview-thumbnail">
+              <i class="mdi mdi-alert m-auto text-primary"></i>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject fw-normal text-dark mb-1">Application Error</h6>
+              <p class="fw-light small-text mb-0"> Just now </p>
+            </div>
+          </a>
+          <a class="dropdown-item preview-item py-3">
+            <div class="preview-thumbnail">
+              <i class="mdi mdi-settings m-auto text-primary"></i>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject fw-normal text-dark mb-1">Settings</h6>
+              <p class="fw-light small-text mb-0"> Private message </p>
+            </div>
+          </a>
+          <a class="dropdown-item preview-item py-3">
+            <div class="preview-thumbnail">
+              <i class="mdi mdi-airballoon m-auto text-primary"></i>
+            </div>
+            <div class="preview-item-content">
+              <h6 class="preview-subject fw-normal text-dark mb-1">New user registration</h6>
+              <p class="fw-light small-text mb-0"> 2 days ago </p>
+            </div>
+          </a>
+        </div>
       </li>
+      
       <li class="nav-item dropdown d-none d-lg-block user-dropdown">
         <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-          <img class="img-xs rounded-circle" src="{{asset('assets/images/faces/face8.jpg')}}" alt="Profile image"> </a>
+          @if(is_null(Session::get('path_foto')))
+            <img class="img-xs rounded-circle" src="{{asset('assets/images/faces/face8.jpg')}}" alt="Profile image"> </a>
+          @else
+            <img class="img-xs rounded-circle" src="{{asset('/assets/profile_pictures/'.Session::get('path_foto'))}}" alt="Profile image"> </a>
+          @endif
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
           <div class="dropdown-header text-center">
-            <img class="img-md rounded-circle" src="{{asset('assets/images/faces/face8.jpg')}}" alt="Profile image">
-            <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
-            <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+            @if(is_null(Session::get('path_foto')))
+            <img class="img-xs rounded-circle" src="{{asset('assets/images/faces/face8.jpg')}}" alt="Profile image"> </a>
+          @else
+            <img class="img-xs rounded-circle" src="{{asset('/assets/profile_pictures/'.Session::get('path_foto'))}}" alt="Profile image"> </a>
+          @endif
+            <p class="mb-1 mt-3 font-weight-semibold">{{Session::get('nombre')}}</p>
+            <p class="fw-light text-muted mb-0">{{Session::get('usuario')}}</p>
           </div>
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> Mi perfil {{--<span class="badge badge-pill badge-danger">1</span>--}}</a>
+          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Mensajes</a>
+          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Actividad</a>
+          <a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Cerrar sesión</a>
         </div>
       </li>
     </ul>

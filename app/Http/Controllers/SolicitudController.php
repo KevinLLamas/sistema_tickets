@@ -643,7 +643,6 @@ class SolicitudController extends Controller
             ->where('estatus','like',"%$estado%")
             ->orderBy('id_solicitud',$orden)
             ->paginate($num);
-       
         return $solicitud_usuario;
         }catch(Exception $e){
             return response()->json([
@@ -1368,7 +1367,7 @@ class SolicitudController extends Controller
     public function get_solicitudes_departamento_rep(Request $request){
         
         $estado=$request->input('estado');
-        $idDep=$request->input('id_departamento');
+        $idDep=Session::get('id_departamento');
         $orden=$request->input('orden');
         
         try{
