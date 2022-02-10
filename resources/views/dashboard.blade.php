@@ -7,9 +7,11 @@
             <h4 class="card-title">Listado de tickets</h4>
             <!--p class="card-description">Horizontal bootstrap tab</p-->
             <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item" v-if="rol == 'SUPER'">
+            @if(Session::get('rol')=='Administrador')
+            <li class="nav-item" v-if="rol == 'Administrador'">
                 <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home-1" role="tab" aria-controls="home-1" aria-selected="true">Solicitudes</a>
             </li>
+            @endif
             <li class="nav-item">
                 <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile-1" role="tab" aria-controls="profile-1" aria-selected="false">Solicitudes asignadas</a>
             </li>
@@ -525,7 +527,7 @@
 <script src="{{asset('assets/vue/solicitudes_asignadas.js')}}"></script>
 <script src="{{asset('assets/vue/solicitudes_departamento.js')}}"></script>
 <script src="{{asset('assets/vue/mis_solicitudes.js')}}"></script>
-@if(Session::get('rol')=='SUPER')
+@if(Session::get('rol')=='Administrador')
     <script src="{{asset('assets/vue/solicitudes.js')}}"></script>
 @endif
 @endsection

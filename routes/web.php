@@ -10,8 +10,8 @@ use App\Http\Controllers\SubcategoriaController;
 use App\Http\Controllers\seguimientoController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\NotificacionController;
-Route::get('/', function(){return view('login');});
-Route::post('login', [LoginController::class, 'login']);
+Route::get('/', function(){return view('login');})->middleware('login');
+Route::post('login', [LoginController::class, 'login'])->middleware('login');
 Route::group(['middleware' => 'validar', 'web'], function()
 {
 Route::get('logout', [LoginController::class, 'logout']);

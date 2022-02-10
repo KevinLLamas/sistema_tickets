@@ -41,6 +41,9 @@ class Kernel extends HttpKernel
         'validar'=>[
             \App\Http\Middleware\ValidaToken::class,
         ],
+        'login'=>[
+            \App\Http\Middleware\Login::class,
+        ],
         'api' => [
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,

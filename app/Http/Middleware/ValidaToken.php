@@ -19,7 +19,7 @@ class ValidaToken
      */
     public function handle(Request $request, Closure $next)
     {
-        //Session::flush();
+        /*//Session::flush();
         Session::put([
             "id" => 1,
             "usuario" => "kevin@gmail.com",
@@ -32,13 +32,13 @@ class ValidaToken
         ]);
         Session::save();
         return $next($request);
-        /*
+        */
         if(is_null(Session::get("id"))){
             Session::flush();
             return Redirect::to('/');
         }
         else{
             return $next($request);
-        }*/
+        }
     }
 }
