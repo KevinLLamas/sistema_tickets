@@ -23,6 +23,9 @@ use App\Models\Departamentos;
 use App\Models\Solicitud_usuario;
 use App\Models\Solicitud_notificacion;
 use Illuminate\Support\Facades\Session;
+use App\Models\Pregunta;
+use App\Models\Opciones;
+use App\Models\Solicitud_respuesta;
 class SolicitudController extends Controller
 {
     public function getCampos(Request $request)
@@ -530,7 +533,7 @@ class SolicitudController extends Controller
         $id=$request->input('id');
         $orden=$request->input('orden');
         try{
-            $solicitud=Solicitud::with('usuario_many')
+            $solicitud=Solicitud::with(['subcategoria','usuario'])
                 ->where('id_solicitud','like',"%$id%")
                 ->where('estatus','like',"%$estado%")
                 ->where('descripcion','like',"%$busqueda%")
@@ -636,7 +639,8 @@ class SolicitudController extends Controller
         $estado = $request->input('estado');
         $orden = $request->input('orden');
         try{
-            $solicitud_usuario = Solicitud::where('id_usuario',$idUsuario)
+            $solicitud_usuario = Solicitud::with('subcategoria')
+            ->where('id_usuario',$idUsuario)
             ->where('id_solicitud','like',"%$busquedaid%")
             ->where('descripcion','like',"%$busqueda%")
             ->where('medio_reporte','like',"%$medio%")
@@ -803,6 +807,11 @@ class SolicitudController extends Controller
 
         return Session::get('id_departamento');
         
+    }
+    public function get_preguntas(Request $request){
+        $id_subcategoria = $request->input('id_subcategoria');
+        $preguntas = Pregunta::with('opciones')->where('id_subcategoria', $id_subcategoria)->get(); 
+        return $preguntas;       
     }
     public function get_num_solicitudes_through_time(Request $request){
         $idUsuario=Session::get('id');

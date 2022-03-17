@@ -12283,7 +12283,7 @@ fieldset:disabled .wizard > .actions a,
 .btn-sm, .btn-group-sm > .btn, .fc .btn-group-sm > button, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload, .swal2-modal .swal2-buttonswrapper .btn-group-sm > .swal2-styled, .wizard > .actions .btn-group-sm > a, .fc button {
   padding: 0.5rem 0.81rem;
   font-size: 0.812rem;
-  border-radius: 0.1875rem;
+  /*border-radius: 0.1875rem;*/
 }
 
 .fade {
@@ -13625,7 +13625,7 @@ fieldset:disabled .wizard > .actions a,
 }
 
 .card-title {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0rem;
 }
 
 .card-subtitle {
@@ -20052,7 +20052,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6,
 
 p {
   font-size: 0.812rem;
-  margin-bottom: .5rem;
+  margin-bottom: -0.2rem;
   line-height: 1.3rem;
 }
 
@@ -20422,7 +20422,14 @@ code {
 .img-sm.rounded-10 {
   border-radius: 10px;
 }
+.img-sm2 {
+  width: 18px;
+  height: 18px;
+}
 
+.img-sm2.rounded-10 {
+  border-radius: 3px;
+}
 .img-xs {
   width: 32px;
   height: 32px;
@@ -21436,7 +21443,7 @@ code {
 /* Badges */
 .badge {
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 10px;
   line-height: 1;
   padding: .375rem .5625rem;
   font-weight: normal;
@@ -21697,7 +21704,7 @@ code {
 
 .btn.btn-sm, .btn-group-sm > .btn, .fc .btn-group-sm > button, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload, .swal2-modal .swal2-buttonswrapper .btn-group-sm > .swal2-styled, .wizard > .actions .btn-group-sm > a, .fc button, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .ajax-upload-dragdrop .fc button.ajax-file-upload, .fc .ajax-upload-dragdrop button.ajax-file-upload, .swal2-modal .swal2-buttonswrapper .btn-sm.swal2-styled, .swal2-modal .swal2-buttonswrapper .fc button.swal2-styled, .fc .swal2-modal .swal2-buttonswrapper button.swal2-styled, .wizard > .actions a.btn-sm {
   font-size: 0.812rem;
-  border-radius: 15px;
+  /*border-radius: 15px;*/
 }
 
 .btn.btn-lg, .btn-group-lg > .btn, .fc .btn-group-lg > button, .ajax-upload-dragdrop .btn-group-lg > .ajax-file-upload, .swal2-modal .swal2-buttonswrapper .btn-group-lg > .swal2-styled, .wizard > .actions .btn-group-lg > a, .fc button.btn-lg, .ajax-upload-dragdrop .btn-lg.ajax-file-upload, .swal2-modal .swal2-buttonswrapper .btn-lg.swal2-styled, .wizard > .actions a.btn-lg {
@@ -23957,7 +23964,9 @@ code {
   border-radius: 4px;
   height: 2rem;
 }
-
+.text-area{
+  height: 6rem;
+}
 select.form-control, select.asColorPicker-input, .dataTables_wrapper select,
 .jsgrid .jsgrid-table .jsgrid-filter-row select, .select2-container--default select.select2-selection--single, .select2-container--default .select2-selection--single select.select2-search__field, select.typeahead,
 select.tt-query,
@@ -24118,6 +24127,7 @@ select.border-dark.tt-hint:focus {
 
 .form-group .file-upload-info {
   background: transparent;
+  height: 1rem;
 }
 
 .map-container {
@@ -32619,5 +32629,59 @@ div.tagsinput span.tag a {
     display: none;
   }
 }
+.eye {
+  background: #ffffff;
+  color: #1F3BB3;
+}
+.eye:hover {
+  background: #1F3BB3;
+  color: #ffffff;
+}
+.borderless {
+  border: 1px solid #ffffff;
+}
+.color-white {
+  color:#ffffff;
+}
+.color-grey {
+  color:grey;
+}
+.color-black {
+  color:black;
+}
 
-/*# sourceMappingURL=../maps/vertical-layout-light/style.css.map */
+.small-2{
+  height: 1rem;
+}
+.google-map {
+  position: relative;
+}
+
+.google-map #map_canvas {
+  height: 500px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .google-map #map_canvas {
+    height: 350px;
+  }
+}
+
+.google-map{
+  height:100%;
+  margin-bottom: -8px;
+}
+.google-map iframe{
+  width:100%;
+  border:0;
+  filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+ */
+  -webkit-filter: grayscale(99%); /* Chrome 19+ & Safari 6+ */
+  -webkit-backface-visibility: hidden;  /* Fix for transition flickering */
+}
+
+#defaultMapId 
+{
+    height: 35vh;
+}
+.imagen-chica {  width: auto;  height: 200px; } 

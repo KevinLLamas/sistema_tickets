@@ -17,6 +17,7 @@
         "resolve-url-loader": "^3.1.0"
     },
     "dependencies": {
-        "vue-resource": "^1.5.1"
+        "vue-resource": "^1.5.1",
+        "vue2-google-maps": "^0.10.7"
     }
 }

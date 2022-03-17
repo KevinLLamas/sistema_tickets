@@ -6,11 +6,11 @@
       </button>
     </div>
     <div>
-      <h2 style="color:white;">ChatBot</h2>
-      <!--a class="navbar-brand brand-logo" href="../../index.html">
+      <h2 style="color:white;">Sistema</h2>
+      <!--a class="navbar-brand brand-logo" href="/">
         <img src="{{asset('assets/images/logo-light.svg')}}" alt="logo" />
       </a-->
-      <a class="navbar-brand brand-logo-mini" href="../../index.html">
+      <a class="navbar-brand brand-logo-mini" href="/">
         <img src="{{asset('assets/images/logo-mini.svg')}}" alt="logo" />
       </a>
     </div>
@@ -147,14 +147,14 @@
           @if(is_null(Session::get('path_foto')))
             <img class="img-xs rounded-circle" src="{{asset('assets/images/faces/face8.jpg')}}" alt="Profile image"> </a>
           @else
-            <img class="img-xs rounded-circle" src="{{asset('/assets/profile_pictures/'.Session::get('path_foto'))}}" alt="Profile image"> </a>
+            <img class="img-xs rounded-circle" src="{{asset('/assets/'.Session::get('path_foto'))}}" alt="Profile image"> </a>
           @endif
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
           <div class="dropdown-header text-center">
             @if(is_null(Session::get('path_foto')))
             <img class="img-xs rounded-circle" src="{{asset('assets/images/faces/face8.jpg')}}" alt="Profile image"> </a>
           @else
-            <img class="img-xs rounded-circle" src="{{asset('/assets/profile_pictures/'.Session::get('path_foto'))}}" alt="Profile image"> </a>
+            <img class="img-xs rounded-circle" src="{{asset('/assets/'.Session::get('path_foto'))}}" alt="Profile image"> </a>
           @endif
             <p class="mb-1 mt-3 font-weight-semibold">{{Session::get('nombre')}}</p>
             <p class="fw-light text-muted mb-0">{{Session::get('usuario')}}</p>

@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="{{ asset('assets/vendor/dropify/dropify.min.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/vendor/simple-line-icons/css/simple-line-icons.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/vendor/simplemde/simplemde.min.css')}}">
-  
+<link rel="stylesheet" type="text/css" href="{{asset('assets/css/slim.css')}}">
 
   <!-- endinject -->
   <!-- Plugin css for this page -->
@@ -69,9 +69,12 @@
         <!-- endinject -->
         <!-- Plugin js for this page -->
         <!-- End plugin js for this page -->
+        <link href="{{ asset('/assets/fontawesome/css/fontawesome.css')}}" rel="stylesheet">
+        <link href="{{ asset('/assets/fontawesome/css/brands.css')}}" rel="stylesheet">
+        <link href="{{ asset('/assets/fontawesome/css/solid.css')}}" rel="stylesheet">
         <!-- inject:js -->
         
-
+        <script src="{{asset('assets/vendor/chart.js/Chart.min.js')}}"></script>
         <script src="{{asset('assets/js/off-canvas.js')}}"></script>
         <script src="{{asset('assets/js/hoverable-collapse.js')}}"></script>
         <script src="{{asset('assets/js/cookie.js')}}"></script>
@@ -83,5 +86,7 @@
         <script src="{{asset('assets/vendor/inputmask/jquery.inputmask.bundle.js')}}"></script>
         <script src="{{asset('assets/js/dropify.js')}}"></script>
         <script src="{{asset('assets/js/inputmask.js')}}"></script>
+        <script src="{{asset('assets/js/dashboard.js')}}"></script>
+        <script src="{{asset('assets/js/Chart.roundedBarCharts.js')}}"></script>
 </body>
 </html>

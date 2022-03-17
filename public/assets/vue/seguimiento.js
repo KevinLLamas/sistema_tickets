@@ -1,5 +1,5 @@
-var url = window.location.pathname;
-var getId = url.substring(url.lastIndexOf('/')+1);
+var url2 = window.location.pathname;
+var getId = url2.substring(url2.lastIndexOf('/')+1);
 
 new Vue({
     el: '#app',
@@ -17,6 +17,10 @@ new Vue({
             categoria:
             {
                 nombre: '',
+            },
+            usuario:
+            {
+                path_foto: '',
             },
             departamentos_seleccionados_id: [],
         },
@@ -767,3 +771,15 @@ new Vue({
         }
     }
 });
+(function($) {
+    'use strict';
+    $(function() {
+      $('.file-upload-browse').on('click', function() {
+        var file = $(this).parent().parent().parent().find('.file-upload-default');
+        file.trigger('click');
+      });
+      $('.file-upload-default').on('change', function() {
+        $(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
+      }); 
+    });
+  })(jQuery);

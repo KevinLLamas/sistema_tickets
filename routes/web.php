@@ -106,7 +106,7 @@ Route::post('inserta_atencion_externo',  [seguimientoController::class, 'inserta
 Route::post('update_departamentos',  [seguimientoController::class, 'UpdateDepartamentos']);
 Route::post('sub_dptos',  [seguimientoController::class, 'Subcategorias_Dptos']);
 Route::post('update_subcategoria',  [seguimientoController::class, 'UpdateSubcategoria']);
-
+Route::post('get_preguntas',  [SolicitudController::class, 'get_preguntas']);
 
 Route::post('save_files', [SolicitudController::class, 'save_files']);
 /*Route::get('/ejemplo', function () {

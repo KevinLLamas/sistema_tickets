@@ -26,28 +26,9 @@ class seguimientoController extends Controller
 {
 	protected $users = array();
 	private function get_usuario($id){
-		//LOCAL
-		if($id == null || $id == 0)
-			return ['ok'=>false,'nombre'=>'Usuario'];
-		foreach ($this->users as $user) {
-			if($user['id'] == $id)
-				return $user;
-		}
-		//API
-		$url = curl_init("http://10.9.4.152:3000/persona");
-		$llaveApp = "B0342DEF578109AD4C32E158B2702E884645493F84A0AFACA05A017D3E68D3F8";
-		$data = array(
-			"id_persona"=>$id,
-			"llaveApp" => $llaveApp
-		);
-		curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($url, CURLOPT_CUSTOMREQUEST, "POST");
-		curl_setopt($url, CURLOPT_POSTFIELDS,http_build_query($data));
-		$response = curl_exec($url);
-		curl_close($url);
-		$res = json_decode($response, true);
-		array_push($this->users, ['ok'=>true,'id'=>$id,'nombre'=>$res['nombre']]);
-		return $res;
+		$usuario = Usuario::find($id);
+		
+		return $usuario;
 	}
 	public function getUsers()
 	{
@@ -58,16 +39,6 @@ class seguimientoController extends Controller
 		$solicitud = Solicitud::with(['subcategoria_departamento','subcategoria','atencion','usuario', 'dato_adicional', 'departamento', 'solicitud_usuario'])->where('id_solicitud', $id)->first();
 		if($solicitud->atencion != null)
 		{
-			if(!is_null($solicitud->usuario))
-			{
-				$res = $this->get_usuario($solicitud->usuario->id);
-				if($res['ok'])
-					$solicitud->usuario->nombre = $res['nombre'];
-				else
-					$solicitud->usuario->nombre = 'Usuario';
-			}
-			else
-				$solicitud->usuario = (object) ['nombre'=>'Usuario'];
 			$atencion = $solicitud->atencion;
 			foreach($atencion as $at)
 			{
@@ -75,12 +46,10 @@ class seguimientoController extends Controller
 				if($at->id_usuario != null)
 				{
 					$res = $this->get_usuario($at->id_usuario);
-					if($res['ok']){
-						$at->nombre = $res['nombre'];
-						//$at->correo_usuario = $res['usuario'];
-					}
+					$at->nombre = $res->nombre;
+					$at->path_foto = $res->path_foto;
 				}
-				else{
+				/*else{
 					if($at->tipo_at == 'Asignacion')
 					{						
 						$at->nombre = 'Sistema';
@@ -107,7 +76,7 @@ class seguimientoController extends Controller
 						$at->nombre = 'Usuario';
 						$at->correo_usuario = 'Usuario';
 					}
-				}
+				}*/
 				$at->adjuntos = $adjuntos;
 				
 			}

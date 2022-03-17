@@ -551,13 +551,13 @@
           data: [40, 20, 30, 10],
           backgroundColor: [
             "#1F3BB3",
-            "#FDD0C7",
+            "#f6f8fa",
             "#52CDFF",
             "#81DADA"
           ],
           borderColor: [
             "#1F3BB3",
-            "#FDD0C7",
+            "#F4F5F7",
             "#52CDFF",
             "#81DADA"
           ],

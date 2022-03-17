@@ -27,6 +27,7 @@
         </ul>
       </div>
     </li>
+    @if(Session::get('rol')=='Administrador')
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-advanced" aria-expanded="false" aria-controls="ui-advanced">
         <i class="icon-user me-1"></i>
@@ -42,6 +43,8 @@
         </ul>
       </div>
     </li>
+    @endif
+    @if(Session::get('rol')=='Administrador')
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="collapse" href="#ui-departamento" aria-expanded="false" aria-controls="ui-departamento">
         <i class="icon-list me-1"></i>
@@ -57,7 +60,8 @@
         </ul>
       </div>
     </li>
-
+    @endif
+    @if(Session::get('rol')== 'Administrador'|| Session::get('rol')=='Directivo')
     <li class="nav-item nav-category">Funciones</li>
     <li class="nav-item">
       <a class="nav-link" href="/">
@@ -65,6 +69,7 @@
         <span class="menu-title">Reportes</span>
       </a>
     </li>
+    @endif
     {{--<li class="nav-item">
       <a class="nav-link" href="../../pages/apps/calendar.html">
         <i class="menu-icon mdi mdi-calendar"></i>
